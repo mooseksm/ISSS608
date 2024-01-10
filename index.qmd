@@ -2,7 +2,7 @@
 title: "ISSS608"
 ---
 
-Welcome to **ISSS608 Visual Analytics and Applications** website.
+Welcome to my **ISSS608 Visual Analytics and Applications** website.
 
 ```         
 ```
