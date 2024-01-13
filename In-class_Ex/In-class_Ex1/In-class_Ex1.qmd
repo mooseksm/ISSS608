@@ -1,0 +1,311 @@
+---
+title: "In-class Exercise 1"
+date: January 13, 2024
+date-modified: "last-modified"
+toc: true
+execute:
+  eval: true
+  echo: true
+  warning: false
+---
+
+# Getting Started
+
+## Loading R package
+
+```{r}
+pacman::p_load(tidyverse)
+
+```
+
+# Importing Data
+
+```{r}
+exam_data <- read_csv("data/Exam_data.csv")
+```
+
+# Wrangling Data
+
+### Geom bar
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x=RACE)) +
+  geom_bar()+
+  ggtitle("Distribution of cohort of primary 3 students from a local school by race")
+```
+
+### Geom dotplot
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x = MATHS)) +
+  geom_dotplot(binwidth=2.5,
+               dotsize = 0.5)+
+  scale_y_continuous(NULL,
+                     breaks=NULL)+
+  ggtitle("Distribution of students by MATHS score")
+```
+
+### Geom histogram
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS)) +
+  geom_histogram(bins=20,            
+                 color="black",      
+                 fill="light yellow")+
+  ggtitle("Distribution of students by MATHS score")
+
+ggplot(data=exam_data, 
+       aes(x= MATHS, 
+           fill = GENDER)) +
+  geom_histogram(bins=20, 
+                 color="grey30")+
+  ggtitle("Distribution of students by MATHS score and by gender")
+```
+
+### Geom density
+
+Useful alternative to the histogram for continuous data that comes from an underlying smooth distribution.
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x = MATHS)) +
+  geom_density()+
+  ggtitle("Distribution of students by MATHS score")
+
+ggplot(data=exam_data, 
+       aes(x = MATHS, 
+           colour = GENDER)) +
+  geom_density()+
+  ggtitle("Distribution of students by MATHS score and by gender")
+```
+
+### Geom boxplot
+
+```{r}
+ggplot(data=exam_data, 
+       aes(y = MATHS,       
+           x= GENDER)) +    
+  geom_boxplot()+
+  ggtitle("Distribution of MATHS score for each gender")
+```
+
+### Notched plot
+
+```{r}
+ggplot(data=exam_data, 
+       aes(y = MATHS, 
+           x= GENDER)) +
+  geom_boxplot(notch=TRUE)+
+  ggtitle("Distribution of MATHS score for each gender")
+```
+
+Observation: Median MATHS score for female and male is different.
+
+### Geom violin
+
+Used to compare multiple data distributions
+
+```{r}
+ggplot(data=exam_data, 
+       aes(y = MATHS, 
+           x= GENDER)) +
+  geom_violin()+
+  ggtitle("Distribution of MATHS score by gender")
+```
+
+### Geom point aka scatterplot
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS, 
+           y=ENGLISH)) +
+  geom_point()+
+  ggtitle("Distribution of students according to MATHS and ENGLISH scores")
+```
+
+### Combination of geom objects
+
+Combination of geom boxplot and geom point (scatterplot)
+
+```{r}
+ggplot(data=exam_data, 
+       aes(y = MATHS, 
+           x= GENDER)) +
+  geom_boxplot() +                    
+  geom_point(position="jitter", 
+             size = 0.5)+
+  ggtitle("Distribution of MATHS scores by gender")
+```
+
+### Exploring statistical functions
+
+Adding a statistical summary use stat_summary() method (overrides the default geom)
+
+```{r}
+ggplot(data=exam_data, 
+       aes(y = MATHS, x= GENDER)) +
+  geom_boxplot() +
+  stat_summary(geom = "point",       
+               fun.y="mean",         
+               colour ="light blue",        
+               size=4)+
+  ggtitle("Distribution of MATHS scores by gender with stat summary")
+```
+
+Adding a statistical summary using geom() method (overrides default stat)
+
+```{r}
+ggplot(data=exam_data, 
+       aes(y = MATHS, x= GENDER)) +
+  geom_boxplot() +
+  geom_point(stat="summary",        
+             fun.y="mean",           
+             colour ="pink",          
+             size=4)+
+  ggtitle("Distribution of MATHS scores by gender with stat summary")
+```
+
+### Adding a best fit curve to scatterplot
+
+Default loess smoothing method
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS, y=ENGLISH)) +
+  geom_point() +
+  geom_smooth(linewidth=0.5)+
+  ggtitle("Distribution of students by ENGLISH and MATHS scores")
+```
+
+Using lm smoothing method
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS, 
+           y=ENGLISH)) +
+  geom_point() +
+  geom_smooth(method=lm, 
+              linewidth=0.5)+
+  ggtitle("Distribution of students by ENGLISH and MATHS scores")
+```
+
+### Working with facets
+
+Facetting is helpful in displaying different subsets of the data.
+
+-   Using facet_wrap()
+
+Better use of screen space than facet_grid because most displays are roughly rectangular.
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS)) +
+  geom_histogram(bins=20,
+                 color="black",
+                 fill="orange") +
+    facet_wrap(~ CLASS)+
+  ggtitle("Distribution of MATHS scores by class")
+```
+
+-   Using facet_grid()
+
+Most useful when you have two discrete variables, and all combinations of the variables exist in the data.
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS)) +
+  geom_histogram(bins=20,
+                 color="black",
+                 fill="purple") +
+    facet_grid(~ CLASS)+
+  ggtitle("Distribution of MATHS scores by class")
+```
+
+Main difference between the two functions:
+
+-   The facet_grid() function will produce a grid of plots for each combination of variables that you specify, even if some plots are empty.
+-   The facet_wrap() function will only produce plots for the combinations of variables that have values, which means it won’t produce any empty plots.
+
+Source: https://www.statology.org/facet_wrap-vs-facet_grid-in-r/
+
+### Coordinates
+
+-   Flip bar chart configuration from vertical to horizontal
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x=RACE)) +
+  geom_bar()+
+  ggtitle("Distribution of students by race")
+
+ggplot(data=exam_data, 
+       aes(x=RACE)) +
+  geom_bar()+
+  coord_flip()+
+  ggtitle("Distribution of students by race")
+```
+
+### Changing x- and y- axis range
+
+Chart below is misleading as x- and y-axis ranges are not equal. y-axis is denoted in chunks of 20 while x-axis is denoted in chunks of 25.
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS, y=ENGLISH)) +
+  geom_point() +
+  geom_smooth(method=lm, linewidth=0.5)+
+  ggtitle("Distribution of students by ENGLISH and MATHS scores")
+```
+
+Adjusting the x- and y-axis to range from 0 to 100 in equal chunks
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x= MATHS, y=ENGLISH)) +
+  geom_point() +
+  geom_smooth(method=lm, 
+              linewidth=0.5) +  
+  coord_cartesian(xlim=c(0,100),
+                  ylim=c(0,100))+
+  ggtitle("Distribution of students by ENGLISH and MATHS scores")
+```
+
+### Exploring themes in ggplot2
+
+Themes control elements of the graph not related to the data i.e. background color, size of fonts and color of labels
+
+-   Theme grey
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x=RACE)) +
+  geom_bar() +
+  coord_flip() +
+  theme_gray()+
+  ggtitle("Distribution of students by race")
+```
+
+-   Theme classic
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x=RACE)) +
+  geom_bar() +
+  coord_flip() +
+  theme_classic()+
+  ggtitle("Distribution of students by race")
+```
+
+-   Theme minimal
+
+```{r}
+ggplot(data=exam_data, 
+       aes(x=RACE)) +
+  geom_bar() +
+  coord_flip() +
+  theme_minimal()+
+  ggtitle("Distribution of students by race")
+```
