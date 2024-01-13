@@ -59,3 +59,6 @@ stu_qqq_SG <-
   read_rds("data/stu_qqq_SG.rds")
 ```
 To test, one can clear the environment and rerun the code to see if the data "stu_qqq_SG" appears.
+
+To avoid active code when loading the website, one can indicate "#| eval: false" within the r code chunk.
+
