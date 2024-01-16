@@ -1,8 +1,20 @@
 ---
 title: "ISSS608"
+listing:
+  field-display-names:
+    title: "Latest Updates"
+  contents:
+  - "/In-class_Ex/*/*.qmd"
+  - "/Hands-on_Ex/*/*.qmd"
+  - "/Take-home_Ex/*/*.qmd"
+  type: grid
+  sort:
+    - "date desc"
+    - "title asc"
+  max-items: 3
 ---
 
-Welcome to my **ISSS608 Visual Analytics and Applications** website.
+Welcome to Si Min's **ISSS608 Visual Analytics and Applications** website.
 
 ```         
 ```
