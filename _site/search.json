@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "ISSS608",
     "section": "",
-    "text": "Welcome to Si Min’s ISSS608 Visual Analytics and Applications website.\nPlease find below the latest updates:\n\n\n\n\n\n\n\n\n\n\n\n\nIn-class Exercise 1: Now You See It!\n\n\n\n\n\n\n\n\n\nJan 13, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 1\n\n\n\n\n\n\n\n\n\nJan 6, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 10\n\n\n\n\n\n\n\n\n\nJan 6, 2024\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Welcome to Si Min’s ISSS608 Visual Analytics and Applications website.\nPlease find below the latest updates:\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 2\n\n\n\n\n\n\n\n\n\nJan 13, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nIn-class Exercise 1: Now You See It!\n\n\n\n\n\n\n\n\n\nJan 13, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 1\n\n\n\n\n\n\n\n\n\nJan 6, 2024\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
@@ -54,5 +54,61 @@
     "title": "In-class Exercise 1: Now You See It!",
     "section": "Importing PISA data",
     "text": "Importing PISA data\nThe code chunk below uses read_sas() of haven to import PISA data into R environment.\n\nstu_qqq &lt;- \n  read_sas(\"data/cy08msp_stu_qqq.sas7bdat\")\n\n\nFiltering data to obtain SG data\n\nstu_qqq_SG &lt;- stu_qqq %&gt;%\n  filter(CNT == \"SGP\")\n\nIndicate a $ to call out the CNT variable in stu_qqq dataset thereafter remove it before running the code.\n\n\nSaving the filtered data as a new file\n\nwrite_rds(stu_qqq_SG,\n          \"data/stu_qqq_SG.rds\")\n\nAlways remember to indicate the extension i.e. “.rds” when saving the file.\n\n\nCalling the file to check if it has been saved correctly\n\nstu_qqq_SG &lt;- \n  read_rds(\"data/stu_qqq_SG.rds\")\n\nTo test, one can clear the environment and rerun the code to see if the data “stu_qqq_SG” appears.\nTo avoid active code when loading the website, one can indicate “#| eval: false” within the r code chunk."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html",
+    "href": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html",
+    "title": "Hands-on Exercise 2",
+    "section": "",
+    "text": "Beyond ggplot2 fundamentals"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#installing-and-loading-the-required-libraries",
+    "href": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#installing-and-loading-the-required-libraries",
+    "title": "Hands-on Exercise 2",
+    "section": "Installing and loading the required libraries",
+    "text": "Installing and loading the required libraries\nIn this hands-on exercise 2, four R packages in addition to tidyverse will be used. They are:\n\nggrepel: provides geoms for ggplot2 to repel overlapping text labels\nggthemes: provides extra themes, geoms and scales for ggplot2\nhrbrthemes: provides typography-centric themes and theme components for ggplot2\npatchwork: for the preparation of a composite figure created using ggplot2\n\nThe code chunk below will be used to check if these packages have been installed and to also load them into my working R environment:\n\npacman::p_load(ggrepel, patchwork, ggthemes, hrbrthemes, tidyverse)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#importing-data",
+    "href": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#importing-data",
+    "title": "Hands-on Exercise 2",
+    "section": "Importing data",
+    "text": "Importing data\nFor this hands-on exercise, the data file Exam_data will be used. It consists of year end examination grades of a cohort of primary 3 students from a local school. It is in csv file format.\nThe code chunk below imports exam_data.csv into the R environment by using read_csv() function of readr package. readr is one of the tidyverse packages.\n\nexam_data &lt;- read_csv(\"data/Exam_data.csv\")\n\nThere are a total of seven attributes in the exam_data tibble data frame. Four of them are categorical data type and the other three are in continuous data type.\nTaking a look at the head of the exam_data below:\n\nhead(exam_data,10)\n\n# A tibble: 10 × 7\n   ID         CLASS GENDER RACE    ENGLISH MATHS SCIENCE\n   &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;\n 1 Student321 3I    Male   Malay        21     9      15\n 2 Student305 3I    Female Malay        24    22      16\n 3 Student289 3H    Male   Chinese      26    16      16\n 4 Student227 3F    Male   Chinese      27    77      31\n 5 Student318 3I    Male   Malay        27    11      25\n 6 Student306 3I    Female Malay        31    16      16\n 7 Student313 3I    Male   Chinese      31    21      25\n 8 Student316 3I    Male   Malay        31    18      27\n 9 Student312 3I    Male   Malay        33    19      15\n10 Student297 3H    Male   Indian       34    49      37\n\n\n\nthe categorical data types are: ID, CLASS, GENDER, RACE\nthe continuous data types are: ENGLISH, MATHS, SCIENCE"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#the-code",
+    "href": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#the-code",
+    "title": "Hands-on Exercise 2",
+    "section": "The code",
+    "text": "The code\n\nggplot(data=exam_data, \n       aes(x= MATHS, \n           y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, \n              size=0.5) +  \n  geom_label(aes(label = ID), \n             hjust = .5, \n             vjust = -.5) +\n  coord_cartesian(xlim=c(0,100),\n                  ylim=c(0,100)) +\n  ggtitle(\"English scores versus Maths scores for Primary 3\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#working-with-ggrepel",
+    "href": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#working-with-ggrepel",
+    "title": "Hands-on Exercise 2",
+    "section": "Working with ggrepel",
+    "text": "Working with ggrepel\n\nThe plotThe code\n\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data, \n       aes(x= MATHS, \n           y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, \n              size=0.5) +  \n  geom_label_repel(aes(label = ID),\n                   fontface = \"bold\") +\n  coord_cartesian(xlim=c(0,100),\n                  ylim=c(0,100)) +\n  ggtitle(\"English scores versus Maths scores for Primary 3\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#the-plot-3",
+    "href": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#the-plot-3",
+    "title": "Hands-on Exercise 2",
+    "section": "The plot",
+    "text": "The plot"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#the-code-3",
+    "href": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#the-code-3",
+    "title": "Hands-on Exercise 2",
+    "section": "The code",
+    "text": "The code\n\nggplot(data=exam_data,\n       aes(x=MATHS)) +\n  geom_histogram(bins=20,\n                 boundary=100,\n                 color=\"grey25\",\n                 fill=\"darkseagreen2\")+\n  ggtitle(\"Distribution of Maths scores\") +\n  theme_economist()\n\nIt also provides some extra geoms and scales for ‘ggplot2’. This website explains further.\n\nWorking with hrbrthemes package\nhrbrthemes package provides a base theme that focuses on typographic elements, including where various labels are placed as well as the fonts that are used."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#references",
+    "href": "Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html#references",
+    "title": "Hands-on Exercise 2",
+    "section": "References",
+    "text": "References\n\nPatchwork R package goes nerd viral\nggrepel\nggthemes\nhrbrthemes\nggplot tips: Arranging plots\nggplot2 Theme Elements Demonstration\nggplot2 Theme Elements Reference Sheet"
   }
 ]
