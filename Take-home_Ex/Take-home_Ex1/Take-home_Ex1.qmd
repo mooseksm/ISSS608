@@ -1,0 +1,113 @@
+---
+title: "Take-home Exercise 1: Creating data visualisation beyond default"
+date: "January 13, 2024"
+date-modified: "last-modified"
+toc: true
+execute:
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---
+
+# 1. Overview  
+
+## 1.1 Background: Setting the Scene
+
+[Organisation for Economic Co-operation and Development](https://www.oecd.org/) (OECD) education director Andreas Schleicher shared in a 2016 [BBC article](https://www.bbc.com/news/education-38212070) that:
+
+***“Singapore managed to achieve excellence without wide differences between children from wealthy and disadvantaged families.”***
+
+This sentiment echoes the Singapore Government's commitment in ensuring that ***"Every School a Good School"***, a slogan popularised by Mr Heng Swee Keat during his stint as Singapore’s Minister for Education from 2011 to 2015.
+
+The general public, however, strongly believe that disparities still exist, between elite schools and neighborhood schools, between students from families from different socioeconomic statuses, and between immigrants and non-immigrants.
+
+## 1.2 The Task
+
+The [2022 Programme for International Student Assessment (PISA) data](https://www.oecd.org/pisa/data/2022database/) was released on December 5, 2022. OECD runs the PISA global education survey every three years to assess education systems worldwide through testing 15 year old students in the subjects of mathematics, reading, and science.
+
+In this take-home exercise, I will utilise **Exploratory Data Analysis (EDA)** methods and [**ggplot2**](https://ggplot2.tidyverse.org/)functions to reveal:
+
+-   the distribution of Singapore students’ performance in mathematics, reading, and science, and
+
+-   the relationship between these performances with schools, gender and socioeconomic status of the students.
+
+## 1.3 About the data
+
+The [PISA 2022 database](https://www.oecd.org/pisa/data/2022database/) contains the full set of responses from individual students, school principals and parents. There are a total of five data files and their contents are as follows:
+
+-   Student questionnaire data file
+
+-   School questionnaire data file
+
+-   Teacher questionnaire data file
+
+-   Cognitive item data file
+
+-   Questionnaire timing data file
+
+These data files are in SAS and SPSS formats. For the purpose of this assignment, I will be using only the **Student questionnaire data file**.
+
+For further information on the PISA 2022 survey, please refer to the [PISA 2022 Technical Report](https://www.oecd.org/pisa/data/pisa2022technicalreport/).
+
+## 1.4 Designing Tool
+
+The data will be processed by using appropriate **tidyverse** family of packages and statistical graphics will be prepared using **ggplot2** and its extensions.
+
+# 2. Set-up
+
+## 2.1 Loading R packages
+
+In this take-home exercise, the following R packages will be used. They are:
+
+-   [tidyverse](https://www.tidyverse.org/); and
+-   [haven](https://haven.tidyverse.org/)
+
+The code chunk used is as follows:
+
+```{r}
+pacman::p_load(tidyverse, haven)
+```
+
+Writing code chunks in this way allows entire code to be run section by section, and will hence be easier to control. The use of the function [pacman::](https://www.geeksforgeeks.org/pacman-package-in-r/) is meant to launch/call the package before the syntax is written.
+
+## 2.2 Importing the PISA dataset
+
+The code chunk below uses [`read_sas()`](https://haven.tidyverse.org/reference/read_sas.html) of [haven](https://haven.tidyverse.org/) to import PISA data into R environment.
+
+```{r}
+#| eval: false
+stu_qqq <- 
+  read_sas("data/cy08msp_stu_qqq.sas7bdat")
+```
+
+### 2.2.1 Filtering data to obtain SG data
+
+As the intent is to study the performances of Singaporean students. we will filter the dataset by country code CNT == "SGP" for which SGP represents Singapore. The code chunk is as follows:
+
+```{r}
+#| eval: false
+stu_qqq_SG <- stu_qqq %>%
+  filter(CNT == "SGP")
+```
+
+### 2.2.2 Saving the filtered data as a new file
+
+To avoid rerunning the above steps every time we analyse the data or when loading the webpage, we will save the filtered SGP data as a new file and utilize this file for further analysis. The code chunk is as follows:
+
+```{r}
+#| eval: false
+write_rds(stu_qqq_SG,
+          "data/stu_qqq_SG.rds")
+```
+
+### 2.2.3 Calling the file to check if it has been saved correctly
+
+This step helps to ensure that the new file has been saved correctly - before running the code, clear objects from the Environment workspace and run the code chunk below to observe if the data "stu_qqq_SG" appears. 
+
+```{r}
+stu_qqq_SG <- 
+  read_rds("data/stu_qqq_SG.rds")
+```
+
+# 3. Data Wrangling
