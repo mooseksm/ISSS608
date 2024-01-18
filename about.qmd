@@ -2,8 +2,4 @@
 title: "About"
 ---
 
-About this site
-
-```{r}
-1 + 1
-```
+Hi there! My name is Si Min and this webpage documents my learning journey for ISSS608 Visual Analytics and Applications.
