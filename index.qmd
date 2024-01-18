@@ -2,13 +2,14 @@
 title: "Latest Updates"
 listing:
   id: latest-updates
+  fields: [image, date, title, reading-time]
   contents:
   - "/In-class_Ex/*/*.qmd"
   - "/Hands-on_Ex/*/*.qmd"
   - "/Take-home_Ex/*/*.qmd"
   type: grid
   sort:
-    - "date desc"
+    - "file-modified desc"
     - "title asc"
   max-items: 3
 ---

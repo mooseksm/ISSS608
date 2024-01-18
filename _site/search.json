@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "ISSS608",
     "section": "",
-    "text": "Welcome to Si Min’s ISSS608 Visual Analytics and Applications website.\nPlease find below the latest updates:\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 2\n\n\n\n\n\n\n\n\n\nJan 13, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nIn-class Exercise 1: Now You See It!\n\n\n\n\n\n\n\n\n\nJan 13, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nTake-home Exercise 1: Creating data visualisation beyond default\n\n\n\n\n\n\n\n\n\nJan 13, 2024\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Welcome to Si Min’s ISSS608 Visual Analytics and Applications website.\nPlease find below the latest updates:\n\n\n\n\n\n\n\n\n\n\n\n\nTake-home Exercise 1: Creating data visualisation beyond default\n\n\n3 min\n\n\n\nJan 13, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 2\n\n\n15 min\n\n\n\nJan 13, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nIn-class Exercise 1: Now You See It!\n\n\n2 min\n\n\n\nJan 13, 2024\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
@@ -122,29 +122,29 @@
     "objectID": "Take-home_Ex/Take-home_Ex1/Take-home_Ex1.html#background-setting-the-scene",
     "href": "Take-home_Ex/Take-home_Ex1/Take-home_Ex1.html#background-setting-the-scene",
     "title": "Take-home Exercise 1: Creating data visualisation beyond default",
-    "section": "",
-    "text": "Organisation for Economic Co-operation and Development (OECD) education director Andreas Schleicher shared in a 2016 BBC article that:\n“Singapore managed to achieve excellence without wide differences between children from wealthy and disadvantaged families.”\nThis sentiment echoes the Singapore Government’s commitment in ensuring that “Every School a Good School”, a slogan popularised by Mr Heng Swee Keat during his stint as Singapore’s Minister for Education from 2011 to 2015.\nThe general public, however, strongly believe that disparities still exist, between elite schools and neighborhood schools, between students from families from different socioeconomic statuses, and between immigrants and non-immigrants."
+    "section": "1.1 Background: Setting the Scene",
+    "text": "1.1 Background: Setting the Scene\nOrganisation for Economic Co-operation and Development (OECD) education director Andreas Schleicher shared in a 2016 BBC article that:\n“Singapore managed to achieve excellence without wide differences between children from wealthy and disadvantaged families.”\nThis sentiment echoes the Singapore Government’s commitment in ensuring that “Every School a Good School”, a slogan popularised by Mr Heng Swee Keat during his stint as Singapore’s Minister for Education from 2011 to 2015.\nThe general public, however, strongly believe that disparities still exist, between elite schools and neighborhood schools, between students from families from different socioeconomic statuses, and between immigrants and non-immigrants."
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex1/Take-home_Ex1.html#the-task",
     "href": "Take-home_Ex/Take-home_Ex1/Take-home_Ex1.html#the-task",
     "title": "Take-home Exercise 1: Creating data visualisation beyond default",
-    "section": "",
-    "text": "The 2022 Programme for International Student Assessment (PISA) data was released on December 5, 2022. OECD runs the PISA global education survey every three years to assess education systems worldwide through testing 15 year old students in the subjects of mathematics, reading, and science.\nIn this take-home exercise, I will utilise Exploratory Data Analysis (EDA) methods and ggplot2functions to reveal:\n\nthe distribution of Singapore students’ performance in mathematics, reading, and science, and\nthe relationship between these performances with schools, gender and socioeconomic status of the students."
+    "section": "1.2 The Task",
+    "text": "1.2 The Task\nThe 2022 Programme for International Student Assessment (PISA) data was released on December 5, 2022. OECD runs the PISA global education survey every three years to assess education systems worldwide through testing 15 year old students in the subjects of mathematics, reading, and science.\nIn this take-home exercise, I will utilise Exploratory Data Analysis (EDA) methods and ggplot2functions to reveal:\n\nthe distribution of Singapore students’ performance in mathematics, reading, and science, and\nthe relationship between these performances with schools, gender and socioeconomic status of the students."
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex1/Take-home_Ex1.html#about-the-data",
     "href": "Take-home_Ex/Take-home_Ex1/Take-home_Ex1.html#about-the-data",
     "title": "Take-home Exercise 1: Creating data visualisation beyond default",
-    "section": "",
-    "text": "The PISA 2022 database contains the full set of responses from individual students, school principals and parents. There are a total of five data files and their contents are as follows:\n\nStudent questionnaire data file\nSchool questionnaire data file\nTeacher questionnaire data file\nCognitive item data file\nQuestionnaire timing data file\n\nThese data files are in SAS and SPSS formats. For the purpose of this assignment, I will be using only the Student questionnaire data file.\nFor further information on the PISA 2022 survey, please refer to the PISA 2022 Technical Report."
+    "section": "1.3 About the data",
+    "text": "1.3 About the data\nThe PISA 2022 database contains the full set of responses from individual students, school principals and parents. There are a total of five data files and their contents are as follows:\n\nStudent questionnaire data file\nSchool questionnaire data file\nTeacher questionnaire data file\nCognitive item data file\nQuestionnaire timing data file\n\nThese data files are in SAS and SPSS formats. For the purpose of this assignment, I will be using only the Student questionnaire data file.\nFor further information on the PISA 2022 survey, please refer to the PISA 2022 Technical Report."
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex1/Take-home_Ex1.html#designing-tool",
     "href": "Take-home_Ex/Take-home_Ex1/Take-home_Ex1.html#designing-tool",
     "title": "Take-home Exercise 1: Creating data visualisation beyond default",
-    "section": "",
-    "text": "The data will be processed by using appropriate tidyverse family of packages and statistical graphics will be prepared using ggplot2 and its extensions."
+    "section": "1.4 Designing Tool",
+    "text": "1.4 Designing Tool\nThe data will be processed by using appropriate tidyverse family of packages and statistical graphics will be prepared using ggplot2 and its extensions."
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex1/Take-home_Ex1.html#loading-r-packages",

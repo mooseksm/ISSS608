@@ -10,7 +10,9 @@ execute:
 editor: visual
 ---
 
-# 1. Overview  
+![](data/WIP.png){fig-align="center" width="279"}
+
+# 1. Overview
 
 ## 1.1 Background: Setting the Scene
 
@@ -103,7 +105,7 @@ write_rds(stu_qqq_SG,
 
 ### 2.2.3 Calling the file to check if it has been saved correctly
 
-This step helps to ensure that the new file has been saved correctly - before running the code, clear objects from the Environment workspace and run the code chunk below to observe if the data "stu_qqq_SG" appears. 
+This step helps to ensure that the new file has been saved correctly - before running the code, clear objects from the Environment workspace and run the code chunk below to observe if the data "stu_qqq_SG" appears.
 
 ```{r}
 stu_qqq_SG <- 
