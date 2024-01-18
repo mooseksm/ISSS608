@@ -10,7 +10,7 @@ execute:
 editor: visual
 ---
 
-![](data/WIP.png){fig-align="center" width="279"}
+![](WIP.png){fig-align="center" width="329"}
 
 # 1. Overview
 
