@@ -17,6 +17,7 @@ listing:
 ---
 title: "ISSS608"
 ---
+
 Welcome to Si Min's **ISSS608 Visual Analytics and Applications** website.
 
 Please find below the latest updates:
