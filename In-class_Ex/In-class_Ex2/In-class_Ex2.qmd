@@ -1,0 +1,15 @@
+---
+title: "In-class Exercise 2"
+date: "January 20, 2024"
+date-modified: "last-modified"
+toc: true
+execute:
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---
+
+## Tableau Public
+
+Please refer to this link for In-class Ex 2: <https://public.tableau.com/app/profile/sm.k1347/viz/In-class_Ex2/MonthlySalesandProfitbyRegion2016-2019>
