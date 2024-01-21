@@ -246,7 +246,7 @@ The code chunk is as follows:
 stu_qqq_SG_clean$ST004D01T <- recode(stu_qqq_SG_clean$ST004D01T, "1" = "Female", "2" = "Male")
 ```
 
-## 4 Exploratory Data Analysis
+# 4 Exploratory Data Analysis
 
 ## 4.1 General distribution of students' performance in Math, Science and Reading
 

@@ -172,6 +172,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex1/In-class_Ex1.html" rel="" target="">
  <span class="dropdown-text">In-class Exercise 1</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex2/In-class_Ex2.html" rel="" target="">
+ <span class="dropdown-text">In-class Exercise 2</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -244,7 +248,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#converting-data-type-for-cntschid-and-cntstuid" id="toc-converting-data-type-for-cntschid-and-cntstuid" class="nav-link" data-scroll-target="#converting-data-type-for-cntschid-and-cntstuid">3.4 Converting data type for CNTSCHID and CNTSTUID</a></li>
   <li><a href="#binning-variable-escs" id="toc-binning-variable-escs" class="nav-link" data-scroll-target="#binning-variable-escs">3.5 Binning variable ESCS</a></li>
   <li><a href="#recoding-st004d01t-gender-variable" id="toc-recoding-st004d01t-gender-variable" class="nav-link" data-scroll-target="#recoding-st004d01t-gender-variable">3.6 Recoding ST004D01T (Gender) variable</a></li>
-  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">4 Exploratory Data Analysis</a></li>
+  </ul></li>
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">4 Exploratory Data Analysis</a>
+  <ul class="collapse">
   <li><a href="#general-distribution-of-students-performance-in-math-science-and-reading" id="toc-general-distribution-of-students-performance-in-math-science-and-reading" class="nav-link" data-scroll-target="#general-distribution-of-students-performance-in-math-science-and-reading">4.1 General distribution of students’ performance in Math, Science and Reading</a></li>
   <li><a href="#sec-4.2" id="toc-sec-4.2" class="nav-link" data-scroll-target="#sec-4.2">4.2 Distribution of students’ performance in Math, Science and Reading across school</a></li>
   <li><a href="#sec-4.3" id="toc-sec-4.3" class="nav-link" data-scroll-target="#sec-4.3">4.3 Distribution of students’ performance in Math, Science and Reading by gender</a></li>
@@ -5169,9 +5175,9 @@ Levels: Very Low Low Medium High</code></pre>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG_clean<span class="sc">$</span>ST004D01T <span class="ot">&lt;-</span> <span class="fu">recode</span>(stu_qqq_SG_clean<span class="sc">$</span>ST004D01T, <span class="st">"1"</span> <span class="ot">=</span> <span class="st">"Female"</span>, <span class="st">"2"</span> <span class="ot">=</span> <span class="st">"Male"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="exploratory-data-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="exploratory-data-analysis">4 Exploratory Data Analysis</h2>
 </section>
+<section id="exploratory-data-analysis" class="level1">
+<h1>4 Exploratory Data Analysis</h1>
 <section id="general-distribution-of-students-performance-in-math-science-and-reading" class="level2">
 <h2 class="anchored" data-anchor-id="general-distribution-of-students-performance-in-math-science-and-reading">4.1 General distribution of students’ performance in Math, Science and Reading</h2>
 <p>There are ten plausible values for Math, Reading and Science for each student. Using the <a href="https://www.rdocumentation.org/packages/intsvy/versions/2.8/topics/pisa.mean.pv">pisa.mean.pv</a> function from <a href="https://daniel-caro.com/r-intsvy">intsvy</a> package, we will generate the Mean and Standard Deviation of PV values from “PV1MATH” to “PV10MATH”, “PV1READ” to “PV10READ” and “PV1SCIE” to “PV10SCIE” for the population of students that took the PISA assessment.</p>
