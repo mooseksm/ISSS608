@@ -301,7 +301,8 @@ p1 <- ggplot(data=exam_data,
                  color="grey25",
                  fill="slategray2")+
   coord_cartesian(xlim=c(0,100))+
-  ggtitle("Distribution of Maths scores")
+  ggtitle("Distribution of Maths scores")+
+  theme(text = element_text(size = 10))
 p1
 ```
 
@@ -316,7 +317,8 @@ p1 <- ggplot(data=exam_data,
                  color="grey25",
                  fill="slategray2")+
   coord_cartesian(xlim=c(0,100))+
-  ggtitle("Distribution of Maths scores")
+  ggtitle("Distribution of Maths scores")+
+  theme(text = element_text(size = 10))
 ```
 :::
 
@@ -333,7 +335,8 @@ p2 <- ggplot(data=exam_data,
                  color="grey25",
                  fill="seashell")+
   coord_cartesian(xlim=c(0,100))+
-  ggtitle("Distribution of English scores")
+  ggtitle("Distribution of English scores")+
+  theme(text = element_text(size = 10))
 p2
 ```
 
@@ -341,14 +344,15 @@ p2
 
 ```{r}
 #| eval: false
-p1 >- ggplot(data=exam_data,
+p2 <- ggplot(data=exam_data,
              aes(x=ENGLISH))+
   geom_histogram(bins=20,
                  boundary=100,
                  color="grey25",
                  fill="seashell")+
   coord_cartesian(xlim=c(0,100))+
-  ggtitle("Distribution of English scores")
+  ggtitle("Distribution of English scores")+
+  theme(text = element_text(size = 10))
 ```
 :::
 
@@ -366,7 +370,8 @@ p3 <- ggplot(data=exam_data,
               size=0.5)+
   coord_cartesian(xlim=c(0,100),
                   ylim=c(0,100))+
-  ggtitle("English scores versus Maths scores for Primary 3")
+  ggtitle("English scores versus Maths scores for Primary 3")+
+  theme(text = element_text(size = 10))
 p3
 ```
 
@@ -382,7 +387,8 @@ p3 <- ggplot(data=exam_data,
               size=0.5)+
   coord_cartesian(xlim=c(0,100),
                   ylim=c(0,100))+
-  ggtitle("English scores versus Maths scores for Primary 3")
+  ggtitle("English scores versus Maths scores for Primary 3")+
+  theme(text = element_text(size = 10))
 ```
 :::
 
@@ -430,13 +436,13 @@ We are able to plot more complex composite figures by using the appropriate oper
 ::: panel-tabset
 ### The plot {.unlisted}
 
-```{r, echo=FALSE}
+```{r,fig.width=9, echo=FALSE}
 (p1/p2)|p3
 ```
 
 ### The code
 
-```{r}
+```{r,fig.width=9}
 #| eval: false
 (p1/p2)|p3
 ```
@@ -451,14 +457,14 @@ This website, [Plot Assembly](https://patchwork.data-imaginist.com/articles/guid
 ::: panel-tabset
 ### The plot {.unlisted}
 
-```{r, echo=FALSE}
+```{r,fig.width=9, echo=FALSE}
 ((p1/p2)|p3) +
   plot_annotation(tag_levels = 'I')
 ```
 
 ### The code
 
-```{r}
+```{r,fig.width=9}
 #| eval: false
 ((p1/p2)|p3) +
   plot_annotation(tag_levels = 'I')
@@ -499,14 +505,14 @@ The figure below is created using a combination of patchwork and theme_economist
 ::: panel-tabset
 ### The plot {.unlisted}
 
-```{r}
+```{r,fig.width=15}
 patchwork <- (p1/p2)|p3
 patchwork & theme_economist()
 ```
 
 ### The code
 
-```{r}
+```{r,fig.width=15}
 #| eval: false
 patchwork <- (p1/p2)|p3
 patchwork & theme_economist()
