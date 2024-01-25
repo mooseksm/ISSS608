@@ -1,0 +1,279 @@
+---
+title: "Take-home Exercise 2: DataVis Makeover"
+date: "January 23, 2024"
+date-modified: "last-modified"
+toc: true
+execute:
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---
+
+# 1. The Task
+
+In this take-home exercise, I have selected a peer's [Take-home Exercise 1](https://isss608-ay2023-24t2-ftj72.netlify.app/take-home_ex/take-home_ex01/take-home_ex01) and will improve on the original visualisation by:
+
+-   critiquing the submission in terms of clarity and aesthetics,
+
+-   providing a sketch for an alternative design using the data visualisation design principles and best practices learned in Lesson 1 and 2, and
+
+-   remaking the original design by using ggplot2, ggplot2 extensions and tidyverse packages.
+
+The dataset used is the Student Questionaire data file downloaded from [PISA 2022](https://www.oecd.org/pisa/data/2022database/), and processed by RStudio `tidyverse` family of packages and visualized by `ggplot2` and its extensions.
+
+# 2. The Set-up
+
+The set-up follows up the same steps carried out by the peer. This segment is kept brief as it is not the focus of the exercise.
+
+## 2.1 Loading R packages
+
+Before we begin, we will first load the necessary R packages, as what was carried out by the peer.
+
+Eight R packages - [tidyverse](https://www.tidyverse.org/), [haven](https://haven.tidyverse.org/), [ggplot2](https://ggplot2.tidyverse.org/), [patchwork](https://patchwork.data-imaginist.com/),[ggrepel](https://ggrepel.slowkow.com/),[ggthemes](https://ggplot2.tidyverse.org/reference/ggtheme.html),[hrbrthemes](https://www.rdocumentation.org/packages/hrbrthemes/versions/0.1.0),[dplyr](https://dplyr.tidyverse.org/) - were loaded using the following code chunk:
+
+```{r}
+pacman::p_load(tidyverse,haven,ggplot2,patchwork,ggrepel,ggthemes,hrbrthemes,dplyr)
+```
+
+## 2.2 Importing the data
+
+‘read_sas()’ of haven was used to import the PISA data into the R environment:
+
+```{r}
+#| eval: false
+stu_qqq <- read_sas("data/cy08msp_stu_qqq.sas7bdat")
+```
+
+The peer then filtered the data by limiting it to Singaporean students and removing columns with uniform values. The code chunk is as follows:
+
+```{r}
+#| eval: false
+stu_qqq_SG_filtered <- stu_qqq %>%
+  filter(CNT == "SGP") %>%
+  select_if(function(x) !all(x == x[1]))
+```
+
+The data was then exported as a new rds file and read for further analysis
+
+```{r}
+#| eval: false
+write_rds(stu_qqq_SG_filtered,
+          "data/stu_qqq_SG_filtered.rds")
+```
+
+```{r}
+stu_qqq_SG_filtered <- read_rds("data/stu_qqq_SG_filtered.rds")
+```
+
+An overview of the structure of the data is shown below
+
+::: {.callout-note collapse="true" icon="false" appearance="minimal"}
+## Structure of dataset
+
+```{r}
+str(stu_qqq_SG_filtered)
+```
+:::
+
+# 3. Data Preparation
+
+Data preparation steps taken by the peer are briefly indicated below.
+
+## 3.1 Mean Plausible Value (PV)
+
+The code chunk below obtains the mean of the ten Plausible Values (PV) provided for the subjects of Math, Reading and Science, as an estimate for the student’s performance in the respective subjects.
+
+```{r}
+stu_qqq_SG_filtered <- stu_qqq_SG_filtered %>%
+  mutate(
+    MATH_Score = rowMeans(select(., PV1MATH:PV10MATH), na.rm = TRUE),
+    READ_Score = rowMeans(select(., PV1READ:PV10READ), na.rm = TRUE),
+    SCIE_Score = rowMeans(select(., PV1SCIE:PV10SCIE), na.rm = TRUE)
+  )
+```
+
+## 3.2 Recoding Gender variable
+
+Gender is represented under the variable "ST004D01T" within the dataset, for which responses are written in the form of 1 (Female), and 2 (Male). The peer converted these numeric values to their respective text responses "Female" and "Male" respectively using the code chunk below:
+
+```{r}
+stu_qqq_SG_filtered <- stu_qqq_SG_filtered %>%
+  mutate(Gender = ifelse(ST004D01T == 1, "Female", "Male"))
+```
+
+## 3.3 Changing data type for school ID
+
+The peer also converted the variable "CNTSCHID" representing school ID from numeric to character data type using the following code chunk:
+
+```{r}
+stu_qqq_SG_filtered <- stu_qqq_SG_filtered %>%
+  mutate(CNTSCHID = as.character(CNTSCHID))
+```
+
+## 3.4 Checks for duplicate data
+
+The peer also carried out a check for duplicate data and determined that there were none.
+
+```{r}
+stu_qqq_SG_filtered[duplicated(stu_qqq_SG_filtered),]
+```
+
+# 4. Critique and Redesigning Take-home Exercise 1
+
+There were a total of four visualisations in the peer's Take-home exercise and my assessment of their clarity and aesthetics are as follows:
+
+## 4.1 Visualisation 1: PV scores of all students for each subject area
+
+### 4.1.1 Critique
+
+::: panel-tabset
+## Math {.unlisted}
+
+```{r,echo=FALSE}
+ggplot(data = stu_qqq_SG_filtered,
+       aes (x = 1, y = MATH_Score))+
+  geom_boxplot(notch=TRUE)+
+  stat_summary(geom = "point", fun.y= "mean", colour ="maroon", size=2)+
+  ggtitle("Math Scores")+
+  theme_hc()+
+  coord_cartesian(ylim = c(100, 900))+
+  scale_y_continuous(breaks = seq(100, 900, by = 100))+
+  theme(axis.text.x = element_blank(),axis.ticks.x = element_blank(),axis.title.x = element_blank(),axis.title.y = element_blank())
+```
+
+::: {.callout-note collapse="true" icon="false" appearance="minimal"}
+## The Code {.unlisted}
+
+```{r}
+#| eval: false
+ggplot(data = stu_qqq_SG_filtered,
+       aes (x = 1, y = MATH_Score))+
+  geom_boxplot(notch=TRUE)+
+  stat_summary(geom = "point", fun.y= "mean", colour ="maroon", size=2)+
+  ggtitle("Math Scores")+
+  theme_hc()+
+  coord_cartesian(ylim = c(100, 900))+
+  scale_y_continuous(breaks = seq(100, 900, by = 100))+
+  theme(axis.text.x = element_blank(),axis.ticks.x = element_blank(),axis.title.x = element_blank(),axis.title.y = element_blank())
+```
+:::
+
+## Reading {.unlisted}
+
+```{r,echo=FALSE}
+ggplot(data = stu_qqq_SG_filtered,
+       aes (x = 1, y = READ_Score))+
+  geom_boxplot(notch=TRUE)+
+  stat_summary(geom = "point", fun.y= "mean", colour ="maroon", size=2)+
+  ggtitle("Reading Scores")+
+  theme_hc()+
+  coord_cartesian(ylim = c(100, 900))+
+  scale_y_continuous(breaks = seq(100, 900, by = 100))+
+  theme(axis.text.x = element_blank(),axis.ticks.x = element_blank(),axis.title.x = element_blank(),axis.title.y = element_blank())
+```
+
+::: {.callout-note collapse="true" icon="false" appearance="minimal"}
+## The Code {.unlisted}
+
+```{r}
+#| eval: false
+ggplot(data = stu_qqq_SG_filtered,
+       aes (x = 1, y = READ_Score))+
+  geom_boxplot(notch=TRUE)+
+  stat_summary(geom = "point", fun.y= "mean", colour ="maroon", size=2)+
+  ggtitle("Reading Scores")+
+  theme_hc()+
+  coord_cartesian(ylim = c(100, 900))+
+  scale_y_continuous(breaks = seq(100, 900, by = 100))+
+  theme(axis.text.x = element_blank(),axis.ticks.x = element_blank(),axis.title.x = element_blank(),axis.title.y = element_blank())
+```
+:::
+
+## Science {.unlisted}
+
+```{r,echo=FALSE}
+ggplot(data = stu_qqq_SG_filtered,
+       aes (x = 1, y = SCIE_Score))+
+  geom_boxplot(notch=TRUE)+
+  stat_summary(geom = "point", fun.y= "mean", colour ="maroon", size=2)+
+  ggtitle("Science Scores")+
+  theme_hc()+
+  coord_cartesian(ylim = c(100, 900))+
+  scale_y_continuous(breaks = seq(100, 900, by = 100))+
+  theme(axis.text.x = element_blank(),axis.ticks.x = element_blank(),axis.title.x = element_blank(),axis.title.y = element_blank())
+```
+
+::: {.callout-note collapse="true" icon="false" appearance="minimal"}
+## The Code {.unlisted}
+
+```{r}
+#| eval: false
+ggplot(data = stu_qqq_SG_filtered,
+       aes (x = 1, y = SCIE_Score))+
+  geom_boxplot(notch=TRUE)+
+  stat_summary(geom = "point", fun.y= "mean", colour ="maroon", size=2)+
+  ggtitle("Science Scores")+
+  theme_hc()+
+  coord_cartesian(ylim = c(100, 900))+
+  scale_y_continuous(breaks = seq(100, 900, by = 100))+
+  theme(axis.text.x = element_blank(),axis.ticks.x = element_blank(),axis.title.x = element_blank(),axis.title.y = element_blank())
+```
+:::
+:::
+
++-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Positives                                                                                                             | Negatives                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
++=======================================================================================================================+=============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================+
+| -   The theme used is appropriate as the graph is visually clean and neat.                                            | -   The title of the chart is too generic, stating just "Math Score", "Reading Score" and "Science Score" without indicating that these are average scores of students. A reader would have to further read the explanation accompanying the visualisation to determine the level of granularity of the data i.e. to check if the visualisation represented scores at the student level or at a more general school level.                                                                                  |
+|                                                                                                                       |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| -   The mean value is represented as a maroon dot in the boxplot which provides an additional data point for readers. | -   The y-axis representing PV scores is unlabelled as the code includes "axis.title.y = element_blank()".                                                                                                                                                                                                                                                                                                                                                                                                  |
+|                                                                                                                       |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|                                                                                                                       | -   Based on the [Code Book](https://webfs.oecd.org/pisa2022/CY08MSP_CODEBOOK_5thDecember23.xlsx) provided by OECD, PV scores can range from 0 to 1000 however the y-axis ranges from 100 to 900 which is a misrepresentation.                                                                                                                                                                                                                                                                              |
+|                                                                                                                       |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|                                                                                                                       | -   Notches in notched boxplots represent confidence intervals around medians, and help readers to visually assess whether medians of distributions differ. If the notched areas do not overlap across boxplots, the medians are different from one another. However, in this case, the plots are too wide and flat, making it difficult to observe the notch. Further, the notch does not serve its purpose for comparison as the plots for Math, Reading and Science are separately indicated in tabsets. |
++-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+### 4.2 Sketch of alternative design
+
+-   rename title, add in y-axis label, change the y-axis scale
+
+-   arrows pointing to sides of boxplot \>\> slim down and lengthen our boxplot
+
+-   to add in 2 other diagrams side-by-side via patchwork
+
+### 4.3 Remaking the design
+
+```{r,fig.align='default'}
+p3 <- ggplot(data = stu_qqq_SG_filtered,
+       aes(y = SCIE_Score)) +
+  geom_boxplot(width=0.05)+
+  stat_boxplot(geom = "errorbar", width = 0.01) +
+  stat_summary(aes(x = 0),
+               geom = "point",       
+               fun.y = "mean",         
+               colour = "maroon", 
+               size = 1) +
+  scale_y_continuous(limits = c(0,1000),breaks = seq(0,1000,by=100)) +
+  ggtitle("Science Scores")+
+  theme_hc()+
+  theme(aspect.ratio = 2)
+p4 <- ggplot(data = stu_qqq_SG_filtered,
+       aes(y = MATH_Score)) +
+  geom_boxplot(width=0.05)+
+  stat_boxplot(geom = "errorbar", width = 0.01) +
+  stat_summary(aes(x = 0),
+               geom = "point",       
+               fun.y = "mean",         
+               colour = "maroon", 
+               size = 1) +
+  scale_y_continuous(limits = c(0,1000),breaks = seq(0,1000,by=100)) +
+  ggtitle("Math Scores")+
+  theme_hc()+
+  theme(aspect.ratio = 2)
+p3|p4
+```
+
+# 6. References
+
+-   [Notched box plots](https://help.xlstat.com/6589-notched-box-plots-tutorial-excel#:~:text=Interpreting%20notched%20box%20plots&text=The%20red%20crosses%20correspond%20to,are%20different%20from%20one%20another.)
