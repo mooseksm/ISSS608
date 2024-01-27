@@ -9,6 +9,7 @@ execute:
   warning: false
 editor: visual
 ---
+
 # 1. Overview
 
 ## 1.1 Background: Setting the Scene
@@ -258,7 +259,7 @@ We will first create a data folder path to save any data files we generate:
 data_folder_path <- file.path(getwd(), "data")
 ```
 
-::: {.callout-note}
+::: callout-note
 Please note that the author has indicated export=FALSE for the code chunks below for the purpose of uploading onto github. Locally, the author utilised export=TRUE to generate data files for reference.
 :::
 
@@ -808,6 +809,7 @@ The code chunks are as follows:
 
 ::: panel-tabset
 ## Math {.unlisted}
+
 ```{r,fig.width=20,fig.height=250,echo=FALSE}
 p14 <- ggplot(stu_qqq_SG_clean,
        aes(x = pvmathmean_col, 
@@ -824,6 +826,7 @@ p14 <- ggplot(stu_qqq_SG_clean,
   ggtitle("Distribution of Math Scores of students for each school")
 p14
 ```
+
 ## The Code {.unlisted}
 
 ```{r}
@@ -869,6 +872,7 @@ p15
 ```
 
 ## The Code {.unlisted}
+
 ```{r,fig.width=20,fig.height=250}
 #| eval: false
 p15 <- ggplot(stu_qqq_SG_clean,
@@ -894,6 +898,7 @@ p15 <- ggplot(stu_qqq_SG_clean,
 
 ::: panel-tabset
 ## Science {.unlisted}
+
 ```{r,fig.width=20,fig.height=250,echo=FALSE}
 p16 <- ggplot(stu_qqq_SG_clean,
        aes(x = pvsciemean_col, 
@@ -911,6 +916,7 @@ p16 <- ggplot(stu_qqq_SG_clean,
   ggtitle("Distribution of Science Scores of students for each school")
 p16
 ```
+
 ## The Code {.unlisted}
 
 ```{r,fig.width=20,fig.height=250}
@@ -977,6 +983,7 @@ p17
 ```
 
 ## The Code {.unlisted}
+
 ```{r}
 #|eval=FALSE
 p17 <- ggplot(stu_qqq_SG_clean, 
@@ -1006,6 +1013,7 @@ p17 <- ggplot(stu_qqq_SG_clean,
 
 ::: panel-tabset
 ## Reading {.unlisted}
+
 ```{r,echo=FALSE}
 p18 <- ggplot(stu_qqq_SG_clean, 
        aes(x = ST004D01T, 
@@ -1063,6 +1071,7 @@ p18 <- ggplot(stu_qqq_SG_clean,
 
 ::: panel-tabset
 ## Science {.unlisted}
+
 ```{r,echo=FALSE}
 p19 <- ggplot(stu_qqq_SG_clean, 
        aes(x = ST004D01T, 
@@ -1090,6 +1099,7 @@ p19
 ```
 
 ## The Code {.unlisted}
+
 ```{r}
 #|eval=FALSE
 p19 <- ggplot(stu_qqq_SG_clean, 
