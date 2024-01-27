@@ -1035,6 +1035,8 @@ We will start by working off the original visualisation and taking the following
 
 -   adding vlines to the plot to indicate the value of Singapore's ESCS index at the 0, 25th, 50th, 75th and 100th percentile. This is with reference to the notes indicated in the [PISA 2022 Results (Volume 1)](https://www.oecd-ilibrary.org/sites/53f23881-en/index.html?itemId=/content/publication/53f23881-en#:~:text=Singapore%20scored%20significantly%20higher%20than,countries%20and%20economies%20in%20mathematics.) where it was stated that ESCS refers to the PISA index of economic, social and cultural status and that a socio-economically advantaged (disadvantaged) student is a student in the **top (bottom) quarter of ESCS in his or her own country/economy**. It would hence be useful to indicate the ESCS index values of Singapore by percentiles.
 
+-   add r2 value to better understand how the variation in ESCS index affects the variation of scores
+
 -   having a side-by-side comparison of all 3 subjects via patchwork
 
 ### 4.4.3 Remaking the design
@@ -1161,13 +1163,13 @@ We then combine the 3 plots into one visualisation using the following code:
   plot_annotation(tag_levels = "I")
 ```
 
-From the visualisation above, we can observe the scores are generally positively correlated with the ESCS index. However, based on the R2 values (which were approximately \~0.2), the variation in ESCS index weakly explains the variation in the scores.
+From the visualisation above, we can observe the scores are generally positively correlated with the ESCS index. However, based on the R2 values (which are approximately \~0.2), the variation in ESCS index weakly explains the variation in the scores.
 
 Further, it is observed that there are a range of scores within the different quantiles of ESCS index i.e. within the 25th percentile, scores vary between a large range, \~300 to \~800 for Math and Science and \~200 to \~700 for Reading. It would hence be better to explore how the scores would vary across the different levels of ESCS index. To do this, we will explore another form of visualisation in the next section.
 
 ### 4.4.4 Supplementary visualisation for performance across different ESCS index values
 
-Given the definition of socio-economically disadvantaged and advantaged which refer to the bottom and top quarter of ESCS in his or her own country/economy, we could bin the ESCS index values.
+Given that socio-economically disadvantaged and advantaged refer to the bottom and top quarter of ESCS in his or her own country/economy, we could bin the ESCS index values for exploratory data analysis.
 
 This would allow us to study the distribution of scores within the ESCS quantiles and additionally counter the issue of having a mass of data points on the plot which might be aesthetically unpleasing, which the earlier remake was unable to tackle.
 
