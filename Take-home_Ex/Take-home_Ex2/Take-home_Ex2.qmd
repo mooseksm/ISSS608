@@ -1308,7 +1308,19 @@ This visualisation not only indicates the general positive relationship scores h
 
 Overall, this remake does counter the negative points of the original visualisation, it is more aesthetically pleasing without the clutter of the data points and clearer and more granular in indicating the distribution of performance by ESCS index.
 
-# 5. References
+# 5. Key Learning Points
+
+When carrying out visualisation, to always keep in mind:
+
+-   [**WHY**]{.underline} you are doing this visualisation
+
+-   [**WHAT**]{.underline} is it that you want to convey
+
+-   [**WHO**]{.underline} is it that you are conveying to and to always **think from the reader's perspective**
+
+-   The above will eventually provide more clarity on [**HOW**]{.underline} to carry out the visualisation
+
+# 6. References
 
 -   [PISA 2022 Database](https://www.oecd.org/pisa/data/2022database/)
 
