@@ -308,7 +308,7 @@ plot(check_h)
 
 We can also perform the complete by using [*check_model()*](https://easystats.github.io/performance/reference/check_model.html).
 
-```{r}
+```{r,fig.width=10,fig.height=10}
 check_model(model1)
 ```
 
