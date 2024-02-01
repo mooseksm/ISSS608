@@ -121,5 +121,75 @@ ggbetweenstats(
   title="Distribution of Maths Scores by Gender"
 )
 ```
+
 Default information: - statistical details - Bayes Factor - sample sizes - distribution summary
 
+### 4.3.7 Oneway ANOVA test: *ggbetweenstats()* method
+
+In the code chunk below, [*ggbetweenstats()*](https://indrajeetpatil.github.io/ggstatsplot/reference/ggbetweenstats.html) is used to build a visual for One-way ANOVA test on English score by race.
+
+```{r}
+#| eval: false
+ggbetweenstats(
+  data = exam,
+  x = RACE, 
+  y = ENGLISH,
+  type = "p",
+  mean.ci = TRUE, 
+  pairwise.comparisons = TRUE, 
+  pairwise.display = "s",
+  p.adjust.method = "fdr",
+  messages = FALSE,
+  title="Distribution of English Scores by Race"
+)
+```
+
+```{r, echo=FALSE}
+ggbetweenstats(
+  data = exam,
+  x = RACE, 
+  y = ENGLISH,
+  type = "p",
+  mean.ci = TRUE, 
+  pairwise.comparisons = TRUE, 
+  pairwise.display = "s",
+  p.adjust.method = "fdr",
+  messages = FALSE,
+  title="Distribution of English Scores by Race"
+)
+```
+
+-   “ns” → only non-significant
+
+-   “s” → only significant
+
+-   “all” → everything
+
+### 4.3.7.1 ggbetweenstats - Summary of tests
+
+<To add in>
+
+### 4.3.8 Significant Test of Correlation: *ggscatterstats()*
+
+In the code chunk below, [*ggscatterstats()*](https://indrajeetpatil.github.io/ggstatsplot/reference/ggscatterstats.html) is used to build a visual for Significant Test of Correlation between Maths scores and English scores.
+
+```{r}
+#| eval: false
+ggscatterstats(
+  data = exam,
+  x = MATHS,
+  y = ENGLISH,
+  marginal = FALSE,
+  title="Distribution of English scores vs Math scores"
+  )
+```
+
+```{r,echo=FALSE}
+ggscatterstats(
+  data = exam,
+  x = MATHS,
+  y = ENGLISH,
+  marginal = FALSE,
+  title="Distribution of English scores vs Math scores"
+  )
+```
