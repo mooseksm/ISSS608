@@ -33,8 +33,8 @@ In this hands-on exercise, I will be using:
 ## Notes from Prof Kam
 Use of welch rather than student because in reality, hard to make sure samples from same population.
 
-ggscatterstats - similar to marginal boxplot exercise we did for Tableau
-ggcorrmat - cross: statistical significance, colour: indicate correlation
+-   ggscatterstats - similar to marginal boxplot exercise we did for Tableau
+-   ggcorrmat - cross: statistical significance, colour: indicate correlation
 :::
 
 ## 4.3 Getting Started
