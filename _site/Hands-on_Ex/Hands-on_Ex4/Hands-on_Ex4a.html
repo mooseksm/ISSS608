@@ -291,7 +291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">February 1, 2024</p>
+      <p class="date-modified">February 3, 2024</p>
     </div>
   </div>
     
@@ -323,6 +323,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(ggdist, ggridges, ggthemes,</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               colorspace, tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Notes from Prof Kam
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Advise not to have anything running in background when installing packages.</p>
+</div>
 </div>
 </section>
 <section id="data-import" class="level3">
@@ -362,10 +375,36 @@ Note
 </ul>
 </div>
 </div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Notes from Prof Kam
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ridgeline plot allow distribution by category - need to have at least 2 variables (1 continuous, 1 categorical)</p>
+</div>
+</div>
 <section id="plotting-ridgeline-graph-ggridges-method" class="level3">
 <h3 class="anchored" data-anchor-id="plotting-ridgeline-graph-ggridges-method">4.3.1 Plotting ridgeline graph: ggridges method</h3>
 <p>There are several ways to plot ridgeline plot with R. In this section, we will plot ridgeline plot by using the <a href="https://wilkelab.org/ggridges/">ggridges</a> package.</p>
 <p>ggridges package provides two main geom to plot gridgeline plots, they are: <a href="https://wilkelab.org/ggridges/reference/geom_ridgeline.html"><code>geom_ridgeline()</code></a> and <a href="https://wilkelab.org/ggridges/reference/geom_density_ridges.html"><code>geom_density_ridges()</code></a>. The former takes height values directly to draw the ridgelines, and the latter first estimates data densities and draws those using ridgelines.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Notes from Prof Kam
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ridgeline is an absolute line plot, can see exact value when impose interactivity. However for density ridges, is the interpolated value/smoothing value, not exact value - best not to impose interactivity. Neither is better than the other, is more of how you want to present data to user.</p>
+</div>
+</div>
 <p>The ridgeline plot below is plotted by using <code>geom_density_ridges()</code>.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">The code chunk</a></li></ul>
@@ -406,6 +445,21 @@ Note
 </div>
 </div>
 </div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Notes from Prof Kam
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ridgeline plot will always need “height” values to be indicated - density ridges does not require this as the height is the interpolated value.</p>
+<p>Allow for observations as such: - Upper and lower limit of 3B is similar/only slightly shorter than 3A which indicate that poorer students in 3A not very much different than students in 3B. However, the better students in 3A fare better than those in 3B. The variation of student performance is 3B is lesser. - 3H has 2 humps - one group of students that perform well, and another group that fare poorer.</p>
+<p>These distributions allow more information to be put in i.e.&nbsp;variations in colour below.</p>
+</div>
+</div>
 </section>
 <section id="varying-fill-colors-along-the-x-axis" class="level3">
 <h3 class="anchored" data-anchor-id="varying-fill-colors-along-the-x-axis">4.3.2 Varying fill colors along the x axis</h3>
@@ -433,7 +487,7 @@ Note
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">scale=</span><span class="dv">3</span>,</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">rel_min_height=</span><span class="fl">0.01</span>)<span class="sc">+</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name=</span><span class="st">"Temp. [F]"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name=</span><span class="st">"Score"</span>,</span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">option=</span><span class="st">"C"</span>)<span class="sc">+</span></span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">name=</span><span class="st">"English grades"</span>,</span>
@@ -494,6 +548,19 @@ Important
 </div>
 <div class="callout-body-container callout-body">
 <p>It is important include the argument&nbsp;<code>calc_ecdf = TRUE</code>&nbsp;in&nbsp;<code>stat_density_ridges()</code>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Notes from Prof Kam
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Observations from probability: - Top 10% students in 3A perform better than those in 3B. - Bottom 10% students in 3A and 3B perform similarly.</p>
 </div>
 </div>
 </section>
@@ -678,6 +745,19 @@ Important
 </div>
 </div>
 </div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Notes from Prof Kam
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ridgeline plot alone don’t allow you to see sample size, addition of dot plots allow you to visualise how many samples you have i.e.&nbsp;Chinese has more samples than Others. If all categories have similar sample size, can just use ridgeline plots. Prof does not advise using the <a href="https://mjskay.github.io/ggdist/articles/slabinterval.html">slab + dots interval</a> which is similar to a dot plot visualisation as the purpose of visualisation is to show the distribution, not asking to count samples.</p>
+</div>
+</div>
 </section>
 <section id="finishing-touch" class="level3">
 <h3 class="anchored" data-anchor-id="finishing-touch"><strong>4.4.4 Finishing touch</strong></h3>
@@ -716,6 +796,19 @@ Important
 <span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Distribution of English Scores by Race"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Notes from Prof Kam
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Suggest to go back and explore whether can wrap the above in ggplotly or ggiraph to impose interactivity.</p>
 </div>
 </div>
 

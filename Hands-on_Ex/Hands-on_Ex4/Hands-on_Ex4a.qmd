@@ -36,6 +36,11 @@ pacman::p_load(ggdist, ggridges, ggthemes,
                colorspace, tidyverse)
 ```
 
+::: {.callout-note}
+## Notes from Prof Kam
+Advise not to have anything running in background when installing packages.
+:::
+
 ### 4.2.2 Data import
 
 For the purpose of this exercise, *Exam_data.csv* will be used:
@@ -78,11 +83,23 @@ ggplot(exam,
 -   It works well when there is a clear pattern in the result, i.e. if there is an obvious ranking in groups. Otherwise, the groups will tend to overlap each other, leading to a messy plot not providing any insight.
 :::
 
+::: {.callout-note}
+## Notes from Prof Kam
+Ridgeline plot allow distribution by category - need  to have at least 2 variables (1 continuous, 1 categorical)
+:::
+
 ### 4.3.1 Plotting ridgeline graph: ggridges method
 
 There are several ways to plot ridgeline plot with R. In this section, we will plot ridgeline plot by using the [ggridges](https://wilkelab.org/ggridges/) package.
 
 ggridges package provides two main geom to plot gridgeline plots, they are: [`geom_ridgeline()`](https://wilkelab.org/ggridges/reference/geom_ridgeline.html) and [`geom_density_ridges()`](https://wilkelab.org/ggridges/reference/geom_density_ridges.html). The former takes height values directly to draw the ridgelines, and the latter first estimates data densities and draws those using ridgelines.
+
+::: {.callout-note}
+## Notes from Prof Kam
+Ridgeline is an absolute line plot, can see exact value when impose interactivity.
+However for density ridges, is the interpolated value/smoothing value, not exact value - best not to impose interactivity.
+Neither is better than the other, is more of how you want to present data to user.
+:::
 
 The ridgeline plot below is plotted by using `geom_density_ridges()`.
 
@@ -137,6 +154,18 @@ ggplot(exam,
 ```
 :::
 
+::: {.callout-note}
+## Notes from Prof Kam
+Ridgeline plot will always need "height" values to be indicated - density ridges does not require this as the height is the interpolated value.
+
+Allow for observations as such: 
+-   Upper and lower limit of 3B is similar/only slightly shorter than 3A which indicate that poorer students in 3A not very much different than students in 3B. However, the better students in 3A fare better than those in 3B. The variation of student performance is 3B is lesser.
+-   3H has 2 humps - one group of students that perform well, and another group that fare poorer.
+
+These distributions allow more information to be put in i.e. variations in colour below.
+:::
+
+
 ### 4.3.2 Varying fill colors along the x axis
 
 Sometimes we would like to have the area under a ridgeline plot not filled with a single solid color but rather with colors that vary in some form along the x axis. This effect can be achieved by using either [`geom_ridgeline_gradient()`](https://wilkelab.org/ggridges/reference/geom_ridgeline_gradient.html) or [`geom_density_ridges_gradient()`](https://wilkelab.org/ggridges/reference/geom_ridgeline_gradient.html). Both geoms work just like `geom_ridgeline()` and `geom_density_ridges()`, except that they allow for varying fill colors. However, they do not allow for alpha transparency in the fill. For technical reasons, we can have either changing fill colors or transparency but not both.
@@ -152,7 +181,7 @@ ggplot(exam,
   geom_density_ridges_gradient(
     scale=3,
     rel_min_height=0.01)+
-  scale_fill_viridis_c(name="Temp. [F]",
+  scale_fill_viridis_c(name="Score",
                        option="C")+
   scale_x_continuous(
     name="English grades",
@@ -175,7 +204,7 @@ ggplot(exam,
   geom_density_ridges_gradient(
     scale=3,
     rel_min_height=0.01)+
-  scale_fill_viridis_c(name="Temp. [F]",
+  scale_fill_viridis_c(name="Score",
                        option="C")+
   scale_x_continuous(
     name="English grades",
@@ -231,6 +260,13 @@ ggplot(exam,
 
 ::: callout-important
 It is important include the argument `calc_ecdf = TRUE` in `stat_density_ridges()`.
+:::
+
+::: {.callout-note}
+## Notes from Prof Kam
+Observations from probability:
+-   Top 10% students in 3A perform better than those in 3B.
+-   Bottom 10% students in 3A and 3B perform similarly.
 :::
 
 ### 4.3.4 Ridgeline plots with quantile lines
@@ -442,6 +478,11 @@ ggplot(exam,
 ```
 :::
 
+::: {.callout-note}
+## Notes from Prof Kam
+Ridgeline plot alone don't allow you to see sample size, addition of dot plots allow you to visualise how many samples you have i.e. Chinese has more samples than Others. If all categories have similar sample size, can just use ridgeline plots. Prof does not advise using the [slab + dots interval](https://mjskay.github.io/ggdist/articles/slabinterval.html) which is similar to a dot plot visualisation as the purpose of visualisation is to show the distribution, not asking to count samples.
+:::
+
 ### **4.4.4 Finishing touch**
 
 Lastly, [`coord_flip()`](https://ggplot2.tidyverse.org/reference/coord_flip.html) of ggplot2 package will be used to flip the raincloud chart horizontally to give it the raincloud appearance. At the same time, `theme_economist()` of ggthemes package is used to give the raincloud chart a professional publishing standard look.
@@ -490,3 +531,9 @@ ggplot(exam,
   ggtitle("Distribution of English Scores by Race")
 ```
 :::
+
+::: {.callout-note}
+## Notes from Prof Kam
+Suggest to go back and explore whether can wrap the above in ggplotly or ggiraph to impose interactivity.
+:::
+

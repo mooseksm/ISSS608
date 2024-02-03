@@ -28,6 +28,14 @@ In this hands-on exercise, I will be using:
     -   To provide alternative statistical inference methods by default.
 
     -   To follow best practices for statistical reporting. For all statistical tests reported in the plots, the default template abides by the [APA](https://my.ilstu.edu/~jhkahn/apastats.html) gold standard for statistical reporting.
+    
+::: {.callout-note}
+## Notes from Prof Kam
+Use of welch rather than student because in reality, hard to make sure samples from same population.
+
+ggscatterstats - similar to marginal boxplot exercise we did for Tableau
+ggcorrmat - cross: statistical significance, colour: indicate correlation
+:::
 
 ## 4.3 Getting Started
 

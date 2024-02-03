@@ -96,6 +96,7 @@ girafe(
 
 ::: callout-note
 ## **Updates - notes from Prof Kam**
+
 plotlyr and girafe are wrappers. always need to save plot as an object first before utilising plotlyr and girafe. with reference to girafe, svg allows retention of graphical resolution, avoids picture from becoming pixelated when zoomed in. it is also possible to make the scale interactive, just have to use the interactive version rather than "scale_y_continuous".
 :::
 
@@ -151,6 +152,7 @@ girafe(
 
 ::: callout-note
 ## **Updates - notes from Prof Kam**
+
 For the first segment of the code above, note to always indicate the dataset used before pasting the customised labels i.e. "exam_data" before "ID" and have the "Class" label in a separate line. Note the style of coding, cleaner than having the detailed code chunk by using the first segment of code above.
 :::
 
@@ -245,6 +247,7 @@ girafe(ggobj = gg_point,
 
 ::: callout-note
 ## **Updates - notes from Prof Kam**
+
 To note that it is not correct to use a bar chart to represent average value but for this bar chart, there is an error bar at the top - indicating the +/- of the average math scores of students by race - further, the tooltip information with hover effect helps to make clear the data we are looking at.
 
 For the first segment of code, we use function as need to calculate mean and sem (standard deviation) values on the fly, not static like ID and class in the earlier plots.
@@ -279,7 +282,8 @@ girafe(
 As can be seen from the plot, elements associated with a data_id i.e. CLASS will be highlighted (in orange above as the default value for hover_css=*"fill:orange"*) during a mouse over.
 
 ::: callout-note
-## **Updates - notes from Prof Kam** 
+## **Updates - notes from Prof Kam**
+
 Advise to hover over with tooltips data to indicate what the highlighted dots are when hovered. In this case, this is adding tooltips. This is carried out by adding the first segment in the code above and indicating it within aes in the p object, or more simply add "tooltip=ID".
 :::
 
@@ -432,8 +436,9 @@ girafe(code = print(p1 + p2),
 ```
 
 ::: callout-note
-## **Updates - notes from Prof Kam** 
-Advised to also indicate tooltip to reflect class and ID of student - have since added (refer to first segment of code above).*
+## **Updates - notes from Prof Kam**
+
+Advised to also indicate tooltip to reflect class and ID of student - have since added (refer to first segment of code above).\*
 
 Note that girafe differs from patchwork in the fact that we need to include a print function. code in girafe is a container. the code also introduces changes in css which take charges of colour, thickness, opacity etc.
 :::
@@ -581,7 +586,7 @@ The only extra line needed is *ggplotly()*.
 :::
 
 ::: callout-note
-## **Updates - notes from Prof Kam** 
+## **Updates - notes from Prof Kam**
 
 In ggplotly, the interactivity of the legend is filtering as compared to Tableau which is only a matter of highlighting (other points fade out):
 
@@ -635,6 +640,7 @@ We just need to click a data point on one of the scatterplots to see the corresp
 
 ::: callout-note
 ## **Updates - notes from Prof Kam**
+
 Note that ggplot data is at d object rather than exam_data directly, otherwise unable to carry out highlighting.
 
 Note that have to use **subplot** to combine the 2 ggplotly objects together instead of crosstalk feature i.e. print(p1 + p2) under [section 3.6.7](#sect367).
@@ -743,8 +749,8 @@ Things to learn from the code chunk:
     **Warning:** This will bring in all of Bootstrap!.
 :::
 
-::: {.callout-note}
-##**[Updates - notes from Prof Kam]**
+::: callout-note
+##**Updates - notes from Prof Kam**
 Plotlyr offers more features than Tableau i.e. use of lasso to select points in the plot which will correspondingly be featured in the table.
 
 gg object essentially drawing out highlighted points into an object and then crosstalk is used to create a datatable from the points.
