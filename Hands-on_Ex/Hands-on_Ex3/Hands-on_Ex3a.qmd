@@ -151,7 +151,7 @@ girafe(
 
 ::: callout-note
 ## **Updates - notes from Prof Kam**
-For the first segment of the code above, note to always indicate the dataset used before pasting the customised labels i.e. exam_data$ID, "\n" is to have the "Class" label in a separate line. Note the style of coding, cleaner to have "tooltip=exam_data$tooltip" instead of having the detailed code chunk (first segment of code above) within.
+For the first segment of the code above, note to always indicate the dataset used before pasting the customised labels i.e. "exam_data" before "ID" and have the "Class" label in a separate line. Note the style of coding, cleaner than having the detailed code chunk by using the first segment of code above.
 :::
 
 # 3.6 Interactivity
@@ -280,7 +280,7 @@ As can be seen from the plot, elements associated with a data_id i.e. CLASS will
 
 ::: callout-note
 ## **Updates - notes from Prof Kam** 
-Advise to hover over with tooltips data to indicate what the highlighted dots are when hovered. In this case, this is adding tooltips. This is carried out by adding the first segment in the code above i.e. exam_data$tooltip <- c(paste0("Class = ",exam_data$CLASS)) and indicating "tooltip=exam_data\$tooltip" within aes in the p object, or more simply add "tooltip=ID".
+Advise to hover over with tooltips data to indicate what the highlighted dots are when hovered. In this case, this is adding tooltips. This is carried out by adding the first segment in the code above and indicating it within aes in the p object, or more simply add "tooltip=ID".
 :::
 
 ### 3.6.4 Styling hover effect
@@ -744,6 +744,7 @@ Things to learn from the code chunk:
 :::
 
 ::: {.callout-note}
+##**[Updates - notes from Prof Kam]**
 Plotlyr offers more features than Tableau i.e. use of lasso to select points in the plot which will correspondingly be featured in the table.
 
 gg object essentially drawing out highlighted points into an object and then crosstalk is used to create a datatable from the points.
