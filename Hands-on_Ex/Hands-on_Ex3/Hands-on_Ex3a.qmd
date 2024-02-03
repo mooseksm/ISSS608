@@ -94,6 +94,11 @@ girafe(
   )
 ```
 
+::: callout-note
+## **Updates - notes from Prof Kam**
+plotlyr and girafe are wrappers. always need to save plot as an object first before utilising plotlyr and girafe. with reference to girafe, svg allows retention of graphical resolution, avoids picture from becoming pixelated when zoomed in. it is also possible to make the scale interactive, just have to use the interactive version rather than "scale_y_continuous".
+:::
+
 # 3.5 Interactivity
 
 By hovering the mouse pointer on an data point of interest, the student’s ID will be displayed:
@@ -143,6 +148,11 @@ girafe(
   width_svg = 8,
   height_svg = 8*0.618)
 ```
+
+::: callout-note
+## **Updates - notes from Prof Kam**
+For the first segment of the code above, note to always indicate the dataset used before pasting the customised labels i.e. exam_data$ID, "\n" is to have the "Class" label in a separate line. Note the style of coding, cleaner to have "tooltip=exam_data$tooltip" instead of having the detailed code chunk (first segment of code above) within.
+:::
 
 # 3.6 Interactivity
 
@@ -233,13 +243,23 @@ girafe(ggobj = gg_point,
        height_svg = 8*0.618)
 ```
 
+::: callout-note
+## **Updates - notes from Prof Kam**
+To note that it is not correct to use a bar chart to represent average value but for this bar chart, there is an error bar at the top - indicating the +/- of the average math scores of students by race - further, the tooltip information with hover effect helps to make clear the data we are looking at.
+
+For the first segment of code, we use function as need to calculate mean and sem (standard deviation) values on the fly, not static like ID and class in the earlier plots.
+:::
+
 ### 3.6.3 Hover effect with data_id aesthetic
 
 A second interactive feature of ggiraph is the `data_id`. The code chunk to adjust the interactivity for this feature is indicated below:
 
 ```{r}
+exam_data$tooltip <- c(paste0(
+  "Class = ",exam_data$CLASS))
+
 p <- ggplot(data=exam_data, 
-       aes(x = MATHS)) +
+       aes(x = MATHS,tooltip=exam_data$tooltip)) +
   geom_dotplot_interactive(           
     aes(data_id = CLASS),             
     stackgroups = TRUE,               
@@ -257,6 +277,11 @@ girafe(
 ```
 
 As can be seen from the plot, elements associated with a data_id i.e. CLASS will be highlighted (in orange above as the default value for hover_css=*"fill:orange"*) during a mouse over.
+
+::: callout-note
+## **Updates - notes from Prof Kam** 
+Advise to hover over with tooltips data to indicate what the highlighted dots are when hovered. In this case, this is adding tooltips. This is carried out by adding the first segment in the code above i.e. exam_data$tooltip <- c(paste0("Class = ",exam_data$CLASS)) and indicating "tooltip=exam_data\$tooltip" within aes in the p object, or more simply add "tooltip=ID".
+:::
 
 ### 3.6.4 Styling hover effect
 
@@ -351,7 +376,7 @@ The web document link with a data object will be displayed on the web browser up
 Note that click actions must be a string column in the dataset containing valid javascript instructions.
 :::
 
-### 3.6.7 Coordinated Multiple Views with ggiraph
+### 3.6.7 Coordinated Multiple Views with ggiraph {#sect367}
 
 An implementation of coordinated multiple views can be observed in the data visualisation below.
 
@@ -364,10 +389,15 @@ To create this interactivity, the following steps will need to be taken:
 2.  *patchwork* function of [patchwork](https://patchwork.data-imaginist.com/) package will be used within the girafe function to create the interactive coordinated multiple views.
 
 ```{r}
+exam_data$tooltip <- c(paste0(
+  "Name = ", exam_data$ID,
+  "\n Class = ",exam_data$CLASS))
+
 p1 <- ggplot(data=exam_data, 
        aes(x = MATHS)) +
   geom_dotplot_interactive(              
-    aes(data_id = ID),              
+    aes(data_id = ID,
+        tooltip=exam_data$tooltip),              
     stackgroups = TRUE,                  
     binwidth = 1,                        
     method = "histodot") +  
@@ -380,7 +410,8 @@ p1 <- ggplot(data=exam_data,
 p2 <- ggplot(data=exam_data, 
        aes(x = ENGLISH)) +
   geom_dotplot_interactive(              
-    aes(data_id = ID),              
+    aes(data_id = ID,
+        tooltip=exam_data$tooltip),              
     stackgroups = TRUE,                  
     binwidth = 1,                        
     method = "histodot") + 
@@ -399,6 +430,13 @@ girafe(code = print(p1 + p2),
          )
        ) 
 ```
+
+::: callout-note
+## **Updates - notes from Prof Kam** 
+Advised to also indicate tooltip to reflect class and ID of student - have since added (refer to first segment of code above).*
+
+Note that girafe differs from patchwork in the fact that we need to include a print function. code in girafe is a container. the code also introduces changes in css which take charges of colour, thickness, opacity etc.
+:::
 
 The *data_id* aesthetic is critical to link observations between plots to faciliate comparison. The tooltip aesthetic is optional but nice to have when mouse over a point. Addition of the tooltip interactivity is shown in the code chunk below:
 
@@ -455,7 +493,7 @@ There are two ways to create interactive graph by using plotly, they are:
 
 ### 3.7.1 Creating an interactive scatter plot: plot_ly() method
 
-The tabset below shows an example a basic interactive plot created by using plot_ly().
+The tabset below shows an example a basic interactive plot created by using plot_ly() - \[note: native plotly way\]
 
 ::: panel-tabset
 ## The plot {.unlisted}
@@ -493,7 +531,7 @@ plot_ly(data = exam_data,
   layout(title=list(text="Distribution of Maths Scores vs English Scores for all students",size=2))
 ```
 
-Hoer over the color symbols at the legend to observe the interactivity.
+Hover over the color symbols at the legend to observe the interactivity.
 
 ## The code chunk {.unlisted}
 
@@ -509,7 +547,7 @@ plot_ly(data = exam_data,
 
 ### 3.7.3 Creating an interactive scatter plot: ggplotly() method
 
-The code chunk below plots an interactive scatter plot by using ggplotly().
+The code chunk below plots an interactive scatter plot by using ggplotly(). \[note difference with native plotly - don't have to change coding convention i.e. use of \~\]. code will first form an object i.e. p below and use ggplotly to wrap.
 
 ::: panel-tabset
 ## The plot {.unlisted}
@@ -540,6 +578,20 @@ ggplotly(p)
 ```
 
 The only extra line needed is *ggplotly()*.
+:::
+
+::: callout-note
+## **Updates - notes from Prof Kam** 
+
+In ggplotly, the interactivity of the legend is filtering as compared to Tableau which is only a matter of highlighting (other points fade out):
+
+![](tableauexample.png){width="466"}
+
+Do also note that the tooltip colour is synchronized with legend and also indicates the variable name.
+
+The hover is also a crosshair which allows for brushing.
+
+There is also an options panel on top i.e. lasso tool which allows for selection of specific points.
 :::
 
 ### 3.7.4 Coordinated Multiple Views with plotly
@@ -580,6 +632,13 @@ subplot(ggplotly(p1),
 ```
 
 We just need to click a data point on one of the scatterplots to see the corresponding point on the other scatterplot selected.
+
+::: callout-note
+## **Updates - notes from Prof Kam**
+Note that ggplot data is at d object rather than exam_data directly, otherwise unable to carry out highlighting.
+
+Note that have to use **subplot** to combine the 2 ggplotly objects together instead of crosstalk feature i.e. print(p1 + p2) under [section 3.6.7](#sect367).
+:::
 
 ## The code chunk {.unlisted}
 
@@ -682,6 +741,12 @@ Things to learn from the code chunk:
 -   *bscols()* is a helper function of **crosstalk** package. It makes it easy to put HTML elements side by side. It can be called directly from the console but is especially designed to work in an R Markdown document.
 
     **Warning:** This will bring in all of Bootstrap!.
+:::
+
+::: {.callout-note}
+Plotlyr offers more features than Tableau i.e. use of lasso to select points in the plot which will correspondingly be featured in the table.
+
+gg object essentially drawing out highlighted points into an object and then crosstalk is used to create a datatable from the points.
 :::
 
 # 3.9 References
