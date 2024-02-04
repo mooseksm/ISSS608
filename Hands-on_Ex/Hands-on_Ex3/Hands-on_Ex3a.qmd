@@ -750,7 +750,7 @@ Things to learn from the code chunk:
 :::
 
 ::: callout-note
-##**Updates - notes from Prof Kam**
+##Updates - notes from Prof Kam
 Plotlyr offers more features than Tableau i.e. use of lasso to select points in the plot which will correspondingly be featured in the table.
 
 gg object essentially drawing out highlighted points into an object and then crosstalk is used to create a datatable from the points.
