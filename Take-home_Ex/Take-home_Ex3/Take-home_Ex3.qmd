@@ -376,6 +376,7 @@ We will plot a grouped bar chart using *combined_summed* dataset, adding interac
 
 ::: {.callout-note appearance="minimal" collapse="true" icon="false"}
 ## Show the code
+
 ```{r}
 #| eval: false
 p1 <- ggplot(combined_summed,
@@ -418,6 +419,7 @@ As plotting graphs for all years into one plot would be confusing, we included a
 
 ::: {.callout-note appearance="minimal" collapse="true" icon="false"}
 ## Show the code
+
 ```{r}
 #| eval: false
 p2 <- ggplot(combined_detailed, aes(x = Day, 
@@ -456,7 +458,6 @@ p2 <- ggplot(combined_detailed, aes(x = Day,
 ggplotly(p2)
 ```
 
-
 As seen from the plot above, for the years 1983 to 2013, the distribution of rainfall in Dec was different from that in June - there were either a greater number of peaks and/or peaks with higher intensities of daily rainfall within the month of Dec as compared to June - **however in 2023, the difference in the daily rainfall distribution between June and December was not pronounced as June and December seemed to have a more similar daily rainfall distribution.**
 
 ### 5.4 Analysis of frequency of rainfall in Jun and Dec over the years
@@ -469,6 +470,7 @@ We utilise the *"combined_freq"* dataset to study the percentage of rainy days i
 
 ::: {.callout-note appearance="minimal" collapse="true" icon="false"}
 ## Show the code
+
 ```{r}
 #| eval: false
 p3 <- ggplot(combined_freq, aes(x = Year_num, 
@@ -515,6 +517,7 @@ The code chunk are as follows:
 
 ::: panel-tabset
 ## Jun Rainfall {.unlisted}
+
 ```{r}
 p4 <- ggplot(jun_rainfall, aes(x = `Daily Rainfall Total (mm)`)) +
   geom_histogram(binwidth = 10, fill = "tomato", color = "black", alpha = 0.7) +
@@ -528,7 +531,9 @@ p4 <- ggplot(jun_rainfall, aes(x = `Daily Rainfall Total (mm)`)) +
 
 p4_gif <- animate(p4, width = 650, height = 400)
 ```
+
 ## Dec Rainfall {.unlisted}
+
 ```{r}
 p5 <- ggplot(dec_rainfall, aes(x = `Daily Rainfall Total (mm)`)) +
   geom_histogram(binwidth = 10, fill = "lightseagreen", color = "black", alpha = 0.7) +
@@ -549,6 +554,7 @@ We then combine the gifs together to form a new gif:
 
 ::: {.callout-note appearance="minimal" collapse="true" icon="false"}
 ## Show the code
+
 ```{r}
 #| eval: false
 p4_mgif <- image_read(p4_gif)
@@ -564,6 +570,7 @@ for(i in 2:93){
 new_gif
 ```
 :::
+
 ```{r,echo=FALSE}
 p4_mgif <- image_read(p4_gif)
 p5_mgif <- image_read(p5_gif)
@@ -585,3 +592,13 @@ Rainfall intensity in December increased over the years but is highly varied. In
 ## 6. Overall evaluation
 
 Based on the above observations, it does not appear that the difference between dry month June and wet month December will become more pronounced. **As rainfall in June intensifies in volume and in frequency, its contrast with December seems to be less which [conflicts with [claim 2](#background)]{.underline} that *The contrast between the wet months (November to January) and dry months (February and June to September) is likely to be more pronounced.***
+
+## 7. References
+
+-   h[ttps://www.weather.gov.sg/home](https://r4va.netlify.app/)
+
+-   <https://r4va.netlify.app/>
+
+-   <https://stackoverflow.com/questions/58897286/slider-for-plotly-r>
+
+-   [r](https://stackoverflow.com/questions/58897286/slider-for-plotly-r)<https://stackoverflow.com/questions/3681647/ggplot-how-to-increase-spacing-between-faceted-plots>
