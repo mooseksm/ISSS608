@@ -198,7 +198,8 @@ Facetting is helpful in displaying different subsets of the data.
 
 -   Using facet_wrap()
 
-Better use of screen space than facet_grid because most displays are roughly rectangular. 
+Better use of screen space than facet_grid because most displays are roughly rectangular.
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x= MATHS)) +
@@ -208,9 +209,11 @@ ggplot(data=exam_data,
     facet_wrap(~ CLASS)+
   ggtitle("Distribution of MATHS scores by class")
 ```
+
 -   Using facet_grid()
 
 Most useful when you have two discrete variables, and all combinations of the variables exist in the data.
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x= MATHS)) +
@@ -220,15 +223,18 @@ ggplot(data=exam_data,
     facet_grid(~ CLASS)+
   ggtitle("Distribution of MATHS scores by class")
 ```
+
 Main difference between the two functions:
 
-- The facet_grid() function will produce a grid of plots for each combination of variables that you specify, even if some plots are empty.
-- The facet_wrap() function will only produce plots for the combinations of variables that have values, which means it won’t produce any empty plots.
+-   The facet_grid() function will produce a grid of plots for each combination of variables that you specify, even if some plots are empty.
+-   The facet_wrap() function will only produce plots for the combinations of variables that have values, which means it won’t produce any empty plots.
 
 Source: https://www.statology.org/facet_wrap-vs-facet_grid-in-r/
 
 ### Coordinates
-- Flip bar chart configuration from vertical to horizontal
+
+-   Flip bar chart configuration from vertical to horizontal
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x=RACE)) +
@@ -243,7 +249,9 @@ ggplot(data=exam_data,
 ```
 
 ### Changing x- and y- axis range
+
 Chart below is misleading as x- and y-axis ranges are not equal. y-axis is denoted in chunks of 20 while x-axis is denoted in chunks of 25.
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x= MATHS, y=ENGLISH)) +
@@ -253,6 +261,7 @@ ggplot(data=exam_data,
 ```
 
 Adjusting the x- and y-axis to range from 0 to 100 in equal chunks
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x= MATHS, y=ENGLISH)) +
@@ -265,9 +274,11 @@ ggplot(data=exam_data,
 ```
 
 ### Exploring themes in ggplot2
+
 Themes control elements of the graph not related to the data i.e. background color, size of fonts and color of labels
 
-- Theme grey
+-   Theme grey
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x=RACE)) +
@@ -276,7 +287,9 @@ ggplot(data=exam_data,
   theme_gray()+
   ggtitle("Distribution of students by race")
 ```
-- Theme classic
+
+-   Theme classic
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x=RACE)) +
@@ -285,7 +298,9 @@ ggplot(data=exam_data,
   theme_classic()+
   ggtitle("Distribution of students by race")
 ```
-- Theme minimal
+
+-   Theme minimal
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x=RACE)) +
@@ -294,3 +309,13 @@ ggplot(data=exam_data,
   theme_minimal()+
   ggtitle("Distribution of students by race")
 ```
+
+# In-class review of hands-on exercise 1 (17 Feb 2024)
+
+-   y-axis of density curve should be labelled as probability values
+-   weakness in interpretation, to be sharper in interpretation i.e. probability density curve is a sign of skewness – the different tail lengths indicate no normal distribution
+-   if x variable is numerical a scatterplot, change to factor will help generate a boxplot
+-   for the probability density curve, to sort it by values (either mean or median), otherwise will miss the pattern à which is like 3 clusters (800 to 600, 600 to 400, 400 and below), every school has good students but for relatively poorer schools, their poorest performing students fair worse than those in better schools.
+-   exclude NA responses when carrying out visualisations cause not helpful, interactivity required for that kind of graph (to find out what name)
+-   for scatterplots with best fit line - need to adjust aspect ratio (y-axis too short, x-axis too long)
+-   try to opt for balanced design i.e. bar chart showing distribution of students by school type (private vs public) then on the right 3 boxplots showing the math, reading and science scores of students by school types
