@@ -10,8 +10,6 @@ execute:
 editor: visual
 ---
 
-# Take-home Exercise 3: Be Weatherwise or Otherwise
-
 ## 1. Overview
 
 ### 1.1 Background {#background}
@@ -591,7 +589,17 @@ Rainfall intensity in December increased over the years but is highly varied. In
 
 ## 6. Overall evaluation
 
-Based on the above observations, it does not appear that the difference between dry month June and wet month December will become more pronounced. **As rainfall in June intensifies in volume and in frequency, its contrast with December seems to be less which [conflicts with [claim 2](#background)]{.underline} that *The contrast between the wet months (November to January) and dry months (February and June to September) is likely to be more pronounced.***
+Based on the above observations, it does not appear that the difference between dry month June and wet month December will become more pronounced. **As rainfall in June intensifies in volume and in frequency, its contrast with December seems to be less which conflicts with [claim 2](#0) that *The contrast between the wet months (November to January) and dry months (February and June to September) is likely to be more pronounced.***
+
+However, it is also important to note the limitations of the above analysis:
+
+-   it was carried out based on data from a single weather station, Changi weather station
+
+-   it was based on just one dry (June) and one wet month (Dec) of the year
+
+-   only 5 years of data was studied - 1983, 1993, 2003, 2013 and 2023
+
+Hence more in-depth analysis utilising (i) data from more weather stations, to more comprehensively cover the areas in Singapore, (ii) data from more dry and wet months, as well as (iii) more years of data for a more accurate and comprehensive study will need to be carried out.
 
 ## 7. References
 
