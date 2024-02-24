@@ -7,7 +7,9 @@ toc-title: Contents
 execute:
   eval: true
   echo: true
+  freeze: true
   warning: false
+  message: false
 ---
 
 # **Beyond ggplot2 fundamentals**

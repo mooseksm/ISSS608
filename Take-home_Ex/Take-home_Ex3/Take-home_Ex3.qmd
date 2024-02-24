@@ -6,7 +6,9 @@ toc: true
 execute:
   eval: true
   echo: true
+  freeze: true
   warning: false
+  message: false
 editor: visual
 ---
 
@@ -92,6 +94,10 @@ The following error is shown if just "read_csv" function is used:
 
 There is hence a need to add "locale=locale(encoding="latin1")" within the "read_csv" function
 :::
+
+### Advice from Prof Kam
+
+Some classmates made use of different ways to clean the data:
 
 ## 3. Overarching Design Idea
 

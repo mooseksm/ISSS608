@@ -6,7 +6,9 @@ toc: true
 execute:
   eval: true
   echo: true
+  freeze: true
   warning: false
+  message: false
 editor: visual
 ---
 
@@ -38,27 +40,32 @@ stu_qqq <-
 ```
 
 ### Filtering data to obtain SG data
+
 ```{r}
 #| eval: false
 stu_qqq_SG <- stu_qqq %>%
   filter(CNT == "SGP")
 ```
-Indicate a $ to call out the CNT variable in stu_qqq dataset thereafter remove it before running the code.
+
+Indicate a \$ to call out the CNT variable in stu_qqq dataset thereafter remove it before running the code.
 
 ### Saving the filtered data as a new file
+
 ```{r}
 #| eval: false
 write_rds(stu_qqq_SG,
           "data/stu_qqq_SG.rds")
 ```
+
 Always remember to indicate the extension i.e. ".rds" when saving the file.
 
 ### Calling the file to check if it has been saved correctly
+
 ```{r}
 stu_qqq_SG <- 
   read_rds("data/stu_qqq_SG.rds")
 ```
+
 To test, one can clear the environment and rerun the code to see if the data "stu_qqq_SG" appears.
 
-To avoid active code when loading the website, one can indicate "#| eval: false" within the r code chunk.
-
+To avoid active code when loading the website, one can indicate "#\| eval: false" within the r code chunk.

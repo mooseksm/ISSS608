@@ -1,0 +1,66 @@
+---
+title: "In-class Exercise 6: Horizon Plot"
+author: "Si Min Kock"
+date: "February 24, 2024"
+date-modified: "last-modified"
+toc: true
+execute:
+  eval: true
+  echo: true
+  freeze: true
+  warning: false
+  message: false
+editor: visual
+---
+
+## 1. Installing R Packages
+
+```{r}
+pacman::p_load(ggHoriPlot,ggthemes,tidyverse)
+```
+## 2. Importing Data
+
+```{r}
+averp <- read_csv("data/AVERP.csv") %>%
+  mutate(`Date`=dmy(`Date`))
+```
+
+::: {.callout-note}
+Date/Time data is always tricky!
+
+Always remember to check whether date data is in correct format. Prior to mutating the date above, the date was recognised as a character data type.
+
+`dmy()` of [`lubridate`](https://lubridate.tidyverse.org/) package will parse the date field into the appropriate data type in R.
+:::
+
+## 3. Plotting the horizon plot
+
+```{r}
+#| fig-width: 12
+#| fig-height: 10
+averp %>% 
+  filter(Date >= "2018-01-01") %>%
+  ggplot() + # don't need to indicate data here as it is in the first line of code
+  geom_horizon(aes(x = Date, y=Values), 
+               origin = "midpoint", 
+               horizonscale = 6)+
+  facet_grid(`Consumer Items`~.) +
+    theme_few() + #theme to use less features
+  scale_fill_hcl(palette = 'RdBu') + # use diverging color scheme only when you have positive and negative data to get good separation however if looking at just positive data i.e. just need to observe intensity of data, just use single color
+  theme(panel.spacing.y=unit(0, "lines"), strip.text.y = element_text(
+    size = 5, angle = 0, hjust = 0),
+    legend.position = 'none',
+    axis.text.y = element_blank(),
+    axis.text.x = element_text(size=7),
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    panel.border = element_blank()
+    ) +
+    scale_x_date(expand=c(0,0), date_breaks = "3 month", date_labels = "%b%y") +
+  ggtitle('Average Retail Prices of Selected Consumer Items (Jan 2018 to Dec 2022)')
+```
+
+::: {.callout-note}
+One can configure the figure width and height by including lines of code "fig-width:12" and "fig-height:10" above before the main code.
+:::

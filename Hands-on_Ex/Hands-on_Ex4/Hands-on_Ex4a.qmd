@@ -6,7 +6,9 @@ toc: true
 execute:
   eval: true
   echo: true
+  freeze: true
   warning: false
+  message: false
 ---
 
 # 4 Visualising Distribution
@@ -36,8 +38,9 @@ pacman::p_load(ggdist, ggridges, ggthemes,
                colorspace, tidyverse)
 ```
 
-::: {.callout-note}
+::: callout-note
 ## Notes from Prof Kam
+
 Advise not to have anything running in background when installing packages.
 :::
 
@@ -83,9 +86,10 @@ ggplot(exam,
 -   It works well when there is a clear pattern in the result, i.e. if there is an obvious ranking in groups. Otherwise, the groups will tend to overlap each other, leading to a messy plot not providing any insight.
 :::
 
-::: {.callout-note}
+::: callout-note
 ## Notes from Prof Kam
-Ridgeline plot allow distribution by category - need  to have at least 2 variables (1 continuous, 1 categorical)
+
+Ridgeline plot allow distribution by category - need to have at least 2 variables (1 continuous, 1 categorical)
 :::
 
 ### 4.3.1 Plotting ridgeline graph: ggridges method
@@ -94,11 +98,10 @@ There are several ways to plot ridgeline plot with R. In this section, we will p
 
 ggridges package provides two main geom to plot gridgeline plots, they are: [`geom_ridgeline()`](https://wilkelab.org/ggridges/reference/geom_ridgeline.html) and [`geom_density_ridges()`](https://wilkelab.org/ggridges/reference/geom_density_ridges.html). The former takes height values directly to draw the ridgelines, and the latter first estimates data densities and draws those using ridgelines.
 
-::: {.callout-note}
+::: callout-note
 ## Notes from Prof Kam
-Ridgeline is an absolute line plot, can see exact value when impose interactivity.
-However for density ridges, is the interpolated value/smoothing value, not exact value - best not to impose interactivity.
-Neither is better than the other, is more of how you want to present data to user.
+
+Ridgeline is an absolute line plot, can see exact value when impose interactivity. However for density ridges, is the interpolated value/smoothing value, not exact value - best not to impose interactivity. Neither is better than the other, is more of how you want to present data to user.
 :::
 
 The ridgeline plot below is plotted by using `geom_density_ridges()`.
@@ -154,17 +157,15 @@ ggplot(exam,
 ```
 :::
 
-::: {.callout-note}
+::: callout-note
 ## Notes from Prof Kam
+
 Ridgeline plot will always need "height" values to be indicated - density ridges does not require this as the height is the interpolated value.
 
-Allow for observations as such: 
--   Upper and lower limit of 3B is similar/only slightly shorter than 3A which indicate that poorer students in 3A not very much different than students in 3B. However, the better students in 3A fare better than those in 3B. The variation of student performance is 3B is lesser.
--   3H has 2 humps - one group of students that perform well, and another group that fare poorer.
+Allow for observations as such: - Upper and lower limit of 3B is similar/only slightly shorter than 3A which indicate that poorer students in 3A not very much different than students in 3B. However, the better students in 3A fare better than those in 3B. The variation of student performance is 3B is lesser. - 3H has 2 humps - one group of students that perform well, and another group that fare poorer.
 
 These distributions allow more information to be put in i.e. variations in colour below.
 :::
-
 
 ### 4.3.2 Varying fill colors along the x axis
 
@@ -262,11 +263,10 @@ ggplot(exam,
 It is important include the argument `calc_ecdf = TRUE` in `stat_density_ridges()`.
 :::
 
-::: {.callout-note}
+::: callout-note
 ## Notes from Prof Kam
-Observations from probability:
--   Top 10% students in 3A perform better than those in 3B.
--   Bottom 10% students in 3A and 3B perform similarly.
+
+Observations from probability: - Top 10% students in 3A perform better than those in 3B. - Bottom 10% students in 3A and 3B perform similarly.
 :::
 
 ### 4.3.4 Ridgeline plots with quantile lines
@@ -478,8 +478,9 @@ ggplot(exam,
 ```
 :::
 
-::: {.callout-note}
+::: callout-note
 ## Notes from Prof Kam
+
 Ridgeline plot alone don't allow you to see sample size, addition of dot plots allow you to visualise how many samples you have i.e. Chinese has more samples than Others. If all categories have similar sample size, can just use ridgeline plots. Prof does not advise using the [slab + dots interval](https://mjskay.github.io/ggdist/articles/slabinterval.html) which is similar to a dot plot visualisation as the purpose of visualisation is to show the distribution, not asking to count samples.
 :::
 
@@ -532,8 +533,8 @@ ggplot(exam,
 ```
 :::
 
-::: {.callout-note}
+::: callout-note
 ## Notes from Prof Kam
+
 Suggest to go back and explore whether can wrap the above in ggplotly or ggiraph to impose interactivity.
 :::
-

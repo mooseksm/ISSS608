@@ -6,7 +6,9 @@ toc: true
 execute:
   eval: true
   echo: true
+  freeze: true
   warning: false
+  message: false
 ---
 
 # 5 Creating Ternary Plot with R
@@ -113,7 +115,7 @@ ggtern(data=agpop_mutated,
 
 The code below create an interactive ternary plot using ***plot_ly()*** function of **Plotly R**.
 
-::: {.callout-note}
+::: callout-note
 Attempt was made to label the hover text according to the different categorisation.
 :::
 

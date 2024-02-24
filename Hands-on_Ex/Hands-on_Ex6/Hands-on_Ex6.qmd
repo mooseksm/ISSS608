@@ -6,7 +6,9 @@ toc: true
 execute:
   eval: true
   echo: true
+  freeze: true
   warning: false
+  message: false
 ---
 
 # Visualising and Analysing Time-oriented Data
@@ -94,8 +96,6 @@ make_hr_wkday <- function(ts,sc,tz) {
 ```
 
 ::: callout-note
--   [`dmy_hms()`](https://lubridate.tidyverse.org/) is used instead of [`ymd_hms()`](https://lubridate.tidyverse.org/reference/ymd_hms.html) as the format of the date on my computer is in the form of the former and not latter
-
 -   [`ymd_hms()`](https://lubridate.tidyverse.org/reference/ymd_hms.html) and [`hour()`](https://lubridate.tidyverse.org/reference/hour.html) are from [**lubridate**](https://lubridate.tidyverse.org/) package, and
 
 -   [`weekdays()`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/weekdays) is a **base** R function.
@@ -122,6 +122,19 @@ attacks <- attacks %>%
 
 ::: callout-note
 Beside extracting the necessary data into *attacks* data frame, `mutate()` of **dplyr** package is used to convert *wkday* and *hour* fields into **factor** so they’ll be ordered when plotting.
+:::
+
+::: {.callout-note}
+The code chunk below allows one to overcome the limitations of computer timestamp:
+
+```{r}
+#| eval: false
+attacks <- attacks %>%
+  mutate(wkday = lubridate::wday(timestamp,
+                                 label=TRUE,
+                                 abbr=FALSE,
+                                 hour=lubridate::hour(timestamp)))
+```
 :::
 
 Table below shows the tidy tibble table after processing:
