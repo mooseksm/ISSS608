@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/Hands-on_Ex/Hands-on_Ex8/Hands-on_Ex8.html",
       "/Hands-on_Ex/Hands-on_Ex7/Hands-on_Ex7c.html",
       "/Hands-on_Ex/Hands-on_Ex7/Hands-on_Ex7b.html",
       "/Hands-on_Ex/Hands-on_Ex7/Hands-on_Ex7a.html",
@@ -26,8 +27,7 @@
       "/Take-home_Ex/Take-home_Ex2/Take-home_Ex2.html",
       "/Take-home_Ex/Take-home_Ex1/Take-home_Ex1.html",
       "/Hands-on_Ex/Hands-on_Ex10/Hands-on_Ex10.html",
-      "/Hands-on_Ex/Hands-on_Ex9/Hands-on_Ex9.html",
-      "/Hands-on_Ex/Hands-on_Ex8/Hands-on_Ex8.html"
+      "/Hands-on_Ex/Hands-on_Ex9/Hands-on_Ex9.html"
     ]
   }
 ]
