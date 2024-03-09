@@ -1,0 +1,171 @@
+---
+title: "In-class Exercise 7"
+author: "Si Min Kock"
+date: "March 9, 2024"
+date-modified: "last-modified"
+toc: true
+execute:
+  eval: true
+  echo: true
+  freeze: true
+  warning: false
+  message: false
+editor: visual
+---
+
+## 1. Installing R Packages
+
+```{r}
+pacman::p_load(sf,terra,gstat,tmap,viridis,tidyverse)
+```
+
+Purpose of the packages:
+
+-   viridis just provides more colours
+
+-   sf allows for data import
+
+-   terra mainly for handling image file output files
+
+-   gstat (geostatistical methods) used for spatial interpolation
+
+## 2. Importing Data
+
+Rainfall Station Data:
+
+```{r}
+rfstations <- read_csv("data/aspatial/RainfallStation.csv")
+
+rfstations
+```
+
+The latitude and longitude coordinates are based on WGS84.
+
+Weather data - just getting rainfall data:
+
+```{r}
+rfdata <- read_csv("data/aspatial/DAILYDATA_202402.csv")%>%
+  select(c(1,5)) %>%
+  group_by(Station) %>%
+  summarise(MONTHSUM = sum(`Daily Rainfall Total (mm)`)) %>%
+  ungroup()
+
+rfdata
+```
+
+Joining rfdata with rfstations via left_join on rainfall records
+
+::: callout-note
+## Things to note!
+
+-   rstations has 63 observations, much higher than rfdata data of 43 observations hence if had left_join on rainfall stations, would have 20 extra rainfall stations without any records.
+
+-   did not define "by = join_by(Station)" as both datafiles have "Station" variable in common - the naming is consistent. however if doing it for other files, will need to check that the raw data files' naming are consistent.
+
+-   to also check through the "rfdata" after joining to ensure no null data and that all rainfall stations have valid coordinate records.
+:::
+
+```{r}
+rfdata <- rfdata %>%
+  left_join(rfstations)
+
+rfdata
+```
+
+The next code chunk transforms the data into spatial data. Always call "Longitude" first by "Latitude" as need to indicate x first then y although when speaking verbally, we always say "Lat" then "Long".
+
+4326 is a code to indicate to sf that it is in WGS84 system. Changing it to 3414 is to change it to SVY21 (aka metres).
+
+```{r}
+rfdata_sf <- st_as_sf(rfdata,
+                      coords = c("Longitude",
+                                 "Latitude"),
+                      crs = 4326) %>%
+  st_transform(crs = 3414)
+```
+
+The longitude and latitude will be combined to form a coordinate pair variable, making the rfdata_sf contain only 3 variables. They are also not in decimal degree but are in metres now.
+
+We import spatial data which was originally in WGS84 hence need to st_transform with code 3414:
+
+```{r}
+mpsz2019 <- st_read(dsn = "data/geospatial",
+                    layer = "MPSZ-2019") %>%
+  st_transform(crs= 3414)
+```
+
+The last variable "geometry" has multiple coordinate pairs hence multipolygon.
+
+## 3. Plotting
+
+```{r}
+tmap_options(check.and.fix = TRUE)
+tmap_mode("view")
+tm_shape(mpsz2019) +
+  tm_borders() +
+  tm_shape(rfdata_sf) +
+  tm_dots(col = 'MONTHSUM')
+tmap_mode("plot")
+```
+
+::: callout-note
+The code "tmap_options(check.and.fix = TRUE)" helps to fix any errors.
+
+Prof Kam wanted to use boundary as a backdrop hence did not use tm_fill or tm_polygons, only used tm_borders.
+
+For added info, tm_polygons is actually a combination of tm_fill and tm_borders.
+
+Used tm_dots to map the colour with field called "MONTHSUM" so that can see colour code based on monthly total rainfall values.
+:::
+
+Applying interpolation method:
+
+```{r}
+grid <- terra::rast(mpsz2019,
+                    nrows = 690,
+                    ncols = 1075)
+
+xy <- terra::xyFromCell(grid,
+                        1:ncell(grid))
+```
+
+::: callout-note
+Prof Kam derived nrows and ncols number from the maximum and minimum (under Bounding box):
+
+![](images/clipboard-2431133488.png)
+
+Use values below **(xmax-xmin)/resolution of choice** and **(ymax-ymin)/resolution of choice**:
+
+![](images/clipboard-3007979403.png)
+:::
+
+```{r}
+coop <- st_as_sf(as.data.frame(xy),
+                 coords = c("x","y"),
+                 crs = st_crs(mpsz2019))
+
+coop +
+```
+
+```{r}
+res <- gstat(formula = MONTHSUM ~ 1,
+             locations = rfdata_sf,
+             nmax = 15,
+             set = list(idp = 0))
+
+resp <- predict(res,coop)
+resp$x <- st_coordinates(resp)[,1]
+
+```
+
+::: callout
+## Additional Info
+
+\[For info\] Prof used sf package to save MPSZ data as shp file.
+
+\[[Additional\] Prof Kam Tip on "freeze":]{.underline}
+
+-   For first time commit of "\_freeze" file to github, need to use Terminal and indicate the following command "git add \_freeze/"
+
+-   Otherwise, commit through the regular route of clicking the "freeze" file under Git tab will hang.
+:::
