@@ -1,0 +1,302 @@
+---
+title: "Take-home Exercise 4: Prototyping Modules for Visual Analytics Shiny Application"
+date: "March 1, 2024"
+date-modified: "last-modified"
+toc: true
+execute:
+  eval: true
+  echo: true
+  freeze: true
+  warning: false
+  message: false
+editor: visual
+---
+
+## 1. The Task
+
+In this take-home exercise, I am required to select one of the module of my group's proposed Shiny application and complete the following tasks:
+
+-   To evaluate and determine the necessary R packages needed for the Shiny application and ensure that they are supported in R CRAN,
+
+-   To prepare and test the specific R codes to ensure that they can run and return the correct output as expected,
+
+-   To determine the parameters and outputs that will be exposed on the Shiny applications, and
+
+-   To select the appropriate Shiny UI components for exposing the parameters determined above.
+
+All teams must consult the [prototype](https://habaritanzania.netlify.app/) page of [AY2022-2023 January Term Group 3: Tanzania Tourism Analysis](https://thehabaritanzania.netlify.app/). There are three main modules in this application: [Exploratory Data Analysis](https://habaritanzania.netlify.app/eda/eda) & [Confirmatory Data Analysis](https://habaritanzania.netlify.app/eda/cda), [Cluster Analysis](https://habaritanzania.netlify.app/analysis/clustering) and [Decision Tree Analysis](https://habaritanzania.netlify.app/analysis/decision_tree). Each of them were prepared by one of the member of the project team which they later combined into the Prototype page of their project website.
+
+Take-home Exercise 4 will be similar to one of the prototype module prepared above in term of content but with the following differences:
+
+-   I am required to prepare the prototype module report as Take-home Exercise 4 submission. This mean, it has to be published on my own coursework page.
+
+-   I am required to include a section called UI design for the different components of the UIs for the proposed design.
+
+For storyboarding the UI Design, I will need to consult [Storyboard](https://giniceseah.netlify.app/posts/2021-07-31-storyboard/) link.
+
+## 2. About the Project
+
+My project group [StormTroopers](https://vaastormtroopers.netlify.app/proposal/proposal) is working on the topic of climate change.
+
+As a small, low-lying city-state, Singapore is vulnerable to the effects of climate change which has brought about more extreme weather patterns - rising sea levels, dry spells and intense rainfall which at times can lead to flash floods.
+
+![](images/clipboard-939414320.png)
+
+Acording to an [infographic](https://www.nccs.gov.sg/singapores-climate-action/impact-of-climate-change-in-singapore/) above by the National Climate Change Secretariat Singapore:
+
+1.  Daily mean temperatures are projected to increase by 1.4 to 4.6 degrees celsius; and
+2.  The contrast between the wet months (November to January) and dry months (February and June to September) is likely to be more pronounced.
+
+In Jan 2024, the Centre for Climate Research Singapore (CCRS) announced the [Third National Climate Change Study (V3)](https://www.mss-int.sg/v3-climate-projections) which provided potential scenarios of our future based on low, medium, and high global greenhouse gas emissions.
+
+1.  Very hot days will become more frequent.
+2.  Extreme daily rainfall is projected to intensify.
+3.  The mean sea level around Singapore is projected to rise up to 1.15m by end century, and up to around 2m by 2150 under the high emissions scenario.
+
+It is important that we better understand how climate change has been affecting Singapore, by understanding the trends in our daily temperatures and rainfall over the years, and utilise historical data to forecast future climate data. It will provide guidance on whether and how Singapore will need to urgently develop ways to mitigate and adapt.
+
+### 2.1 Issues to address
+
+The scope I am in charge of is Confirmatory Data Analysis (CDA) which seeks to address the following issues:
+
+-   Are the changes in rainfall and temperature over the years statistically significant? 
+
+-   Are there really certain months “drier” or “wetter”/ “hotter” or “cooler”?
+
+-   Are there certain locations “drier” or “wetter”/ “hotter” or “cooler”?
+
+## 3. The Data
+
+For this take-home exercise and the project, data utilised is the historical climate data from [Metrological Service Singapore](http://www.weather.gov.sg/climate-historical-daily).
+
+The team downloaded historical daily records from various weather stations across Singapore from 1980 to 2023 via API scrapping as a *daily_historical.csv* datafile.
+
+## 4. Set-up
+
+### 4.1 Installing and loading the required libraries
+
+The following code chunk is used to install the necessary R packages:
+
+```{r}
+pacman::p_load(tidyverse,ggridges,ggrepel,ggthemes,ggstatsplot,hrbrthemes,patchwork,dplyr, gifski, gapminder,plotly,gganimate,ggiraph,magick)
+```
+
+### 4.2 Importing the Dataset
+
+I will import the *daily_historical.csv* datafile using the following code chunk:
+
+```{r}
+daily_historical <- read_csv("data/daily_historical.csv",locale=locale(encoding="latin1"))
+
+daily_historical
+```
+
+As can be seen, there are a total of 329,156 records across 13 variables.
+
+### 4.3 Data Cleaning
+
+#### 4.3.1 Remove missing values
+
+Before proceeding with analysis, we first remove any missing values in the data using the following code chunk:
+
+```{r}
+daily_historical <- drop_na(daily_historical)
+
+daily_historical
+```
+
+As can be seen, what remains is a total of 44,856 records across 13 variables.
+
+#### 4.3.2 Ensuring alignment in time period of records across weather stations
+
+To ensure consistent comparison across all weather stations, the same time period would have to be used. As such, we need to check the starting and ending year of data across all weather stations:
+
+::: panel-tabset
+## Starting Year
+
+```{r}
+daily_historical_start <- daily_historical %>% 
+  group_by(station) %>% 
+  summarise(earliest_year = min(year))
+
+daily_historical_start
+```
+
+## Ending Year
+
+```{r}
+daily_historical_start <- daily_historical %>%
+  group_by(station) %>%
+  summarise(latest_year = max(year))
+
+daily_historical_start
+```
+:::
+
+```         
+```
+
+As the starting and ending year of weather data across all 13 weather stations is 2014 and 2023 respectively, no further steps are required to align the time period of the data.
+
+#### 4.3.3 Converting data types for *year*, *month* and *day*
+
+Based on a *glimpse* of the *daily_historical* dataframe, the data types for *year*, *month* and *day* are continuous.
+
+```{r}
+
+glimpse(daily_historical)
+```
+
+For ease of further analysis, we will convert them to categorical *factor* data type instead:
+
+```{r}
+daily_historical <- daily_historical %>%
+  mutate_at(vars(year,month,day),as.factor)
+
+glimpse(daily_historical)
+```
+
+### 4.4 Data Wrangling
+
+We will analyse weather and rainfall data separately and hence we will create two dataframes *historical_weather* and *historical_rainfall* from the dataset *daily_historical:*
+
+::: panel-tabset
+## *historical_weather*
+
+```{r}
+historical_weather <- daily_historical %>% select(1:4,9:11)
+historical_weather
+```
+
+## *historical_rainfall*
+
+```{r}
+historical_rainfall <- daily_historical %>% select(1:8)
+historical_rainfall
+```
+:::
+
+## 5. CDA
+
+### 5.1 CDA #1 - Are the changes in rainfall and temperature over the years statistically significant? 
+
+The first CDA that I will address is whether changes in rainfall and temperature over the years are statistically significant
+
+As the data ranges from 2014 to 2023, there are 10 years worth of data.
+
+### 5.1.1 Historical rainfall over the years
+
+```{r}
+historical_rainfall_year <- historical_rainfall %>%
+  group_by(station,year) %>%
+  summarise(yearly_rainfall = sum(daily_rainfall_total))
+
+historical_rainfall_year
+```
+
+```{r}
+p1 <- ggplot(historical_rainfall_year,
+             aes(y=yearly_rainfall,
+                 x = year,
+                 group = station,
+                 color = station)) +
+  geom_line() +
+  facet_wrap(~station,scales = "free_x") +
+  labs(title="Yearly rainfall across weather stations from 2014 to 2023",
+       y = "Rainfall volume (mm)",
+       x = "Year") +
+  theme_minimal() +
+  theme(axis.text.x=element_text(angle=90,hjust=1))
+
+p1 <- ggplotly(p1, tooltip="all",width = 800,height = 600) %>% 
+  layout(width = 800, height = 600)
+
+p1
+```
+
+Over the years, across the 13 weather stations, the rainfall volume is observed to have increased albeit by different intensities. We need to examine if the differences are statistically different.
+
+Before we do so**,** we will need to determine whether the rainfall for each year follows a normal or non-normal distribution and we visualise the distribution of rainfall using ridgeline plots, using the code chunk below.
+
+::: panel-tabset
+## Zoomed-in plot
+
+```{r,fig.width=30,fig.height=20}
+p2 <- ggplot(historical_rainfall, 
+       aes(x = daily_rainfall_total, 
+           y = year, 
+           fill = 0.5 - abs(0.5-stat(ecdf)))) +
+  stat_density_ridges(geom = "density_ridges_gradient", 
+                      calc_ecdf = TRUE) +
+  scale_fill_viridis_c(name = "Tail probability",
+                       direction = -1,
+                       option="turbo")+
+  facet_wrap(~station) + 
+  theme_ridges(font_size = 25)+
+  coord_cartesian(xlim = c(0,50))+
+  labs(title="Distribution of Yearly Rainfall from 2014 to 2023 (zoomed in)",
+       y="Station",
+       x="Rainfall Volume (mm)")
+
+p2
+```
+
+## Full plot
+
+```{r,fig.width=30,fig.height=20}
+p3 <- ggplot(historical_rainfall, 
+       aes(x = daily_rainfall_total, 
+           y = year, 
+           fill = 0.5 - abs(0.5-stat(ecdf)))) +
+  stat_density_ridges(geom = "density_ridges_gradient", 
+                      calc_ecdf = TRUE) +
+  scale_fill_viridis_c(name = "Tail probability",
+                       direction = -1,
+                       option="turbo")+
+  facet_wrap(~station) + 
+  theme_ridges(font_size = 25)+
+  labs(title="Distribution of Yearly Rainfall from 2014 to 2023",
+       y="Station",
+       x="Rainfall Volume (mm)")
+
+p3
+```
+:::
+
+As the distribution of rainfall is not normal, I will utilise non-parametric test.
+
+**The hypothesis is as follows:**
+
+*H~0~: There is no difference between median rainfall across 10 years.*
+
+*H~1~: There is a difference between median rainfall across 10 years.*
+
+```{r,fig.width=12}
+ggbetweenstats(
+  data = historical_rainfall_year,
+  x = year, 
+  y = yearly_rainfall,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Rainfall across 10 years (2014 to 2023)"
+)
+```
+
+## 5.3 CDA #3 - Are there certain locations “drier” or “wetter”/ “hotter” or “cooler”?
+
+**The hypothesis is as follows:**
+
+*H~0~: There is no difference between median yearly rainfall across weather stations.*
+
+*H~1~: There is a difference between median yearly rainfall across weather stations.*
+
+```{r,fig.width=12}
+ggbetweenstats(
+  data = historical_rainfall_year,
+  x = station, 
+  y = yearly_rainfall,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Yearly Rainfall by Station"
+)
+```

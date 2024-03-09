@@ -144,7 +144,6 @@ coop <- st_as_sf(as.data.frame(xy),
                  coords = c("x","y"),
                  crs = st_crs(mpsz2019))
 
-coop +
 ```
 
 ```{r}
