@@ -288,14 +288,14 @@ tm_shape(mpsz_pop2020)+
 
 Notice that the distribution of quantile data classification method are more evenly distributed then equal data classification method.
 
-::: {.callout-warning}
+::: callout-warning
 ## Warning: Maps Lie!
 
 DIY: Prepare choropleth maps by using different classification methods supported by tmap and compare their differences.
 
 The following classification methods were tested: quantile, fisher and jenks.
 
-:::panel-tabset
+::: panel-tabset
 ## quantile classification
 
 ```{r}
@@ -307,6 +307,7 @@ tm_shape(mpsz_pop2020)+
 ```
 
 ## fisher classification
+
 ```{r}
 tm_shape(mpsz_pop2020)+
   tm_fill("DEPENDENCY",
@@ -316,6 +317,7 @@ tm_shape(mpsz_pop2020)+
 ```
 
 ## jenks classification
+
 ```{r}
 tm_shape(mpsz_pop2020)+
   tm_fill("DEPENDENCY",
@@ -329,8 +331,9 @@ While fisher and jenks classification showed choropleth maps of similar intensit
 
 DIY: Prepare choropleth maps by using similar classification method but with different numbers of classes (i.e. 2, 6, 10, 20). The classification method used is jenks.
 
-:::panel-tabset
+::: panel-tabset
 ## n =2
+
 ```{r}
 tm_shape(mpsz_pop2020)+
   tm_fill("DEPENDENCY",
@@ -340,6 +343,7 @@ tm_shape(mpsz_pop2020)+
 ```
 
 ## n=6
+
 ```{r}
 tm_shape(mpsz_pop2020)+
   tm_fill("DEPENDENCY",
@@ -349,6 +353,7 @@ tm_shape(mpsz_pop2020)+
 ```
 
 ## n=10
+
 ```{r}
 tm_shape(mpsz_pop2020)+
   tm_fill("DEPENDENCY",
@@ -358,6 +363,7 @@ tm_shape(mpsz_pop2020)+
 ```
 
 ## n=20
+
 ```{r}
 tm_shape(mpsz_pop2020)+
   tm_fill("DEPENDENCY",
@@ -368,7 +374,6 @@ tm_shape(mpsz_pop2020)+
 :::
 
 A greater number of classes will allow a greater variation in intensity and hence more obvious differences between different areas.
-
 :::
 
 #### 7.4.3.2 Plotting choropleth map with custom break
