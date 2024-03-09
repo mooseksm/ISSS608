@@ -194,7 +194,7 @@ historical_rainfall_year <- historical_rainfall %>%
 DT::datatable(historical_rainfall_year,class = "compact")
 ```
 
-```{r}
+```{r,fig.height=8}
 p1 <- ggplot(historical_rainfall_year,
              aes(y=yearly_rainfall,
                  x = year,
@@ -206,12 +206,9 @@ p1 <- ggplot(historical_rainfall_year,
        y = "Rainfall volume (mm)",
        x = "Year") +
   theme_minimal() +
-  theme(axis.text.x=element_text(angle=90,hjust=1))
+  theme(axis.text.x=element_text(angle=90,hjust=1),panel.spacing.y = unit(5,"lines") )
 
-p1 <- ggplotly(p1, tooltip="all",width = 800,height = 600) %>% 
-  layout(width = 800, height = 600)
-
-p1
+ggplotly(p1)
 ```
 
 Over the years, across the 13 weather stations, the rainfall volume is observed to have increased albeit by different intensities. We need to examine if the differences are statistically different.
@@ -555,7 +552,365 @@ As the p-values of the test above are \< 0.05, we reject the null hypothesis at 
 
 ### 5.2.1 Rainfall across different months
 
+```{r}
+historical_rainfall_month <- historical_rainfall %>%
+  group_by(year,month) %>%
+  summarise(monthly_rainfall = sum(daily_rainfall_total))
+
+DT::datatable(historical_rainfall_month,class = "compact")
+```
+
+```{r,fig.width=17,fig.height=15}
+test <- ggplot(historical_rainfall_month,
+             aes(y=monthly_rainfall,
+                 x = month,
+                 fill = year)) +
+  geom_bar(stat = "identity")+
+  facet_wrap(~year, scales = "free_x") +
+  labs(title="Monthly rainfall each year from 2014 to 2023",
+       y = "Rainfall volume (mm)",
+       x = "Month") +
+  theme_minimal()+
+  theme(panel.spacing.y = unit(10, "lines"))
+
+ggplotly(test)
+```
+
+From the above plots, in 2014 and 2015, it can be seen that rainfall volume is higher in the later months of the year however this is less obvious after 2016. Notably, in 2018 and 2021, a higher volume of rainfall was seen in January as compared to December.
+
+To determine if there are certain months which are drier or wetter, we need to carry out statistical test to determine if there is a significant difference in the rainfall volume across months.
+
+We first study the distribution of rainfall by month to determine if the distribution is normal or not-normal.
+
+::: panel-tabset
+## Zoomed-in plot
+
+```{r,fig.width=30,fig.height=20}
+ggplot(historical_rainfall, 
+       aes(x = daily_rainfall_total, 
+           y = month, 
+           fill = 0.5 - abs(0.5-stat(ecdf)))) +
+  stat_density_ridges(geom = "density_ridges_gradient", 
+                      calc_ecdf = TRUE) +
+  scale_fill_viridis_c(name = "Tail probability",
+                       direction = -1,
+                       option="turbo")+
+  facet_wrap(~station) + 
+  coord_cartesian(c(0,50))+
+  theme_ridges(font_size = 25)+
+  labs(title="Distribution of Daily Rainfall in a month from 2014 to 2023",
+       y="Station",
+       x="Rainfall volume (mm)")
+```
+
+## Full plot
+
+```{r,fig.width=30,fig.height=20}
+ggplot(historical_rainfall, 
+       aes(x = daily_rainfall_total, 
+           y = month, 
+           fill = 0.5 - abs(0.5-stat(ecdf)))) +
+  stat_density_ridges(geom = "density_ridges_gradient", 
+                      calc_ecdf = TRUE) +
+  scale_fill_viridis_c(name = "Tail probability",
+                       direction = -1,
+                       option="turbo")+
+  facet_wrap(~station) + 
+  theme_ridges(font_size = 25)+
+  labs(title="Distribution of Daily Rainfall in a month from 2014 to 2023",
+       y="Station",
+       x="Rainfall volume (mm)")
+```
+:::
+
+As can be seen from the plots above, the distribution of rainfall is not normal (with the plots right-skewed), as such, I will utilise non-parametric test.
+
+::: panel-tabset
+## Mean Rainfall across months
+
+**The hypothesis is as follows:**
+
+*H~0~: There is no difference between mean rainfall across months.*
+
+*H~1~: There is a difference between mean rainfall across months.*
+
+```{r,fig.width=12,fig.height=10}
+ggbetweenstats(
+  data = historical_rainfall_month,
+  x = month, 
+  y = monthly_rainfall,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Rainfall across months (2014 to 2023)",
+  ylab = "Rainfall volume (mm)",
+  xlab = "Month",
+  ggsignif.args = list(textsize = 5)
+) +
+  theme(text = element_text(size = 20), plot.title=element_text(size=20))
+```
+
+As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the rainfall across months.
+
+## Mean Daily Rainfall across months
+
+**The hypothesis is as follows:**
+
+*H~0~: There is no difference between mean daily rainfall across months.*
+
+*H~1~: There is a difference between mean daily rainfall across months.*
+
+```{r,fig.width=15,fig.height=20}
+ggbetweenstats(
+  data = historical_rainfall,
+  x = month, 
+  y = daily_rainfall_total,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Daily Rainfall across months (2014 to 2023)",
+  ylab = "Rainfall volume (mm)",
+  xlab = "Month",
+  ggsignif.args = list(textsize = 5)
+) +
+  theme(text = element_text(size = 20), plot.title=element_text(size=20))
+```
+
+As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the mean daily rainfall across the years.
+:::
+
 ### 5.2.2 Temperature across different months
+
+```{r}
+historical_temp_month <- historical_temp %>%
+  group_by(year,month) %>%
+  summarise(median_mean_temp = median(mean_temperature),
+            median_max_temp = median(maximum_temperature),
+            median_min_temp = median(minimum_temperature))
+
+DT::datatable(historical_temp_month,class = "compact")
+```
+
+::: panel-tabset
+## Median Daily Mean Temperature
+
+```{r,fig.width=15,fig.height=12}
+test2 <- ggplot(historical_temp_month,
+       aes(y = median_mean_temp,
+           x = month,
+           fill = year)) +
+  geom_bar(stat = "identity")+
+  facet_wrap(~year,scales = "free_x") +
+  labs(title="Daily mean temperature across weather stations from 2014 to 2023",
+       y = "Temperature (°C)",
+       x = "Year")+
+  theme_minimal() +
+  theme(panel.spacing.y = unit(5,"lines"))
+
+ggplotly(test2)
+```
+
+Based on observation, it seems like median daily mean temperature does not differ signicantly across months from 2014 to 2023.
+
+## Median Daily Maximum Temperature
+
+```{r,fig.width=15,fig.height=12}
+test3 <- ggplot(historical_temp_month,
+       aes(y = median_max_temp,
+           x = month,
+           fill = year)) +
+  geom_bar(stat = "identity")+
+  facet_wrap(~year,scales = "free_x") +
+  labs(title="Daily max temperature across weather stations from 2014 to 2023",
+       y = "Temperature (°C)",
+       x = "Year") +
+  theme_minimal() +
+  theme(panel.spacing.y = unit(5,"lines"))
+
+ggplotly(test3)
+```
+
+Based on observation, it seems like median daily max temperature is not significantly different across months over the years from 2014 to 2023.
+
+## Median Daily Minimum Temperature
+
+```{r,fig.width=15,fig.height=12}
+test4 <- ggplot(historical_temp_month,
+       aes(y = median_min_temp,
+           x = month,
+           fill = year)) +
+  geom_bar(stat = "identity")+
+  facet_wrap(~year,scales = "free_x") +
+  labs(title="Daily min temperature across weather stations from 2014 to 2023",
+       y = "Temperature (°C)",
+       x = "Year") +
+  theme_minimal() +
+  theme(panel.spacing.y = unit(5,"lines"))
+
+ggplotly(test4)
+```
+
+Based on observation, it seems like median daily minimum temperature significantly differs across months over the years from 2014 to 2023.
+:::
+
+We visualise the distribution using ridgeline plots, using the code chunks below.
+
+::: panel-tabset
+## Daily Mean Temperature
+
+```{r,fig.width=30,fig.height=20}
+ggplot(historical_temp, 
+       aes(x = mean_temperature, 
+           y = month, 
+           fill = 0.5 - abs(0.5-stat(ecdf)))) +
+  stat_density_ridges(geom = "density_ridges_gradient", 
+                      calc_ecdf = TRUE) +
+  scale_fill_viridis_c(name = "Tail probability",
+                       direction = -1,
+                       option="turbo")+
+  facet_wrap(~station,scales = "free_x") + 
+  theme_ridges(font_size = 25)+
+  labs(title="Distribution of Daily Mean Temperature from 2014 to 2023",
+       y="Station",
+       x="Temperature (°C)")
+```
+
+As can be seen from the plot above, the distribution of daily mean temperature is not normal, as such, non-parametric test will be used.
+
+## Daily Maximum Temperature
+
+```{r,fig.width=30,fig.height=20}
+ggplot(historical_temp, 
+       aes(x = maximum_temperature, 
+           y = month, 
+           fill = 0.5 - abs(0.5-stat(ecdf)))) +
+  stat_density_ridges(geom = "density_ridges_gradient", 
+                      calc_ecdf = TRUE) +
+  scale_fill_viridis_c(name = "Tail probability",
+                       direction = -1,
+                       option="turbo")+
+  facet_wrap(~station,scales = "free_x") + 
+  theme_ridges(font_size = 25)+
+  labs(title="Distribution of Daily Maximum Temperature from 2014 to 2023",
+       y="Station",
+       x="Temperature (°C)")
+```
+
+As can be seen from the plot above, the distribution of daily maximum temperature is not normal, as such, non-parametric test will be used.
+
+## Daily Minimum Temperature
+
+```{r,fig.width=30,fig.height=20}
+ggplot(historical_temp, 
+       aes(x = minimum_temperature, 
+           y = month, 
+           fill = 0.5 - abs(0.5-stat(ecdf)))) +
+  stat_density_ridges(geom = "density_ridges_gradient", 
+                      calc_ecdf = TRUE) +
+  scale_fill_viridis_c(name = "Tail probability",
+                       direction = -1,
+                       option="turbo")+
+  facet_wrap(~station,scales = "free_x") + 
+  theme_ridges(font_size = 25)+
+  labs(title="Distribution of Daily Minimum Temperature from 2014 to 2023",
+       y="Station",
+       x="Temperature (°C)")
+```
+
+As can be seen from the plot above, the distribution of daily minimum temperature is not normal, as such, non-parametric test will be used.
+:::
+
+## Testing
+
+```{r,fig.width=12,fig.height=10}
+ggbetweenstats(
+  data = historical_temp_month,
+  x = month, 
+  y = median_mean_temp,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Daily Mean Temperature across months (2014 to 2023)",
+  ylab = "Temperature (°C)",
+  xlab = "Month",
+  ggsignif.args = list(textsize = 5)
+) +
+  theme(text = element_text(size = 20),plot.title=element_text(size=20))
+```
+
+::: panel-tabset
+## Daily Mean Temperature
+
+**The hypothesis is as follows:**
+
+*H~0~: There is no difference between mean daily mean temperature across months.*
+
+*H~1~: There is a difference between mean daily mean temperature across months.*
+
+```{r,fig.width=12,fig.height=10}
+ggbetweenstats(
+  data = historical_temp,
+  x = month, 
+  y = mean_temperature,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Daily Mean Temperature across months (2014 to 2023)",
+  ylab = "Temperature (°C)",
+  xlab = "Month",
+  ggsignif.args = list(textsize = 5)
+) +
+  theme(text = element_text(size = 20),plot.title=element_text(size=20))
+```
+
+As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the mean daily mean temperature across months.
+
+## Daily Max Temperature
+
+**The hypothesis is as follows:**
+
+*H~0~: There is no difference between mean daily max temperature across months.*
+
+*H~1~: There is a difference between mean daily max temperature across months.*
+
+```{r,fig.width=12,fig.height=10}
+ggbetweenstats(
+  data = historical_temp,
+  x = month, 
+  y = maximum_temperature,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Daily Maximum Temperature across months (2014 to 2023)",
+  ylab = "Temperature (°C)",
+  xlab = "Month",
+  ggsignif.args = list(textsize = 5)
+) +
+  theme(text = element_text(size = 20),plot.title=element_text(size=20))
+```
+
+As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the mean daily max temperature across months.
+
+## Daily Min Temperature
+
+**The hypothesis is as follows:**
+
+*H~0~: There is no difference between mean daily min temperature across months.*
+
+*H~1~: There is a difference between mean daily min temperature across months.*
+
+```{r,fig.width=12,fig.height=10}
+ggbetweenstats(
+  data = historical_temp,
+  x = month, 
+  y = minimum_temperature,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Daily Minimum Temperature across months (2014 to 2023)",
+  ylab = "Temperature (°C)",
+  xlab = "Month",
+  ggsignif.args = list(textsize = 5)
+) +
+  theme(text = element_text(size = 20),plot.title=element_text(size=20))
+```
+
+As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the mean daily min temperature across months.
+:::
 
 ## 5.3 CDA #3 - Are there certain locations “drier” or “wetter”/ “hotter” or “cooler”?
 
@@ -585,3 +940,62 @@ ggbetweenstats(
 ```
 
 ### 5.3.2 Temperature across different weather stations
+
+::: panel-tabset
+## Daily Mean Temperature
+
+```{r,fig.width=12,fig.height=10}
+ggbetweenstats(
+  data = historical_temp,
+  x = station, 
+  y = mean_temperature,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Daily Mean Temperature by Station",
+  ylab = "Temperature (°C)",
+  xlab = "Station",
+  ggsignif.args = list(textsize = 3)
+) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1),
+        plot.title = element_text(size = 15),
+        text = element_text(size = 15))
+```
+
+## Daily Maximum Temperature
+
+```{r,fig.width=12,fig.height=10}
+ggbetweenstats(
+  data = historical_temp,
+  x = station, 
+  y = maximum_temperature,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Daily Maximum Temperature by Station",
+  ylab = "Temperature (°C)",
+  xlab = "Station",
+  ggsignif.args = list(textsize = 3)
+) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1),
+        plot.title = element_text(size = 15),
+        text = element_text(size = 15))
+```
+
+## Daily Minimum Temperature
+
+```{r,fig.width=12,fig.height=10}
+ggbetweenstats(
+  data = historical_temp,
+  x = station, 
+  y = minimum_temperature,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Daily Minimum Temperature by Station",
+  ylab = "Temperature (°C)",
+  xlab = "Station",
+  ggsignif.args = list(textsize = 3)
+) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1),
+        plot.title = element_text(size = 15),
+        text = element_text(size = 15))
+```
+:::
