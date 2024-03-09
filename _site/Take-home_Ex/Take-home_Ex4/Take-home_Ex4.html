@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2024-03-01">
+
+<title>ISSS608 - Take-home Exercise 4: Prototyping Modules for Visual Analytics Shiny Application</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="../../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="../../site_libs/plotly-binding-4.10.4/plotly.js"></script>
+<script src="../../site_libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="../../site_libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="../../site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="../../site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="../../site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="../../site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">ISSS608</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-hands-on-exercises" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Hands-on Exercises</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-hands-on-exercises">    
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex1/Hands-on_Ex1.html">
+ <span class="dropdown-text">Hands-on Exercise 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex2/Hands-on_Ex2.html">
+ <span class="dropdown-text">Hands-on Exercise 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex3/Hands-on_Ex3a.html">
+ <span class="dropdown-text">Hands-on Exercise 3A</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex3/Hands-on_Ex3b.html">
+ <span class="dropdown-text">Hands-on Exercise 3B</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex4/Hands-on_Ex4a.html">
+ <span class="dropdown-text">Hands-on Exercise 4A</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex4/Hands-on_Ex4b.html">
+ <span class="dropdown-text">Hands-on Exercise 4B</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex4/Hands-on_Ex4c.html">
+ <span class="dropdown-text">Hands-on Exercise 4C</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex4/Hands-on_Ex4d.html">
+ <span class="dropdown-text">Hands-on Exercise 4D</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex5/Hands-on_Ex5A.html">
+ <span class="dropdown-text">Hands-on Exercise 5A</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex5/Hands-on_Ex5B.html">
+ <span class="dropdown-text">Hands-on Exercise 5B</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex5/Hands-on_Ex5C.html">
+ <span class="dropdown-text">Hands-on Exercise 5C</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex5/Hands-on_Ex5D.html">
+ <span class="dropdown-text">Hands-on Exercise 5D</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex5/Hands-on_Ex5E.html">
+ <span class="dropdown-text">Hands-on Exercise 5E</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex6/Hands-on_Ex6.html">
+ <span class="dropdown-text">Hands-on Exercise 6</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex7/Hands-on_Ex7a.html">
+ <span class="dropdown-text">Hands-on Exercise 7A</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex7/Hands-on_Ex7b.html">
+ <span class="dropdown-text">Hands-on Exercise 7B</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex7/Hands-on_Ex7c.html">
+ <span class="dropdown-text">Hands-on Exercise 7C</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex8/Hands-on_Ex8.html">
+ <span class="dropdown-text">Hands-on Exercise 8</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex9/Hands-on_Ex9.html">
+ <span class="dropdown-text">Hands-on Exercise 9</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex10/Hands-on_Ex10.html">
+ <span class="dropdown-text">Hands-on Exercise 10</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-in-class-exercises" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">In-class Exercises</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-in-class-exercises">    
+        <li>
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex1/In-class_Ex1.html">
+ <span class="dropdown-text">In-class Exercise 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex2/In-class_Ex2.html">
+ <span class="dropdown-text">In-class Exercise 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex6/In-class_Ex6.html">
+ <span class="dropdown-text">In-class Exercise 6</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-take-home-exercises" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Take-home Exercises</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-take-home-exercises">    
+        <li>
+    <a class="dropdown-item" href="../../Take-home_Ex/Take-home_Ex1/Take-home_Ex1.html">
+ <span class="dropdown-text">Take-Home Exercise 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Take-home_Ex/Take-home_Ex2/Take-home_Ex2.html">
+ <span class="dropdown-text">Take-Home Exercise 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Take-home_Ex/Take-home_Ex3/Take-home_Ex3.html">
+ <span class="dropdown-text">Take-Home Exercise 3</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-task" id="toc-the-task" class="nav-link active" data-scroll-target="#the-task">1. The Task</a></li>
+  <li><a href="#about-the-project" id="toc-about-the-project" class="nav-link" data-scroll-target="#about-the-project">2. About the Project</a>
+  <ul class="collapse">
+  <li><a href="#issues-to-address" id="toc-issues-to-address" class="nav-link" data-scroll-target="#issues-to-address">2.1 Issues to address</a></li>
+  </ul></li>
+  <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">3. The Data</a></li>
+  <li><a href="#set-up" id="toc-set-up" class="nav-link" data-scroll-target="#set-up">4. Set-up</a>
+  <ul class="collapse">
+  <li><a href="#installing-and-loading-the-required-libraries" id="toc-installing-and-loading-the-required-libraries" class="nav-link" data-scroll-target="#installing-and-loading-the-required-libraries">4.1 Installing and loading the required libraries</a></li>
+  <li><a href="#importing-the-dataset" id="toc-importing-the-dataset" class="nav-link" data-scroll-target="#importing-the-dataset">4.2 Importing the Dataset</a></li>
+  <li><a href="#data-cleaning" id="toc-data-cleaning" class="nav-link" data-scroll-target="#data-cleaning">4.3 Data Cleaning</a></li>
+  <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">4.4 Data Wrangling</a></li>
+  </ul></li>
+  <li><a href="#cda" id="toc-cda" class="nav-link" data-scroll-target="#cda">5. CDA</a>
+  <ul class="collapse">
+  <li><a href="#cda-1---are-the-changes-in-rainfall-and-temperature-over-the-years-statistically-significant" id="toc-cda-1---are-the-changes-in-rainfall-and-temperature-over-the-years-statistically-significant" class="nav-link" data-scroll-target="#cda-1---are-the-changes-in-rainfall-and-temperature-over-the-years-statistically-significant">5.1 CDA #1 - Are the changes in rainfall and temperature over the years statistically significant?&nbsp;</a></li>
+  <li><a href="#historical-rainfall-over-the-years" id="toc-historical-rainfall-over-the-years" class="nav-link" data-scroll-target="#historical-rainfall-over-the-years">5.1.1 Historical rainfall over the years</a></li>
+  </ul></li>
+  <li><a href="#cda-3---are-there-certain-locations-drier-or-wetter-hotter-or-cooler" id="toc-cda-3---are-there-certain-locations-drier-or-wetter-hotter-or-cooler" class="nav-link" data-scroll-target="#cda-3---are-there-certain-locations-drier-or-wetter-hotter-or-cooler">5.3 CDA #3 - Are there certain locations “drier” or “wetter”/ “hotter” or “cooler”?</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Take-home Exercise 4: Prototyping Modules for Visual Analytics Shiny Application</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 1, 2024</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">March 9, 2024</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="the-task" class="level2">
+<h2 class="anchored" data-anchor-id="the-task">1. The Task</h2>
+<p>In this take-home exercise, I am required to select one of the module of my group’s proposed Shiny application and complete the following tasks:</p>
+<ul>
+<li><p>To evaluate and determine the necessary R packages needed for the Shiny application and ensure that they are supported in R CRAN,</p></li>
+<li><p>To prepare and test the specific R codes to ensure that they can run and return the correct output as expected,</p></li>
+<li><p>To determine the parameters and outputs that will be exposed on the Shiny applications, and</p></li>
+<li><p>To select the appropriate Shiny UI components for exposing the parameters determined above.</p></li>
+</ul>
+<p>All teams must consult the <a href="https://habaritanzania.netlify.app/">prototype</a> page of <a href="https://thehabaritanzania.netlify.app/">AY2022-2023 January Term Group 3: Tanzania Tourism Analysis</a>. There are three main modules in this application: <a href="https://habaritanzania.netlify.app/eda/eda">Exploratory Data Analysis</a> &amp; <a href="https://habaritanzania.netlify.app/eda/cda">Confirmatory Data Analysis</a>, <a href="https://habaritanzania.netlify.app/analysis/clustering">Cluster Analysis</a> and <a href="https://habaritanzania.netlify.app/analysis/decision_tree">Decision Tree Analysis</a>. Each of them were prepared by one of the member of the project team which they later combined into the Prototype page of their project website.</p>
+<p>Take-home Exercise 4 will be similar to one of the prototype module prepared above in term of content but with the following differences:</p>
+<ul>
+<li><p>I am required to prepare the prototype module report as Take-home Exercise 4 submission. This mean, it has to be published on my own coursework page.</p></li>
+<li><p>I am required to include a section called UI design for the different components of the UIs for the proposed design.</p></li>
+</ul>
+<p>For storyboarding the UI Design, I will need to consult <a href="https://giniceseah.netlify.app/posts/2021-07-31-storyboard/">Storyboard</a> link.</p>
+</section>
+<section id="about-the-project" class="level2">
+<h2 class="anchored" data-anchor-id="about-the-project">2. About the Project</h2>
+<p>My project group <a href="https://vaastormtroopers.netlify.app/proposal/proposal">StormTroopers</a> is working on the topic of climate change.</p>
+<p>As a small, low-lying city-state, Singapore is vulnerable to the effects of climate change which has brought about more extreme weather patterns - rising sea levels, dry spells and intense rainfall which at times can lead to flash floods.</p>
+<p><img src="images/clipboard-939414320.png" class="img-fluid"></p>
+<p>Acording to an <a href="https://www.nccs.gov.sg/singapores-climate-action/impact-of-climate-change-in-singapore/">infographic</a> above by the National Climate Change Secretariat Singapore:</p>
+<ol type="1">
+<li>Daily mean temperatures are projected to increase by 1.4 to 4.6 degrees celsius; and</li>
+<li>The contrast between the wet months (November to January) and dry months (February and June to September) is likely to be more pronounced.</li>
+</ol>
+<p>In Jan 2024, the Centre for Climate Research Singapore (CCRS) announced the <a href="https://www.mss-int.sg/v3-climate-projections">Third National Climate Change Study (V3)</a> which provided potential scenarios of our future based on low, medium, and high global greenhouse gas emissions.</p>
+<ol type="1">
+<li>Very hot days will become more frequent.</li>
+<li>Extreme daily rainfall is projected to intensify.</li>
+<li>The mean sea level around Singapore is projected to rise up to 1.15m by end century, and up to around 2m by 2150 under the high emissions scenario.</li>
+</ol>
+<p>It is important that we better understand how climate change has been affecting Singapore, by understanding the trends in our daily temperatures and rainfall over the years, and utilise historical data to forecast future climate data. It will provide guidance on whether and how Singapore will need to urgently develop ways to mitigate and adapt.</p>
+<section id="issues-to-address" class="level3">
+<h3 class="anchored" data-anchor-id="issues-to-address">2.1 Issues to address</h3>
+<p>The scope I am in charge of is Confirmatory Data Analysis (CDA) which seeks to address the following issues:</p>
+<ul>
+<li><p>Are the changes in rainfall and temperature over the years statistically significant?&nbsp;</p></li>
+<li><p>Are there really certain months “drier” or “wetter”/ “hotter” or “cooler”?</p></li>
+<li><p>Are there certain locations “drier” or “wetter”/ “hotter” or “cooler”?</p></li>
+</ul>
+</section>
+</section>
+<section id="the-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-data">3. The Data</h2>
+<p>For this take-home exercise and the project, data utilised is the historical climate data from <a href="http://www.weather.gov.sg/climate-historical-daily">Metrological Service Singapore</a>.</p>
+<p>The team downloaded historical daily records from various weather stations across Singapore from 1980 to 2023 via API scrapping as a <em>daily_historical.csv</em> datafile.</p>
+</section>
+<section id="set-up" class="level2">
+<h2 class="anchored" data-anchor-id="set-up">4. Set-up</h2>
+<section id="installing-and-loading-the-required-libraries" class="level3">
+<h3 class="anchored" data-anchor-id="installing-and-loading-the-required-libraries">4.1 Installing and loading the required libraries</h3>
+<p>The following code chunk is used to install the necessary R packages:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse,ggridges,ggrepel,ggthemes,ggstatsplot,hrbrthemes,patchwork,dplyr, gifski, gapminder,plotly,gganimate,ggiraph,magick)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="importing-the-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="importing-the-dataset">4.2 Importing the Dataset</h3>
+<p>I will import the <em>daily_historical.csv</em> datafile using the following code chunk:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>daily_historical <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/daily_historical.csv"</span>,<span class="at">locale=</span><span class="fu">locale</span>(<span class="at">encoding=</span><span class="st">"latin1"</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>daily_historical</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 329,156 × 13
+   station          year month   day daily_rainfall_total highest_30_min_rainf…¹
+   &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;                &lt;dbl&gt;                  &lt;dbl&gt;
+ 1 Macritchie Res…  1980     1     1                  0                       NA
+ 2 Macritchie Res…  1980     1     2                  0                       NA
+ 3 Macritchie Res…  1980     1     3                  0                       NA
+ 4 Macritchie Res…  1980     1     4                  0                       NA
+ 5 Macritchie Res…  1980     1     5                 22.6                     NA
+ 6 Macritchie Res…  1980     1     6                 49.6                     NA
+ 7 Macritchie Res…  1980     1     7                  2.4                     NA
+ 8 Macritchie Res…  1980     1     8                  0                       NA
+ 9 Macritchie Res…  1980     1     9                  0                       NA
+10 Macritchie Res…  1980     1    10                  0                       NA
+# ℹ 329,146 more rows
+# ℹ abbreviated name: ¹​highest_30_min_rainfall
+# ℹ 7 more variables: highest_60_min_rainfall &lt;dbl&gt;,
+#   highest_120_min_rainfall &lt;dbl&gt;, mean_temperature &lt;dbl&gt;,
+#   maximum_temperature &lt;dbl&gt;, minimum_temperature &lt;dbl&gt;,
+#   mean_wind_speed &lt;dbl&gt;, max_wind_speed &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>As can be seen, there are a total of 329,156 records across 13 variables.</p>
+</section>
+<section id="data-cleaning" class="level3">
+<h3 class="anchored" data-anchor-id="data-cleaning">4.3 Data Cleaning</h3>
+<section id="remove-missing-values" class="level4">
+<h4 class="anchored" data-anchor-id="remove-missing-values">4.3.1 Remove missing values</h4>
+<p>Before proceeding with analysis, we first remove any missing values in the data using the following code chunk:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>daily_historical <span class="ot">&lt;-</span> <span class="fu">drop_na</span>(daily_historical)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>daily_historical</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 44,856 × 13
+   station    year month   day daily_rainfall_total highest_30_min_rainfall
+   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;                &lt;dbl&gt;                   &lt;dbl&gt;
+ 1 Admiralty  2014     1     1                  0                       0  
+ 2 Admiralty  2014     1     2                  0                       0  
+ 3 Admiralty  2014     1     3                  4.6                     4.4
+ 4 Admiralty  2014     1     4                  3.8                     3.8
+ 5 Admiralty  2014     1     5                  3.6                     1.2
+ 6 Admiralty  2014     1     6                 80                      21.8
+ 7 Admiralty  2014     1     7                  2                       2  
+ 8 Admiralty  2014     1     8                  0                       0  
+ 9 Admiralty  2014     1     9                  2.6                     1.4
+10 Admiralty  2014     1    10                  0                       0  
+# ℹ 44,846 more rows
+# ℹ 7 more variables: highest_60_min_rainfall &lt;dbl&gt;,
+#   highest_120_min_rainfall &lt;dbl&gt;, mean_temperature &lt;dbl&gt;,
+#   maximum_temperature &lt;dbl&gt;, minimum_temperature &lt;dbl&gt;,
+#   mean_wind_speed &lt;dbl&gt;, max_wind_speed &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>As can be seen, what remains is a total of 44,856 records across 13 variables.</p>
+</section>
+<section id="ensuring-alignment-in-time-period-of-records-across-weather-stations" class="level4">
+<h4 class="anchored" data-anchor-id="ensuring-alignment-in-time-period-of-records-across-weather-stations">4.3.2 Ensuring alignment in time period of records across weather stations</h4>
+<p>To ensure consistent comparison across all weather stations, the same time period would have to be used. As such, we need to check the starting and ending year of data across all weather stations:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Starting Year</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Ending Year</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>daily_historical_start <span class="ot">&lt;-</span> daily_historical <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(station) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">earliest_year =</span> <span class="fu">min</span>(year))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>daily_historical_start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13 × 2
+   station               earliest_year
+   &lt;chr&gt;                         &lt;dbl&gt;
+ 1 Admiralty                      2014
+ 2 Ang Mo Kio                     2014
+ 3 Changi                         2014
+ 4 Choa Chu Kang (South)          2014
+ 5 Clementi                       2014
+ 6 East Coast Parkway             2014
+ 7 Jurong (West)                  2014
+ 8 Jurong Island                  2014
+ 9 Newton                         2014
+10 Pasir Panjang                  2014
+11 Sentosa Island                 2014
+12 Tai Seng                       2014
+13 Tuas South                     2014</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>daily_historical_start <span class="ot">&lt;-</span> daily_historical <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(station) <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">latest_year =</span> <span class="fu">max</span>(year))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>daily_historical_start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13 × 2
+   station               latest_year
+   &lt;chr&gt;                       &lt;dbl&gt;
+ 1 Admiralty                    2023
+ 2 Ang Mo Kio                   2023
+ 3 Changi                       2023
+ 4 Choa Chu Kang (South)        2023
+ 5 Clementi                     2023
+ 6 East Coast Parkway           2023
+ 7 Jurong (West)                2023
+ 8 Jurong Island                2023
+ 9 Newton                       2023
+10 Pasir Panjang                2023
+11 Sentosa Island               2023
+12 Tai Seng                     2023
+13 Tuas South                   2023</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<pre><code></code></pre>
+<p>As the starting and ending year of weather data across all 13 weather stations is 2014 and 2023 respectively, no further steps are required to align the time period of the data.</p>
+</section>
+<section id="converting-data-types-for-year-month-and-day" class="level4">
+<h4 class="anchored" data-anchor-id="converting-data-types-for-year-month-and-day">4.3.3 Converting data types for <em>year</em>, <em>month</em> and <em>day</em></h4>
+<p>Based on a <em>glimpse</em> of the <em>daily_historical</em> dataframe, the data types for <em>year</em>, <em>month</em> and <em>day</em> are continuous.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(daily_historical)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 44,856
+Columns: 13
+$ station                  &lt;chr&gt; "Admiralty", "Admiralty", "Admiralty", "Admir…
+$ year                     &lt;dbl&gt; 2014, 2014, 2014, 2014, 2014, 2014, 2014, 201…
+$ month                    &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+$ day                      &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14…
+$ daily_rainfall_total     &lt;dbl&gt; 0.0, 0.0, 4.6, 3.8, 3.6, 80.0, 2.0, 0.0, 2.6,…
+$ highest_30_min_rainfall  &lt;dbl&gt; 0.0, 0.0, 4.4, 3.8, 1.2, 21.8, 2.0, 0.0, 1.4,…
+$ highest_60_min_rainfall  &lt;dbl&gt; 0.0, 0.0, 4.4, 3.8, 1.6, 26.2, 2.0, 0.0, 2.0,…
+$ highest_120_min_rainfall &lt;dbl&gt; 0.0, 0.0, 4.6, 3.8, 2.0, 30.6, 2.0, 0.0, 2.6,…
+$ mean_temperature         &lt;dbl&gt; 26.3, 26.9, 26.5, 26.4, 24.6, 25.0, 26.5, 26.…
+$ maximum_temperature      &lt;dbl&gt; 28.8, 30.7, 29.5, 31.2, 25.3, 27.2, 30.6, 30.…
+$ minimum_temperature      &lt;dbl&gt; 24.3, 24.6, 24.9, 24.7, 23.6, 23.1, 24.3, 24.…
+$ mean_wind_speed          &lt;dbl&gt; 10.8, 11.5, 9.7, 8.1, 8.4, 6.2, 8.0, 11.7, 6.…
+$ max_wind_speed           &lt;dbl&gt; 34.2, 38.2, 34.2, 32.8, 27.0, 29.5, 27.4, 34.…</code></pre>
+</div>
+</div>
+<p>For ease of further analysis, we will convert them to categorical <em>factor</em> data type instead:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>daily_historical <span class="ot">&lt;-</span> daily_historical <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">vars</span>(year,month,day),as.factor)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(daily_historical)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 44,856
+Columns: 13
+$ station                  &lt;chr&gt; "Admiralty", "Admiralty", "Admiralty", "Admir…
+$ year                     &lt;fct&gt; 2014, 2014, 2014, 2014, 2014, 2014, 2014, 201…
+$ month                    &lt;fct&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+$ day                      &lt;fct&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14…
+$ daily_rainfall_total     &lt;dbl&gt; 0.0, 0.0, 4.6, 3.8, 3.6, 80.0, 2.0, 0.0, 2.6,…
+$ highest_30_min_rainfall  &lt;dbl&gt; 0.0, 0.0, 4.4, 3.8, 1.2, 21.8, 2.0, 0.0, 1.4,…
+$ highest_60_min_rainfall  &lt;dbl&gt; 0.0, 0.0, 4.4, 3.8, 1.6, 26.2, 2.0, 0.0, 2.0,…
+$ highest_120_min_rainfall &lt;dbl&gt; 0.0, 0.0, 4.6, 3.8, 2.0, 30.6, 2.0, 0.0, 2.6,…
+$ mean_temperature         &lt;dbl&gt; 26.3, 26.9, 26.5, 26.4, 24.6, 25.0, 26.5, 26.…
+$ maximum_temperature      &lt;dbl&gt; 28.8, 30.7, 29.5, 31.2, 25.3, 27.2, 30.6, 30.…
+$ minimum_temperature      &lt;dbl&gt; 24.3, 24.6, 24.9, 24.7, 23.6, 23.1, 24.3, 24.…
+$ mean_wind_speed          &lt;dbl&gt; 10.8, 11.5, 9.7, 8.1, 8.4, 6.2, 8.0, 11.7, 6.…
+$ max_wind_speed           &lt;dbl&gt; 34.2, 38.2, 34.2, 32.8, 27.0, 29.5, 27.4, 34.…</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="data-wrangling" class="level3">
+<h3 class="anchored" data-anchor-id="data-wrangling">4.4 Data Wrangling</h3>
+<p>We will analyse weather and rainfall data separately and hence we will create two dataframes <em>historical_weather</em> and <em>historical_rainfall</em> from the dataset <em>daily_historical:</em></p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true"><em>historical_weather</em></a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false"><em>historical_rainfall</em></a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>historical_weather <span class="ot">&lt;-</span> daily_historical <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>,<span class="dv">9</span><span class="sc">:</span><span class="dv">11</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>historical_weather</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 44,856 × 7
+   station   year  month day   mean_temperature maximum_temperature
+   &lt;chr&gt;     &lt;fct&gt; &lt;fct&gt; &lt;fct&gt;            &lt;dbl&gt;               &lt;dbl&gt;
+ 1 Admiralty 2014  1     1                 26.3                28.8
+ 2 Admiralty 2014  1     2                 26.9                30.7
+ 3 Admiralty 2014  1     3                 26.5                29.5
+ 4 Admiralty 2014  1     4                 26.4                31.2
+ 5 Admiralty 2014  1     5                 24.6                25.3
+ 6 Admiralty 2014  1     6                 25                  27.2
+ 7 Admiralty 2014  1     7                 26.5                30.6
+ 8 Admiralty 2014  1     8                 26.9                30.8
+ 9 Admiralty 2014  1     9                 25.4                27.5
+10 Admiralty 2014  1     10                26.9                31.9
+# ℹ 44,846 more rows
+# ℹ 1 more variable: minimum_temperature &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>historical_rainfall <span class="ot">&lt;-</span> daily_historical <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>historical_rainfall</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 44,856 × 8
+   station   year  month day   daily_rainfall_total highest_30_min_rainfall
+   &lt;chr&gt;     &lt;fct&gt; &lt;fct&gt; &lt;fct&gt;                &lt;dbl&gt;                   &lt;dbl&gt;
+ 1 Admiralty 2014  1     1                      0                       0  
+ 2 Admiralty 2014  1     2                      0                       0  
+ 3 Admiralty 2014  1     3                      4.6                     4.4
+ 4 Admiralty 2014  1     4                      3.8                     3.8
+ 5 Admiralty 2014  1     5                      3.6                     1.2
+ 6 Admiralty 2014  1     6                     80                      21.8
+ 7 Admiralty 2014  1     7                      2                       2  
+ 8 Admiralty 2014  1     8                      0                       0  
+ 9 Admiralty 2014  1     9                      2.6                     1.4
+10 Admiralty 2014  1     10                     0                       0  
+# ℹ 44,846 more rows
+# ℹ 2 more variables: highest_60_min_rainfall &lt;dbl&gt;,
+#   highest_120_min_rainfall &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="cda" class="level2">
+<h2 class="anchored" data-anchor-id="cda">5. CDA</h2>
+<section id="cda-1---are-the-changes-in-rainfall-and-temperature-over-the-years-statistically-significant" class="level3">
+<h3 class="anchored" data-anchor-id="cda-1---are-the-changes-in-rainfall-and-temperature-over-the-years-statistically-significant">5.1 CDA #1 - Are the changes in rainfall and temperature over the years statistically significant?&nbsp;</h3>
+<p>The first CDA that I will address is whether changes in rainfall and temperature over the years are statistically significant</p>
+<p>As the data ranges from 2014 to 2023, there are 10 years worth of data.</p>
+</section>
+<section id="historical-rainfall-over-the-years" class="level3">
+<h3 class="anchored" data-anchor-id="historical-rainfall-over-the-years">5.1.1 Historical rainfall over the years</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>historical_rainfall_year <span class="ot">&lt;-</span> historical_rainfall <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(station,year) <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">yearly_rainfall =</span> <span class="fu">sum</span>(daily_rainfall_total))</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>historical_rainfall_year</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 130 × 3
+# Groups:   station [13]
+   station   year  yearly_rainfall
+   &lt;chr&gt;     &lt;fct&gt;           &lt;dbl&gt;
+ 1 Admiralty 2014            1808.
+ 2 Admiralty 2015            2047.
+ 3 Admiralty 2016            1962.
+ 4 Admiralty 2017            1914.
+ 5 Admiralty 2018            2212.
+ 6 Admiralty 2019            1969.
+ 7 Admiralty 2020            2015 
+ 8 Admiralty 2021            2552.
+ 9 Admiralty 2022            3164.
+10 Admiralty 2023            2589.
+# ℹ 120 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(historical_rainfall_year,</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">y=</span>yearly_rainfall,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">x =</span> year,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">group =</span> station,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> station)) <span class="sc">+</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>station,<span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Yearly rainfall across weather stations from 2014 to 2023"</span>,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Rainfall volume (mm)"</span>,</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>) <span class="sc">+</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x=</span><span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">90</span>,<span class="at">hjust=</span><span class="dv">1</span>))</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplotly</span>(p1, <span class="at">tooltip=</span><span class="st">"all"</span>,<span class="at">width =</span> <span class="dv">800</span>,<span class="at">height =</span> <span class="dv">600</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layout</span>(<span class="at">width =</span> <span class="dv">800</span>, <span class="at">height =</span> <span class="dv">600</span>)</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="htmlwidget-0620e2dec50fbb9b5a5c" style="width:100%;height:487px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0620e2dec50fbb9b5a5c">{"x":{"data":[{"x":[1,2,3,4,5,6,7,8,9,10],"y":[1807.9000000000001,2046.8,1961.5999999999999,1914.2,2211.6999999999998,1969.4000000000001,2015,2551.8000000000002,3163.9000000000001,2588.8000000000002],"text":["year: 2014<br />yearly_rainfall: 1807.9<br />station: Admiralty<br />station: Admiralty","year: 2015<br />yearly_rainfall: 2046.8<br />station: Admiralty<br />station: Admiralty","year: 2016<br />yearly_rainfall: 1961.6<br />station: Admiralty<br />station: Admiralty","year: 2017<br />yearly_rainfall: 1914.2<br />station: Admiralty<br />station: Admiralty","year: 2018<br />yearly_rainfall: 2211.7<br />station: Admiralty<br />station: Admiralty","year: 2019<br />yearly_rainfall: 1969.4<br />station: Admiralty<br />station: Admiralty","year: 2020<br />yearly_rainfall: 2015.0<br />station: Admiralty<br />station: Admiralty","year: 2021<br />yearly_rainfall: 2551.8<br />station: Admiralty<br />station: Admiralty","year: 2022<br />yearly_rainfall: 3163.9<br />station: Admiralty<br />station: Admiralty","year: 2023<br />yearly_rainfall: 2588.8<br />station: Admiralty<br />station: Admiralty"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(248,118,109,1)","dash":"solid"},"hoveron":"points","name":"Admiralty","legendgroup":"Admiralty","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10],"y":[1961.4000000000001,2018.4000000000001,2193.4000000000001,2573,2734.5999999999999,1624.4000000000001,2279.5,3126.5999999999999,3207.5999999999999,2889.8000000000002],"text":["year: 2014<br />yearly_rainfall: 1961.4<br />station: Ang Mo Kio<br />station: Ang Mo Kio","year: 2015<br />yearly_rainfall: 2018.4<br />station: Ang Mo Kio<br />station: Ang Mo Kio","year: 2016<br />yearly_rainfall: 2193.4<br />station: Ang Mo Kio<br />station: Ang Mo Kio","year: 2017<br />yearly_rainfall: 2573.0<br />station: Ang Mo Kio<br />station: Ang Mo Kio","year: 2018<br />yearly_rainfall: 2734.6<br />station: Ang Mo Kio<br />station: Ang Mo Kio","year: 2019<br />yearly_rainfall: 1624.4<br />station: Ang Mo Kio<br />station: Ang Mo Kio","year: 2020<br />yearly_rainfall: 2279.5<br />station: Ang Mo Kio<br />station: Ang Mo Kio","year: 2021<br />yearly_rainfall: 3126.6<br />station: Ang Mo Kio<br />station: Ang Mo Kio","year: 2022<br />yearly_rainfall: 3207.6<br />station: Ang Mo Kio<br />station: Ang Mo Kio","year: 2023<br />yearly_rainfall: 2889.8<br />station: Ang Mo Kio<br />station: Ang Mo Kio"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(225,138,0,1)","dash":"solid"},"hoveron":"points","name":"Ang Mo Kio","legendgroup":"Ang Mo Kio","showlegend":true,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10],"y":[1538.4000000000001,1266.8,1954,2040.8,1708.2,1367.5,1793.2,2796.5999999999999,2169,2411.1999999999998],"text":["year: 2014<br />yearly_rainfall: 1538.4<br />station: Changi<br />station: Changi","year: 2015<br />yearly_rainfall: 1266.8<br />station: Changi<br />station: Changi","year: 2016<br />yearly_rainfall: 1954.0<br />station: Changi<br />station: Changi","year: 2017<br />yearly_rainfall: 2040.8<br />station: Changi<br />station: Changi","year: 2018<br />yearly_rainfall: 1708.2<br />station: Changi<br />station: Changi","year: 2019<br />yearly_rainfall: 1367.5<br />station: Changi<br />station: Changi","year: 2020<br />yearly_rainfall: 1793.2<br />station: Changi<br />station: Changi","year: 2021<br />yearly_rainfall: 2796.6<br />station: Changi<br />station: Changi","year: 2022<br />yearly_rainfall: 2169.0<br />station: Changi<br />station: Changi","year: 2023<br />yearly_rainfall: 2411.2<br />station: Changi<br />station: Changi"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(190,156,0,1)","dash":"solid"},"hoveron":"points","name":"Changi","legendgroup":"Changi","showlegend":true,"xaxis":"x3","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10],"y":[2210.8000000000002,1666.2,2597.8000000000002,2035,2742,2136.6999999999998,2664.1999999999998,3448.1999999999998,2866.5999999999999,3263.5999999999999],"text":["year: 2014<br />yearly_rainfall: 2210.8<br />station: Choa Chu Kang (South)<br />station: Choa Chu Kang (South)","year: 2015<br />yearly_rainfall: 1666.2<br />station: Choa Chu Kang (South)<br />station: Choa Chu Kang (South)","year: 2016<br />yearly_rainfall: 2597.8<br />station: Choa Chu Kang (South)<br />station: Choa Chu Kang (South)","year: 2017<br />yearly_rainfall: 2035.0<br />station: Choa Chu Kang (South)<br />station: Choa Chu Kang (South)","year: 2018<br />yearly_rainfall: 2742.0<br />station: Choa Chu Kang (South)<br />station: Choa Chu Kang (South)","year: 2019<br />yearly_rainfall: 2136.7<br />station: Choa Chu Kang (South)<br />station: Choa Chu Kang (South)","year: 2020<br />yearly_rainfall: 2664.2<br />station: Choa Chu Kang (South)<br />station: Choa Chu Kang (South)","year: 2021<br />yearly_rainfall: 3448.2<br />station: Choa Chu Kang (South)<br />station: Choa Chu Kang (South)","year: 2022<br />yearly_rainfall: 2866.6<br />station: Choa Chu Kang (South)<br />station: Choa Chu Kang (South)","year: 2023<br />yearly_rainfall: 3263.6<br />station: Choa Chu Kang (South)<br />station: Choa Chu Kang (South)"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(140,171,0,1)","dash":"solid"},"hoveron":"points","name":"Choa Chu Kang (South)","legendgroup":"Choa Chu Kang (South)","showlegend":true,"xaxis":"x4","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10],"y":[2255.8000000000002,1813.2,2379.8000000000002,1879.4000000000001,2888.5,1738.9000000000001,961.60000000000002,2694.8000000000002,3145.6999999999998,3111.4000000000001],"text":["year: 2014<br />yearly_rainfall: 2255.8<br />station: Clementi<br />station: Clementi","year: 2015<br />yearly_rainfall: 1813.2<br />station: Clementi<br />station: Clementi","year: 2016<br />yearly_rainfall: 2379.8<br />station: Clementi<br />station: Clementi","year: 2017<br />yearly_rainfall: 1879.4<br />station: Clementi<br />station: Clementi","year: 2018<br />yearly_rainfall: 2888.5<br />station: Clementi<br />station: Clementi","year: 2019<br />yearly_rainfall: 1738.9<br />station: Clementi<br />station: Clementi","year: 2020<br />yearly_rainfall:  961.6<br />station: Clementi<br />station: Clementi","year: 2021<br />yearly_rainfall: 2694.8<br />station: Clementi<br />station: Clementi","year: 2022<br />yearly_rainfall: 3145.7<br />station: Clementi<br />station: Clementi","year: 2023<br />yearly_rainfall: 3111.4<br />station: Clementi<br />station: Clementi"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(36,183,0,1)","dash":"solid"},"hoveron":"points","name":"Clementi","legendgroup":"Clementi","showlegend":true,"xaxis":"x5","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10],"y":[1427.2,1031,1646,2158.1999999999998,1333,1092.3,2040.4000000000001,2551.5999999999999,1886.8,2106.9000000000001],"text":["year: 2014<br />yearly_rainfall: 1427.2<br />station: East Coast Parkway<br />station: East Coast Parkway","year: 2015<br />yearly_rainfall: 1031.0<br />station: East Coast Parkway<br />station: East Coast Parkway","year: 2016<br />yearly_rainfall: 1646.0<br />station: East Coast Parkway<br />station: East Coast Parkway","year: 2017<br />yearly_rainfall: 2158.2<br />station: East Coast Parkway<br />station: East Coast Parkway","year: 2018<br />yearly_rainfall: 1333.0<br />station: East Coast Parkway<br />station: East Coast Parkway","year: 2019<br />yearly_rainfall: 1092.3<br />station: East Coast Parkway<br />station: East Coast Parkway","year: 2020<br />yearly_rainfall: 2040.4<br />station: East Coast Parkway<br />station: East Coast Parkway","year: 2021<br />yearly_rainfall: 2551.6<br />station: East Coast Parkway<br />station: East Coast Parkway","year: 2022<br />yearly_rainfall: 1886.8<br />station: East Coast Parkway<br />station: East Coast Parkway","year: 2023<br />yearly_rainfall: 2106.9<br />station: East Coast Parkway<br />station: East Coast Parkway"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(0,190,112,1)","dash":"solid"},"hoveron":"points","name":"East Coast Parkway","legendgroup":"East Coast Parkway","showlegend":true,"xaxis":"x6","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10],"y":[1070.8,2348,2482,1834.5999999999999,2825.8000000000002,2077.9000000000001,3259.8000000000002,3143.4000000000001,3106.4000000000001,2763],"text":["year: 2014<br />yearly_rainfall: 1070.8<br />station: Jurong (West)<br />station: Jurong (West)","year: 2015<br />yearly_rainfall: 2348.0<br />station: Jurong (West)<br />station: Jurong (West)","year: 2016<br />yearly_rainfall: 2482.0<br />station: Jurong (West)<br />station: Jurong (West)","year: 2017<br />yearly_rainfall: 1834.6<br />station: Jurong (West)<br />station: Jurong (West)","year: 2018<br />yearly_rainfall: 2825.8<br />station: Jurong (West)<br />station: Jurong (West)","year: 2019<br />yearly_rainfall: 2077.9<br />station: Jurong (West)<br />station: Jurong (West)","year: 2020<br />yearly_rainfall: 3259.8<br />station: Jurong (West)<br />station: Jurong (West)","year: 2021<br />yearly_rainfall: 3143.4<br />station: Jurong (West)<br />station: Jurong (West)","year: 2022<br />yearly_rainfall: 3106.4<br />station: Jurong (West)<br />station: Jurong (West)","year: 2023<br />yearly_rainfall: 2763.0<br />station: Jurong (West)<br />station: Jurong (West)"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(0,193,171,1)","dash":"solid"},"hoveron":"points","name":"Jurong (West)","legendgroup":"Jurong (West)","showlegend":true,"xaxis":"x7","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10],"y":[1647.8,1752.5999999999999,1564.5999999999999,2099,2482.1999999999998,1520,2476.1999999999998,2137.4000000000001,2528.8000000000002,2192.6999999999998],"text":["year: 2014<br />yearly_rainfall: 1647.8<br />station: Jurong Island<br />station: Jurong Island","year: 2015<br />yearly_rainfall: 1752.6<br />station: Jurong Island<br />station: Jurong Island","year: 2016<br />yearly_rainfall: 1564.6<br />station: Jurong Island<br />station: Jurong Island","year: 2017<br />yearly_rainfall: 2099.0<br />station: Jurong Island<br />station: Jurong Island","year: 2018<br />yearly_rainfall: 2482.2<br />station: Jurong Island<br />station: Jurong Island","year: 2019<br />yearly_rainfall: 1520.0<br />station: Jurong Island<br />station: Jurong Island","year: 2020<br />yearly_rainfall: 2476.2<br />station: Jurong Island<br />station: Jurong Island","year: 2021<br />yearly_rainfall: 2137.4<br />station: Jurong Island<br />station: Jurong Island","year: 2022<br />yearly_rainfall: 2528.8<br />station: Jurong Island<br />station: Jurong Island","year: 2023<br />yearly_rainfall: 2192.7<br />station: Jurong Island<br />station: Jurong Island"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(0,187,218,1)","dash":"solid"},"hoveron":"points","name":"Jurong Island","legendgroup":"Jurong Island","showlegend":true,"xaxis":"x8","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10],"y":[2204.5999999999999,1825.5999999999999,1354.5999999999999,2045.5999999999999,2375,1576.5999999999999,2436.8000000000002,2664.5999999999999,2138.5999999999999,2754.8000000000002],"text":["year: 2014<br />yearly_rainfall: 2204.6<br />station: Newton<br />station: Newton","year: 2015<br />yearly_rainfall: 1825.6<br />station: Newton<br />station: Newton","year: 2016<br />yearly_rainfall: 1354.6<br />station: Newton<br />station: Newton","year: 2017<br />yearly_rainfall: 2045.6<br />station: Newton<br />station: Newton","year: 2018<br />yearly_rainfall: 2375.0<br />station: Newton<br />station: Newton","year: 2019<br />yearly_rainfall: 1576.6<br />station: Newton<br />station: Newton","year: 2020<br />yearly_rainfall: 2436.8<br />station: Newton<br />station: Newton","year: 2021<br />yearly_rainfall: 2664.6<br />station: Newton<br />station: Newton","year: 2022<br />yearly_rainfall: 2138.6<br />station: Newton<br />station: Newton","year: 2023<br />yearly_rainfall: 2754.8<br />station: Newton<br />station: Newton"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(0,172,252,1)","dash":"solid"},"hoveron":"points","name":"Newton","legendgroup":"Newton","showlegend":true,"xaxis":"x9","yaxis":"y3","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10],"y":[1810.5999999999999,1626.4000000000001,2031,2079.5999999999999,2254.1999999999998,1611.5999999999999,2391.8000000000002,3002.4000000000001,1935.2,2493.6999999999998],"text":["year: 2014<br />yearly_rainfall: 1810.6<br />station: Pasir Panjang<br />station: Pasir Panjang","year: 2015<br />yearly_rainfall: 1626.4<br />station: Pasir Panjang<br />station: Pasir Panjang","year: 2016<br />yearly_rainfall: 2031.0<br />station: Pasir Panjang<br />station: Pasir Panjang","year: 2017<br />yearly_rainfall: 2079.6<br />station: Pasir Panjang<br />station: Pasir Panjang","year: 2018<br />yearly_rainfall: 2254.2<br />station: Pasir Panjang<br />station: Pasir Panjang","year: 2019<br />yearly_rainfall: 1611.6<br />station: Pasir Panjang<br />station: Pasir Panjang","year: 2020<br />yearly_rainfall: 2391.8<br />station: Pasir Panjang<br />station: Pasir Panjang","year: 2021<br />yearly_rainfall: 3002.4<br />station: Pasir Panjang<br />station: Pasir Panjang","year: 2022<br />yearly_rainfall: 1935.2<br />station: Pasir Panjang<br />station: Pasir Panjang","year: 2023<br />yearly_rainfall: 2493.7<br />station: Pasir Panjang<br />station: Pasir Panjang"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(139,147,255,1)","dash":"solid"},"hoveron":"points","name":"Pasir Panjang","legendgroup":"Pasir Panjang","showlegend":true,"xaxis":"x10","yaxis":"y3","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10],"y":[2118.5999999999999,1574.5999999999999,1679.8,843.20000000000005,1886.5999999999999,1299,2020.8,2687.5999999999999,2665.9000000000001,2624.4000000000001],"text":["year: 2014<br />yearly_rainfall: 2118.6<br />station: Sentosa Island<br />station: Sentosa Island","year: 2015<br />yearly_rainfall: 1574.6<br />station: Sentosa Island<br />station: Sentosa Island","year: 2016<br />yearly_rainfall: 1679.8<br />station: Sentosa Island<br />station: Sentosa Island","year: 2017<br />yearly_rainfall:  843.2<br />station: Sentosa Island<br />station: Sentosa Island","year: 2018<br />yearly_rainfall: 1886.6<br />station: Sentosa Island<br />station: Sentosa Island","year: 2019<br />yearly_rainfall: 1299.0<br />station: Sentosa Island<br />station: Sentosa Island","year: 2020<br />yearly_rainfall: 2020.8<br />station: Sentosa Island<br />station: Sentosa Island","year: 2021<br />yearly_rainfall: 2687.6<br />station: Sentosa Island<br />station: Sentosa Island","year: 2022<br />yearly_rainfall: 2665.9<br />station: Sentosa Island<br />station: Sentosa Island","year: 2023<br />yearly_rainfall: 2624.4<br />station: Sentosa Island<br />station: Sentosa Island"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(213,117,254,1)","dash":"solid"},"hoveron":"points","name":"Sentosa Island","legendgroup":"Sentosa Island","showlegend":true,"xaxis":"x11","yaxis":"y3","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10],"y":[1950.4000000000001,1584.5999999999999,2249.1999999999998,2695.8000000000002,2178.8000000000002,1638.7,2554.8000000000002,3266.4000000000001,2660.4000000000001,2583],"text":["year: 2014<br />yearly_rainfall: 1950.4<br />station: Tai Seng<br />station: Tai Seng","year: 2015<br />yearly_rainfall: 1584.6<br />station: Tai Seng<br />station: Tai Seng","year: 2016<br />yearly_rainfall: 2249.2<br />station: Tai Seng<br />station: Tai Seng","year: 2017<br />yearly_rainfall: 2695.8<br />station: Tai Seng<br />station: Tai Seng","year: 2018<br />yearly_rainfall: 2178.8<br />station: Tai Seng<br />station: Tai Seng","year: 2019<br />yearly_rainfall: 1638.7<br />station: Tai Seng<br />station: Tai Seng","year: 2020<br />yearly_rainfall: 2554.8<br />station: Tai Seng<br />station: Tai Seng","year: 2021<br />yearly_rainfall: 3266.4<br />station: Tai Seng<br />station: Tai Seng","year: 2022<br />yearly_rainfall: 2660.4<br />station: Tai Seng<br />station: Tai Seng","year: 2023<br />yearly_rainfall: 2583.0<br />station: Tai Seng<br />station: Tai Seng"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(249,98,221,1)","dash":"solid"},"hoveron":"points","name":"Tai Seng","legendgroup":"Tai Seng","showlegend":true,"xaxis":"x12","yaxis":"y3","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10],"y":[1751.8,2009,1812.2,2285.4000000000001,2396.8000000000002,1648.5999999999999,3377,2775.5,2636.5999999999999,2895.3000000000002],"text":["year: 2014<br />yearly_rainfall: 1751.8<br />station: Tuas South<br />station: Tuas South","year: 2015<br />yearly_rainfall: 2009.0<br />station: Tuas South<br />station: Tuas South","year: 2016<br />yearly_rainfall: 1812.2<br />station: Tuas South<br />station: Tuas South","year: 2017<br />yearly_rainfall: 2285.4<br />station: Tuas South<br />station: Tuas South","year: 2018<br />yearly_rainfall: 2396.8<br />station: Tuas South<br />station: Tuas South","year: 2019<br />yearly_rainfall: 1648.6<br />station: Tuas South<br />station: Tuas South","year: 2020<br />yearly_rainfall: 3377.0<br />station: Tuas South<br />station: Tuas South","year: 2021<br />yearly_rainfall: 2775.5<br />station: Tuas South<br />station: Tuas South","year: 2022<br />yearly_rainfall: 2636.6<br />station: Tuas South<br />station: Tuas South","year: 2023<br />yearly_rainfall: 2895.3<br />station: Tuas South<br />station: Tuas South"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(255,101,172,1)","dash":"solid"},"hoveron":"points","name":"Tuas South","legendgroup":"Tuas South","showlegend":true,"xaxis":"x13","yaxis":"y4","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":54.964992389649936,"r":7.3059360730593621,"b":51.385083713850847,"l":48.949771689497723},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Yearly rainfall across weather stations from 2014 to 2023","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,0.24315068493150685],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,10.6],"tickmode":"array","ticktext":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"tickvals":[1,2,3,4,5,6.0000000000000009,7,8,9,10],"categoryorder":"array","categoryarray":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-90,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"annotations":[{"text":"Year","x":0.5,"y":0,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"top","annotationType":"axis","yshift":-33.607305936073061},{"text":"Rainfall volume (mm)","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-33.607305936073061},{"text":"Admiralty","x":0.12157534246575342,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Ang Mo Kio","x":0.375,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Changi","x":0.625,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Choa Chu Kang (South)","x":0.87842465753424659,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Clementi","x":0.12157534246575342,"y":0.69703196347031959,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"East Coast Parkway","x":0.375,"y":0.69703196347031959,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Jurong (West)","x":0.625,"y":0.69703196347031959,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Jurong Island","x":0.87842465753424659,"y":0.69703196347031959,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Newton","x":0.12157534246575342,"y":0.44703196347031959,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Pasir Panjang","x":0.375,"y":0.44703196347031959,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Sentosa Island","x":0.625,"y":0.44703196347031959,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Tai Seng","x":0.87842465753424659,"y":0.44703196347031959,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Tuas South","x":0.12157534246575342,"y":0.19703196347031962,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"yaxis":{"domain":[0.80296803652968041,1],"automargin":true,"type":"linear","autorange":false,"range":[712.95000000000005,3578.4499999999998],"tickmode":"array","ticktext":["1000","1500","2000","2500","3000","3500"],"tickvals":[1000,1500,2000,2500,3000,3500],"categoryorder":"array","categoryarray":["1000","1500","2000","2500","3000","3500"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.24315068493150685,"y0":0.80296803652968041,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.24315068493150685,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.25684931506849318,"x1":0.49315068493150682,"y0":0.80296803652968041,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.25684931506849318,"x1":0.49315068493150682,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.50684931506849318,"x1":0.74315068493150682,"y0":0.80296803652968041,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.50684931506849318,"x1":0.74315068493150682,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.75684931506849318,"x1":1,"y0":0.80296803652968041,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.75684931506849318,"x1":1,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.24315068493150685,"y0":0.55296803652968041,"y1":0.69703196347031959},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.24315068493150685,"y0":0,"y1":23.37899543378996,"yanchor":0.69703196347031959,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.25684931506849318,"x1":0.49315068493150682,"y0":0.55296803652968041,"y1":0.69703196347031959},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.25684931506849318,"x1":0.49315068493150682,"y0":0,"y1":23.37899543378996,"yanchor":0.69703196347031959,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.50684931506849318,"x1":0.74315068493150682,"y0":0.55296803652968041,"y1":0.69703196347031959},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.50684931506849318,"x1":0.74315068493150682,"y0":0,"y1":23.37899543378996,"yanchor":0.69703196347031959,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.75684931506849318,"x1":1,"y0":0.55296803652968041,"y1":0.69703196347031959},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.75684931506849318,"x1":1,"y0":0,"y1":23.37899543378996,"yanchor":0.69703196347031959,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.24315068493150685,"y0":0.30296803652968041,"y1":0.44703196347031959},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.24315068493150685,"y0":0,"y1":23.37899543378996,"yanchor":0.44703196347031959,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.25684931506849318,"x1":0.49315068493150682,"y0":0.30296803652968041,"y1":0.44703196347031959},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.25684931506849318,"x1":0.49315068493150682,"y0":0,"y1":23.37899543378996,"yanchor":0.44703196347031959,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.50684931506849318,"x1":0.74315068493150682,"y0":0.30296803652968041,"y1":0.44703196347031959},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.50684931506849318,"x1":0.74315068493150682,"y0":0,"y1":23.37899543378996,"yanchor":0.44703196347031959,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.75684931506849318,"x1":1,"y0":0.30296803652968041,"y1":0.44703196347031959},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.75684931506849318,"x1":1,"y0":0,"y1":23.37899543378996,"yanchor":0.44703196347031959,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.24315068493150685,"y0":0,"y1":0.19703196347031962},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.24315068493150685,"y0":0,"y1":23.37899543378996,"yanchor":0.19703196347031962,"ysizemode":"pixel"}],"xaxis2":{"type":"linear","autorange":false,"range":[0.40000000000000002,10.6],"tickmode":"array","ticktext":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"tickvals":[1,2,3,4,5,6.0000000000000009,7,8,9,10],"categoryorder":"array","categoryarray":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-90,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.25684931506849318,0.49315068493150682],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"xaxis3":{"type":"linear","autorange":false,"range":[0.40000000000000002,10.6],"tickmode":"array","ticktext":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"tickvals":[1,2,3,4,5,6.0000000000000009,7,8,9,10],"categoryorder":"array","categoryarray":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-90,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.50684931506849318,0.74315068493150682],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"xaxis4":{"type":"linear","autorange":false,"range":[0.40000000000000002,10.6],"tickmode":"array","ticktext":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"tickvals":[1,2,3,4,5,6.0000000000000009,7,8,9,10],"categoryorder":"array","categoryarray":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-90,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.75684931506849318,1],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"xaxis5":{"type":"linear","autorange":false,"range":[0.40000000000000002,10.6],"tickmode":"array","ticktext":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"tickvals":[1,2,3,4,5,6.0000000000000009,7,8,9,10],"categoryorder":"array","categoryarray":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-90,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0,0.24315068493150685],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y2","title":"","hoverformat":".2f"},"yaxis2":{"type":"linear","autorange":false,"range":[712.95000000000005,3578.4499999999998],"tickmode":"array","ticktext":["1000","1500","2000","2500","3000","3500"],"tickvals":[1000,1500,2000,2500,3000,3500],"categoryorder":"array","categoryarray":["1000","1500","2000","2500","3000","3500"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.55296803652968041,0.69703196347031959],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"xaxis6":{"type":"linear","autorange":false,"range":[0.40000000000000002,10.6],"tickmode":"array","ticktext":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"tickvals":[1,2,3,4,5,6.0000000000000009,7,8,9,10],"categoryorder":"array","categoryarray":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-90,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.25684931506849318,0.49315068493150682],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y2","title":"","hoverformat":".2f"},"xaxis7":{"type":"linear","autorange":false,"range":[0.40000000000000002,10.6],"tickmode":"array","ticktext":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"tickvals":[1,2,3,4,5,6.0000000000000009,7,8,9,10],"categoryorder":"array","categoryarray":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-90,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.50684931506849318,0.74315068493150682],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y2","title":"","hoverformat":".2f"},"xaxis8":{"type":"linear","autorange":false,"range":[0.40000000000000002,10.6],"tickmode":"array","ticktext":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"tickvals":[1,2,3,4,5,6.0000000000000009,7,8,9,10],"categoryorder":"array","categoryarray":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-90,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.75684931506849318,1],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y2","title":"","hoverformat":".2f"},"xaxis9":{"type":"linear","autorange":false,"range":[0.40000000000000002,10.6],"tickmode":"array","ticktext":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"tickvals":[1,2,3,4,5,6.0000000000000009,7,8,9,10],"categoryorder":"array","categoryarray":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-90,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0,0.24315068493150685],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y3","title":"","hoverformat":".2f"},"yaxis3":{"type":"linear","autorange":false,"range":[712.95000000000005,3578.4499999999998],"tickmode":"array","ticktext":["1000","1500","2000","2500","3000","3500"],"tickvals":[1000,1500,2000,2500,3000,3500],"categoryorder":"array","categoryarray":["1000","1500","2000","2500","3000","3500"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.30296803652968041,0.44703196347031959],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"xaxis10":{"type":"linear","autorange":false,"range":[0.40000000000000002,10.6],"tickmode":"array","ticktext":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"tickvals":[1,2,3,4,5,6.0000000000000009,7,8,9,10],"categoryorder":"array","categoryarray":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-90,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.25684931506849318,0.49315068493150682],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y3","title":"","hoverformat":".2f"},"xaxis11":{"type":"linear","autorange":false,"range":[0.40000000000000002,10.6],"tickmode":"array","ticktext":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"tickvals":[1,2,3,4,5,6.0000000000000009,7,8,9,10],"categoryorder":"array","categoryarray":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-90,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.50684931506849318,0.74315068493150682],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y3","title":"","hoverformat":".2f"},"xaxis12":{"type":"linear","autorange":false,"range":[0.40000000000000002,10.6],"tickmode":"array","ticktext":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"tickvals":[1,2,3,4,5,6.0000000000000009,7,8,9,10],"categoryorder":"array","categoryarray":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-90,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.75684931506849318,1],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y3","title":"","hoverformat":".2f"},"xaxis13":{"type":"linear","autorange":false,"range":[0.40000000000000002,10.6],"tickmode":"array","ticktext":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"tickvals":[1,2,3,4,5,6.0000000000000009,7,8,9,10],"categoryorder":"array","categoryarray":["2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-90,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0,0.24315068493150685],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y4","title":"","hoverformat":".2f"},"yaxis4":{"type":"linear","autorange":false,"range":[712.95000000000005,3578.4499999999998],"tickmode":"array","ticktext":["1000","1500","2000","2500","3000","3500"],"tickvals":[1000,1500,2000,2500,3000,3500],"categoryorder":"array","categoryarray":["1000","1500","2000","2500","3000","3500"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0,0.19703196347031962],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"station","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","width":800,"height":600,"barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"7ae07219ac5":{"x":{},"y":{},"colour":{},"type":"scatter"}},"cur_data":"7ae07219ac5","visdat":{"7ae07219ac5":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Over the years, across the 13 weather stations, the rainfall volume is observed to have increased albeit by different intensities. We need to examine if the differences are statistically different.</p>
+<p>Before we do so<strong>,</strong> we will need to determine whether the rainfall for each year follows a normal or non-normal distribution and we visualise the distribution of rainfall using ridgeline plots, using the code chunk below.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Zoomed-in plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Full plot</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(historical_rainfall, </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> daily_rainfall_total, </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> year, </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> <span class="fl">0.5</span> <span class="sc">-</span> <span class="fu">abs</span>(<span class="fl">0.5</span><span class="sc">-</span><span class="fu">stat</span>(ecdf)))) <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_density_ridges</span>(<span class="at">geom =</span> <span class="st">"density_ridges_gradient"</span>, </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">calc_ecdf =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">"Tail probability"</span>,</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">option=</span><span class="st">"turbo"</span>)<span class="sc">+</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>station) <span class="sc">+</span> </span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_ridges</span>(<span class="at">font_size =</span> <span class="dv">25</span>)<span class="sc">+</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">50</span>))<span class="sc">+</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Distribution of Yearly Rainfall from 2014 to 2023 (zoomed in)"</span>,</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Station"</span>,</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Rainfall Volume (mm)"</span>)</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex4_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="2880"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(historical_rainfall, </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> daily_rainfall_total, </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> year, </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> <span class="fl">0.5</span> <span class="sc">-</span> <span class="fu">abs</span>(<span class="fl">0.5</span><span class="sc">-</span><span class="fu">stat</span>(ecdf)))) <span class="sc">+</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_density_ridges</span>(<span class="at">geom =</span> <span class="st">"density_ridges_gradient"</span>, </span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">calc_ecdf =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">"Tail probability"</span>,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">option=</span><span class="st">"turbo"</span>)<span class="sc">+</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>station) <span class="sc">+</span> </span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_ridges</span>(<span class="at">font_size =</span> <span class="dv">25</span>)<span class="sc">+</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Distribution of Yearly Rainfall from 2014 to 2023"</span>,</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Station"</span>,</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Rainfall Volume (mm)"</span>)</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>p3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex4_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="2880"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>As the distribution of rainfall is not normal, I will utilise non-parametric test.</p>
+<p><strong>The hypothesis is as follows:</strong></p>
+<p><em>H<sub>0</sub>: There is no difference between median rainfall across 10 years.</em></p>
+<p><em>H<sub>1</sub>: There is a difference between median rainfall across 10 years.</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbetweenstats</span>(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> historical_rainfall_year,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> year, </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> yearly_rainfall,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"np"</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">messages =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">title=</span><span class="st">"Distribution of Rainfall across 10 years (2014 to 2023)"</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex4_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="cda-3---are-there-certain-locations-drier-or-wetter-hotter-or-cooler" class="level2">
+<h2 class="anchored" data-anchor-id="cda-3---are-there-certain-locations-drier-or-wetter-hotter-or-cooler">5.3 CDA #3 - Are there certain locations “drier” or “wetter”/ “hotter” or “cooler”?</h2>
+<p><strong>The hypothesis is as follows:</strong></p>
+<p><em>H<sub>0</sub>: There is no difference between median yearly rainfall across weather stations.</em></p>
+<p><em>H<sub>1</sub>: There is a difference between median yearly rainfall across weather stations.</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbetweenstats</span>(</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> historical_rainfall_year,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> station, </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> yearly_rainfall,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"np"</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">messages =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">title=</span><span class="st">"Distribution of Yearly Rainfall by Station"</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex4_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
