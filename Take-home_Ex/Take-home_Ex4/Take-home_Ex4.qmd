@@ -57,7 +57,7 @@ It is important that we better understand how climate change has been affecting 
 
 ### 2.1 Issues to address
 
-The scope I am in charge of is Confirmatory Data Analysis (CDA) which seeks to address the following issues:
+The scope I am in charge of is Confirmatory Data Analysis which seeks to address the following issues:
 
 -   Are the changes in rainfall and temperature over the years statistically significant? 
 
@@ -95,7 +95,7 @@ As can be seen, there are a total of 329,156 records across 13 variables.
 
 ### 4.3 Data Cleaning
 
-#### 4.3.1 Remove missing values
+#### **4.3.1 Remove missing values**
 
 Before proceeding with analysis, we first remove any missing values in the data using the following code chunk:
 
@@ -107,7 +107,7 @@ daily_historical
 
 As can be seen, what remains is a total of 44,856 records across 13 variables.
 
-#### 4.3.2 Ensuring alignment in time period of records across weather stations
+#### **4.3.2 Ensuring alignment in time period of records across weather stations**
 
 To ensure consistent comparison across all weather stations, the same time period would have to be used. As such, we need to check the starting and ending year of data across all weather stations:
 
@@ -138,7 +138,7 @@ daily_historical_start
 
 As the starting and ending year of weather data across all 13 weather stations is 2014 and 2023 respectively, no further steps are required to align the time period of the data.
 
-#### 4.3.3 Converting data types for *year*, *month* and *day*
+#### **4.3.3 Converting data types for *year*, *month* and *day***
 
 Based on a *glimpse* of the *daily_historical* dataframe, the data types for *year*, *month* and *day* are continuous.
 
@@ -158,14 +158,14 @@ glimpse(daily_historical)
 
 ### 4.4 Data Wrangling
 
-We will analyse weather and rainfall data separately and hence we will create two dataframes *historical_weather* and *historical_rainfall* from the dataset *daily_historical:*
+We will analyse weather and rainfall data separately and hence we will create two dataframes *historical_temp* and *historical_rainfall* from the dataset *daily_historical:*
 
 ::: panel-tabset
-## *historical_weather*
+## *historical_temp*
 
 ```{r}
-historical_weather <- daily_historical %>% select(1:4,9:11)
-historical_weather
+historical_temp <- daily_historical %>% select(1:4,9:11)
+historical_temp
 ```
 
 ## *historical_rainfall*
@@ -176,7 +176,7 @@ historical_rainfall
 ```
 :::
 
-## 5. CDA
+## 5. Confirmatory Data Analysis (CDA)
 
 ### 5.1 CDA #1 - Are the changes in rainfall and temperature over the years statistically significant? 
 
@@ -191,7 +191,7 @@ historical_rainfall_year <- historical_rainfall %>%
   group_by(station,year) %>%
   summarise(yearly_rainfall = sum(daily_rainfall_total))
 
-historical_rainfall_year
+DT::datatable(historical_rainfall_year,class = "compact")
 ```
 
 ```{r}
@@ -234,7 +234,7 @@ p2 <- ggplot(historical_rainfall,
   facet_wrap(~station) + 
   theme_ridges(font_size = 25)+
   coord_cartesian(xlim = c(0,50))+
-  labs(title="Distribution of Yearly Rainfall from 2014 to 2023 (zoomed in)",
+  labs(title="Distribution of Daily Rainfall from 2014 to 2023 (zoomed in)",
        y="Station",
        x="Rainfall Volume (mm)")
 
@@ -255,7 +255,7 @@ p3 <- ggplot(historical_rainfall,
                        option="turbo")+
   facet_wrap(~station) + 
   theme_ridges(font_size = 25)+
-  labs(title="Distribution of Yearly Rainfall from 2014 to 2023",
+  labs(title="Distribution of Daily Rainfall from 2014 to 2023",
        y="Station",
        x="Rainfall Volume (mm)")
 
@@ -263,40 +263,325 @@ p3
 ```
 :::
 
-As the distribution of rainfall is not normal, I will utilise non-parametric test.
+As can be seen from the plots above, the distribution of rainfall is not normal (with the plots right-skewed), as such, I will utilise non-parametric test.
+
+::: panel-tabset
+## Mean Rainfall per year
 
 **The hypothesis is as follows:**
 
-*H~0~: There is no difference between median rainfall across 10 years.*
+*H~0~: There is no difference between mean rainfall per year across 10 years.*
 
-*H~1~: There is a difference between median rainfall across 10 years.*
+*H~1~: There is a difference between mean rainfall per year across 10 years.*
 
-```{r,fig.width=12}
-ggbetweenstats(
+```{r,fig.width=12,fig.height=10}
+p4 <- ggbetweenstats(
   data = historical_rainfall_year,
   x = year, 
   y = yearly_rainfall,
   type = "np",
   messages = FALSE,
-  title="Distribution of Rainfall across 10 years (2014 to 2023)"
-)
+  title="Distribution of Rainfall across 10 years (2014 to 2023)",
+  ylab = "Rainfall volume (mm)",
+  xlab = "Year",
+  ggsignif.args = list(textsize = 5)
+) +
+  theme(text = element_text(size = 20), plot.title=element_text(size=20))
+
+p4
 ```
 
-## 5.3 CDA #3 - Are there certain locations “drier” or “wetter”/ “hotter” or “cooler”?
+As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the mean rainfall per year across the years.
+
+## Mean Daily Rainfall across 10 years
 
 **The hypothesis is as follows:**
 
-*H~0~: There is no difference between median yearly rainfall across weather stations.*
+*H~0~: There is no difference between mean daily rainfall across 10 years.*
 
-*H~1~: There is a difference between median yearly rainfall across weather stations.*
+*H~1~: There is a difference between mean daily rainfall across 10 years.*
 
-```{r,fig.width=12}
-ggbetweenstats(
-  data = historical_rainfall_year,
-  x = station, 
-  y = yearly_rainfall,
+```{r,fig.width=12,fig.height=10}
+p5 <- ggbetweenstats(
+  data = historical_rainfall,
+  x = year, 
+  y = daily_rainfall_total,
   type = "np",
   messages = FALSE,
-  title="Distribution of Yearly Rainfall by Station"
-)
+  title="Distribution of Rainfall across 10 years (2014 to 2023)",
+  ylab = "Rainfall volume (mm)",
+  xlab = "Year",
+  ggsignif.args = list(textsize = 5)
+) +
+  theme(text = element_text(size = 20),plot.title=element_text(size=20))
+
+p5
 ```
+
+As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the mean daily rainfall across the years.
+:::
+
+### 5.1.2 Historical temperature over the years
+
+```{r}
+historical_temp_year <- historical_temp %>%
+  group_by(station,year) %>%
+  summarise(median_mean_temp = median(mean_temperature),
+            median_max_temp = median(maximum_temperature),
+            median_min_temp = median(minimum_temperature))
+
+DT::datatable(historical_temp_year,class = "compact")
+```
+
+::: panel-tabset
+## Median Daily Mean Temperature
+
+```{r}
+p6 <- ggplot(historical_temp_year,
+             aes(y = median_mean_temp,
+                 x = year,
+                 group = station,
+                 color = station)) +
+  geom_line()+
+  facet_wrap(~station,scales = "free_x") +
+  labs(title="Median daily mean temperature across weather stations from 2014 to 2023",
+       y = "Temperature (°C)",
+       x = "Year") +
+  theme_minimal() +
+  theme(axis.text.x=element_text(angle=90,hjust=1))
+
+p6 <- ggplotly(p6, tooltip="all",width = 800,height = 600) %>% 
+  layout(width = 800, height = 600)
+
+p6
+```
+
+Based on observation, it seems like median daily mean temperature for each weather station did not undergo significant changes over the years from 2014 to 2023.
+
+## Median Daily Maximum Temperature
+
+```{r}
+p7 <- ggplot(historical_temp_year,
+             aes(y = median_max_temp,
+                 x = year,
+                 group = station,
+                 color = station)) +
+  geom_line() +
+  facet_wrap(~station,scales = "free_x") +
+  labs(title="Median daily max temperature across weather stations from 2014 to 2023",
+       y = "Temperature (°C)",
+       x = "Year") +
+  theme_minimal() +
+  theme(axis.text.x=element_text(angle=90,hjust=1))
+
+p7 <- ggplotly(p7, tooltip="all",width = 800,height = 600) %>% 
+  layout(width = 800, height = 600)
+
+p7
+```
+
+Based on observation, it seems like median daily max temperature for each weather station did not undergo significant changes over the years from 2014 to 2023. Slight increases observed for Choa Chu Kang (South), Clementi, East Coast Parkway, Newton and Sentosa Island weather stations.
+
+## Median Daily Minimum Temperature
+
+```{r}
+p8 <- ggplot(historical_temp_year,
+             aes(y = median_min_temp,
+                 x = year,
+                 group = station,
+                 color = station)) +
+  geom_line() +
+  facet_wrap(~station,scales = "free_x") +
+  labs(title="Median daily min temperature across weather stations from 2014 to 2023",
+       y = "Temperature (°C)",
+       x = "Year") +
+  theme_minimal() +
+  theme(axis.text.x=element_text(angle=90,hjust=1))
+
+p8 <- ggplotly(p8, tooltip="all",width = 800,height = 600) %>% 
+  layout(width = 800, height = 600)
+
+p8
+```
+
+Based on observation, it seems like median daily minimum temperature for each weather station did not undergo significant changes over the years from 2014 to 2023.
+:::
+
+Likewise, to determine whether the changes in the median daily mean, median daily maximum and median daily minimum temperatures are signficant**,** we will need to determine whether the temperature data follows a normal or non-normal distribution. We visualise the distribution using ridgeline plots, using the code chunks below.
+
+::: panel-tabset
+## Daily Mean Temperature
+
+```{r,fig.width=30,fig.height=20}
+ggplot(historical_temp, 
+       aes(x = mean_temperature, 
+           y = year, 
+           fill = 0.5 - abs(0.5-stat(ecdf)))) +
+  stat_density_ridges(geom = "density_ridges_gradient", 
+                      calc_ecdf = TRUE) +
+  scale_fill_viridis_c(name = "Tail probability",
+                       direction = -1,
+                       option="turbo")+
+  facet_wrap(~station) + 
+  theme_ridges(font_size = 25)+
+  labs(title="Distribution of Daily Mean Temperature from 2014 to 2023",
+       y="Station",
+       x="Temperature (°C)")
+```
+
+As can be seen from the plot above, the distribution of daily mean temperature is not normal, as such, non-parametric test will be used.
+
+## Daily Maximum Temperature
+
+```{r,fig.width=30,fig.height=20}
+ggplot(historical_temp, 
+       aes(x = maximum_temperature, 
+           y = year, 
+           fill = 0.5 - abs(0.5-stat(ecdf)))) +
+  stat_density_ridges(geom = "density_ridges_gradient", 
+                      calc_ecdf = TRUE) +
+  scale_fill_viridis_c(name = "Tail probability",
+                       direction = -1,
+                       option="turbo")+
+  facet_wrap(~station) + 
+  theme_ridges(font_size = 25)+
+  labs(title="Distribution of Daily Maximum Temperature from 2014 to 2023",
+       y="Station",
+       x="Temperature (°C)")
+```
+
+As can be seen from the plot above, the distribution of daily maximum temperature is not normal, as such, non-parametric test will be used.
+
+## Daily Minimum Temperature
+
+```{r,fig.width=30,fig.height=20}
+ggplot(historical_temp, 
+       aes(x = minimum_temperature, 
+           y = year, 
+           fill = 0.5 - abs(0.5-stat(ecdf)))) +
+  stat_density_ridges(geom = "density_ridges_gradient", 
+                      calc_ecdf = TRUE) +
+  scale_fill_viridis_c(name = "Tail probability",
+                       direction = -1,
+                       option="turbo")+
+  facet_wrap(~station) + 
+  theme_ridges(font_size = 25)+
+  labs(title="Distribution of Daily Minimum Temperature from 2014 to 2023",
+       y="Station",
+       x="Temperature (°C)")
+```
+
+As can be seen from the plot above, the distribution of daily minimum temperature is not normal, as such, non-parametric test will be used.
+:::
+
+::: panel-tabset
+## Daily Mean Temperature
+
+**The hypothesis is as follows:**
+
+*H~0~: There is no difference between mean daily mean temperature across 10 years.*
+
+*H~1~: There is a difference between mean daily mean temperature across 10 years.*
+
+```{r,fig.width=12,fig.height=10}
+ggbetweenstats(
+  data = historical_temp,
+  x = year, 
+  y = mean_temperature,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Daily Mean Temperature across 10 years (2014 to 2023)",
+  ylab = "Temperature (°C)",
+  xlab = "Year",
+  ggsignif.args = list(textsize = 5)
+) +
+  theme(text = element_text(size = 20),plot.title=element_text(size=20))
+```
+
+As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the mean daily mean temperature across the years.
+
+## Daily Max Temperature
+
+**The hypothesis is as follows:**
+
+*H~0~: There is no difference between mean daily max temperature across 10 years.*
+
+*H~1~: There is a difference between mean daily max temperature across 10 years.*
+
+```{r,fig.width=12,fig.height=10}
+ggbetweenstats(
+  data = historical_temp,
+  x = year, 
+  y = maximum_temperature,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Daily Max Temperature across 10 years (2014 to 2023)",
+  ylab = "Temperature (°C)",
+  xlab = "Year",
+  ggsignif.args = list(textsize = 5)
+) +
+  theme(text = element_text(size = 20),plot.title=element_text(size=20))
+```
+
+As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the mean daily max temperature across the years.
+
+## Daily Min Temperature
+
+**The hypothesis is as follows:**
+
+*H~0~: There is no difference between mean daily min temperature across 10 years.*
+
+*H~1~: There is a difference between mean daily min temperature across 10 years.*
+
+```{r,fig.width=12,fig.height=10}
+ggbetweenstats(
+  data = historical_temp,
+  x = year, 
+  y = minimum_temperature,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Daily Min Temperature across 10 years (2014 to 2023)",
+  ylab = "Temperature (°C)",
+  xlab = "Year",
+  ggsignif.args = list(textsize = 5)
+) +
+  theme(text = element_text(size = 20),plot.title=element_text(size=20))
+```
+
+As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the mean daily min temperature across the years.
+:::
+
+## 5.2 CDA #2 - Are there really certain months “drier” or “wetter”/ “hotter” or “cooler”?
+
+### 5.2.1 Rainfall across different months
+
+### 5.2.2 Temperature across different months
+
+## 5.3 CDA #3 - Are there certain locations “drier” or “wetter”/ “hotter” or “cooler”?
+
+### 5.3.1 Rainfall across different weather stations
+
+**The hypothesis is as follows:**
+
+*H~0~: There is no difference between mean daily rainfall across weather stations.*
+
+*H~1~: There is a difference between mean daily rainfall across weather stations.*
+
+```{r,fig.width=12,fig.height=10}
+ggbetweenstats(
+  data = historical_rainfall,
+  x = station, 
+  y = daily_rainfall_total,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Daily Rainfall by Station",
+  ylab = "Rainfall volume (mm)",
+  xlab = "Station",
+  ggsignif.args = list(textsize = 3)
+) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1),
+        plot.title = element_text(size = 15),
+        text = element_text(size = 15))
+```
+
+### 5.3.2 Temperature across different weather stations
