@@ -1,0 +1,17 @@
+{
+  "hash": "83b077a010cb740411c0fe20f9be91d5",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"In-class Exercise 6: Horizon Plot\"\nauthor: \"Si Min Kock\"\ndate: \"February 24, 2024\"\ndate-modified: \"last-modified\"\ntoc: true\nexecute:\n  eval: true\n  echo: true\n  freeze: true\n  warning: false\n  message: false\neditor: visual\n---\n\n\n## 1. Installing R Packages\n\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(ggHoriPlot,ggthemes,tidyverse)\n```\n:::\n\n## 2. Importing Data\n\n\n::: {.cell}\n\n```{.r .cell-code}\naverp <- read_csv(\"data/AVERP.csv\") %>%\n  mutate(`Date`=dmy(`Date`))\n```\n:::\n\n\n::: {.callout-note}\nDate/Time data is always tricky!\n\nAlways remember to check whether date data is in correct format. Prior to mutating the date above, the date was recognised as a character data type.\n\n`dmy()` of [`lubridate`](https://lubridate.tidyverse.org/) package will parse the date field into the appropriate data type in R.\n:::\n\n## 3. Plotting the horizon plot\n\n\n::: {.cell}\n\n```{.r .cell-code}\naverp %>% \n  filter(Date >= \"2018-01-01\") %>%\n  ggplot() + # don't need to indicate data here as it is in the first line of code\n  geom_horizon(aes(x = Date, y=Values), \n               origin = \"midpoint\", \n               horizonscale = 6)+\n  facet_grid(`Consumer Items`~.) +\n    theme_few() + #theme to use less features\n  scale_fill_hcl(palette = 'RdBu') + # use diverging color scheme only when you have positive and negative data to get good separation however if looking at just positive data i.e. just need to observe intensity of data, just use single color\n  theme(panel.spacing.y=unit(0, \"lines\"), strip.text.y = element_text(\n    size = 5, angle = 0, hjust = 0),\n    legend.position = 'none',\n    axis.text.y = element_blank(),\n    axis.text.x = element_text(size=7),\n    axis.title.y = element_blank(),\n    axis.title.x = element_blank(),\n    axis.ticks.y = element_blank(),\n    panel.border = element_blank()\n    ) +\n    scale_x_date(expand=c(0,0), date_breaks = \"3 month\", date_labels = \"%b%y\") +\n  ggtitle('Average Retail Prices of Selected Consumer Items (Jan 2018 to Dec 2022)')\n```\n\n::: {.cell-output-display}\n![](In-class_Ex6_files/figure-html/unnamed-chunk-3-1.png){width=1152}\n:::\n:::\n\n\n::: {.callout-note}\nOne can configure the figure width and height by including lines of code \"fig-width:12\" and \"fig-height:10\" above before the main code.\n:::",
+    "supporting": [
+      "In-class_Ex6_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

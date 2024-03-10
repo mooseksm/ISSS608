@@ -133,9 +133,6 @@ daily_historical_start
 ```
 :::
 
-```         
-```
-
 As the starting and ending year of weather data across all 13 weather stations is 2014 and 2023 respectively, no further steps are required to align the time period of the data.
 
 #### **4.3.3 Converting data types for *year*, *month* and *day***
@@ -303,7 +300,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 
 **Overall, this indicates that changes in rainfall over the years is statistically significant.**
 
-## Mean Daily Rainfall across 10 years
+## Median Daily Rainfall across 10 years
 
 **The hypothesis is as follows:**
 
@@ -1011,7 +1008,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 
 *H~1~: There is a difference between median daily mean temperature across months.*
 
-```{r,fig.width=12,fig.height=10}
+```{r,fig.width=15,fig.height=10}
 p30 <- ggbetweenstats(
   data = historical_temp,
   x = month, 
@@ -1075,7 +1072,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 
 *H~1~: There is a difference between median daily max temperature across months.*
 
-```{r,fig.width=12,fig.height=10}
+```{r,fig.width=15,fig.height=10}
 p32 <- ggbetweenstats(
   data = historical_temp,
   x = month, 
@@ -1137,7 +1134,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 
 *H~1~: There is a difference between mean daily min temperature across months.*
 
-```{r,fig.width=12,fig.height=10}
+```{r,fig.width=15,fig.height=10}
 p34 <- ggbetweenstats(
   data = historical_temp,
   x = month, 
@@ -1263,7 +1260,7 @@ p37 <- ggbetweenstats(
 p37
 ```
 
-The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily mean temperature for stations:
+The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median yearly mean temperature for stations:
 
 -   Admiralty with East Coast Parkway, Jurong Island, Pasir Panjang, Sentosa Island and Tai Seng
 
@@ -1279,7 +1276,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 
 -   Newton with Pasir Panjang and Tai Seng
 
-**Overall, this indicates that the differences in median daily mean temperature across stations is generally statistically significant. This suggests that different regions of Singapore are hotter/cooler.**
+**Overall, this indicates that the differences in median yearly mean temperature across stations is generally statistically significant. This suggests that different regions of Singapore are hotter/cooler.**
 
 ## Median Daily Mean Temperature
 
@@ -1457,3 +1454,33 @@ p42
 
 This test shows a more detailed comparison of median daily min temperature across the stations. The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily min temperature across stations.
 :::
+
+## 5.4 CDA Summary Table
+
++---------+---------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| S/N     | CDA                                                                       | Findings                                                                                                                                                                                                                                           |
++=========+===========================================================================+====================================================================================================================================================================================================================================================+
+| **1.1** | Are the changes in rainfall over the years statistically significant?     | -   Over the years, across the 13 weather stations, the rainfall volume is observed to have increased albeit by different intensities.                                                                                                             |
+|         |                                                                           |                                                                                                                                                                                                                                                    |
+|         |                                                                           | -   Based on statistical tests, changes in yearly and daily rainfall over the years are found to be statistically significant.                                                                                                                     |
++---------+---------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **1.2** | Are the changes in temperature over the years statistically significant?  | -   Over the years, across the 13 weather stations, the median daily mean, maximum and minimum temperatures were not observed to have undergone significant changes.                                                                               |
+|         |                                                                           |                                                                                                                                                                                                                                                    |
+|         |                                                                           | -   However, based on statistical tests, changes in mean and minimum temperature over the years is statistically significant. Some changes in max temperature over the years are statistically significant, specifically for 2017 to 2022 period.  |
++---------+---------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **2.1** | Are there really certain months “drier” or “wetter”?                      | -   In 2014 and 2015, rainfall volume is higher in the later months of the year however this is less obvious after 2016. Notably, in 2018 and 2021, a higher volume of rainfall was seen in January as compared to December.                       |
+|         |                                                                           |                                                                                                                                                                                                                                                    |
+|         |                                                                           | -   Differences in median rainfall across some months are statistically significant, with February being drier than November and December, and August being drier than November.                                                                   |
++---------+---------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **2.2** | Are there really certain months “hotter” or “cooler”?                     | -   Across months, the median daily mean, maximum and minimum temperatures were not observed to have undergone significant changes.                                                                                                                |
+|         |                                                                           |                                                                                                                                                                                                                                                    |
+|         |                                                                           | -   Differences in median mean, minimum and maximum temperatures across months are generally statistically significant and suggest that mean, minimum and maximum temperatures are higher during the middle months of the year.                    |
++---------+---------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **3.1** | Are there certain locations “drier” or “wetter”?                          | -   Statistical tests indicate differences in the median yearly and median daily rainfall across stations. This indicates that different regions in Singapore vary in degree of dryness/wetness.                                                   |
++---------+---------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **3.2** | Are there certain locations “hotter” or “cooler”?                         | -   Statistical tests indicate that differences in median yearly and daily mean, minimum and maximum temperature across stations is generally statistically significant. This suggests that different regions of Singapore are hotter/cooler.      |
++---------+---------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+## 6. UI Design
+
+\<WIP\>
