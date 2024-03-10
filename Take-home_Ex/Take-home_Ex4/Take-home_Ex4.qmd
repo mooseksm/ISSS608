@@ -78,7 +78,7 @@ The team downloaded historical daily records from various weather stations acros
 The following code chunk is used to install the necessary R packages:
 
 ```{r}
-pacman::p_load(tidyverse,ggridges,ggrepel,ggthemes,ggstatsplot,hrbrthemes,patchwork,dplyr, gifski, gapminder,plotly,gganimate,ggiraph,magick)
+pacman::p_load(tidyverse,ggridges,ggrepel,ggthemes,ggstatsplot,ggsignif,hrbrthemes,patchwork,dplyr, gifski, gapminder,plotly,gganimate,ggiraph,magick)
 ```
 
 ### 4.2 Importing the Dataset
@@ -194,7 +194,7 @@ historical_rainfall_year <- historical_rainfall %>%
 DT::datatable(historical_rainfall_year,class = "compact")
 ```
 
-```{r,fig.height=8}
+```{r,fig.height=6}
 p1 <- ggplot(historical_rainfall_year,
              aes(y=yearly_rainfall,
                  x = year,
@@ -263,13 +263,13 @@ p3
 As can be seen from the plots above, the distribution of rainfall is not normal (with the plots right-skewed), as such, I will utilise non-parametric test.
 
 ::: panel-tabset
-## Mean Rainfall per year
+## Median Rainfall per year
 
 **The hypothesis is as follows:**
 
-*H~0~: There is no difference between mean rainfall per year across 10 years.*
+*H~0~: There is no difference between median rainfall per year across 10 years.*
 
-*H~1~: There is a difference between mean rainfall per year across 10 years.*
+*H~1~: There is a difference between median rainfall per year across 10 years.*
 
 ```{r,fig.width=12,fig.height=10}
 p4 <- ggbetweenstats(
@@ -277,6 +277,7 @@ p4 <- ggbetweenstats(
   x = year, 
   y = yearly_rainfall,
   type = "np",
+  pairwise.display = "non-significant",
   messages = FALSE,
   title="Distribution of Rainfall across 10 years (2014 to 2023)",
   ylab = "Rainfall volume (mm)",
@@ -288,15 +289,27 @@ p4 <- ggbetweenstats(
 p4
 ```
 
-As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the mean rainfall per year across the years.
+The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median rainfall per year between years:
+
+-   2014 and 2015 with 2021 to 2023
+
+-   2016 with 2021 and 2023
+
+-   2017 with 2021
+
+-   2018 with 2019
+
+-   2019 with 2020 to 2023
+
+**Overall, this indicates that changes in rainfall over the years is statistically significant.**
 
 ## Mean Daily Rainfall across 10 years
 
 **The hypothesis is as follows:**
 
-*H~0~: There is no difference between mean daily rainfall across 10 years.*
+*H~0~: There is no difference between median daily rainfall across 10 years.*
 
-*H~1~: There is a difference between mean daily rainfall across 10 years.*
+*H~1~: There is a difference between median daily rainfall across 10 years.*
 
 ```{r,fig.width=12,fig.height=10}
 p5 <- ggbetweenstats(
@@ -315,7 +328,7 @@ p5 <- ggbetweenstats(
 p5
 ```
 
-As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the mean daily rainfall across the years.
+This test shows a more detailed comparison of median daily rainfall across the 10 years. As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily rainfall across the years.
 :::
 
 ### 5.1.2 Historical temperature over the years
@@ -404,13 +417,13 @@ p8
 Based on observation, it seems like median daily minimum temperature for each weather station did not undergo significant changes over the years from 2014 to 2023.
 :::
 
-Likewise, to determine whether the changes in the median daily mean, median daily maximum and median daily minimum temperatures are signficant**,** we will need to determine whether the temperature data follows a normal or non-normal distribution. We visualise the distribution using ridgeline plots, using the code chunks below.
+Likewise, to determine whether the changes in the median daily mean, median daily maximum and median daily minimum temperatures are significant**,** we will need to determine whether the temperature data follows a normal or non-normal distribution. We visualise the distribution using ridgeline plots, using the code chunks below.
 
 ::: panel-tabset
 ## Daily Mean Temperature
 
 ```{r,fig.width=30,fig.height=20}
-ggplot(historical_temp, 
+p9 <- ggplot(historical_temp, 
        aes(x = mean_temperature, 
            y = year, 
            fill = 0.5 - abs(0.5-stat(ecdf)))) +
@@ -424,6 +437,8 @@ ggplot(historical_temp,
   labs(title="Distribution of Daily Mean Temperature from 2014 to 2023",
        y="Station",
        x="Temperature (°C)")
+
+p9
 ```
 
 As can be seen from the plot above, the distribution of daily mean temperature is not normal, as such, non-parametric test will be used.
@@ -431,7 +446,7 @@ As can be seen from the plot above, the distribution of daily mean temperature i
 ## Daily Maximum Temperature
 
 ```{r,fig.width=30,fig.height=20}
-ggplot(historical_temp, 
+p10 <- ggplot(historical_temp, 
        aes(x = maximum_temperature, 
            y = year, 
            fill = 0.5 - abs(0.5-stat(ecdf)))) +
@@ -445,6 +460,7 @@ ggplot(historical_temp,
   labs(title="Distribution of Daily Maximum Temperature from 2014 to 2023",
        y="Station",
        x="Temperature (°C)")
+p10
 ```
 
 As can be seen from the plot above, the distribution of daily maximum temperature is not normal, as such, non-parametric test will be used.
@@ -452,7 +468,7 @@ As can be seen from the plot above, the distribution of daily maximum temperatur
 ## Daily Minimum Temperature
 
 ```{r,fig.width=30,fig.height=20}
-ggplot(historical_temp, 
+p11 <- ggplot(historical_temp, 
        aes(x = minimum_temperature, 
            y = year, 
            fill = 0.5 - abs(0.5-stat(ecdf)))) +
@@ -466,22 +482,62 @@ ggplot(historical_temp,
   labs(title="Distribution of Daily Minimum Temperature from 2014 to 2023",
        y="Station",
        x="Temperature (°C)")
+p11
 ```
 
 As can be seen from the plot above, the distribution of daily minimum temperature is not normal, as such, non-parametric test will be used.
 :::
 
 ::: panel-tabset
+## Median Mean Temperature by year
+
+**The hypothesis is as follows:**
+
+*H~0~: There is no difference between median mean temperature of each year across 10 years.*
+
+*H~1~: There is a difference between median mean temperature of each year across 10 years.*
+
+```{r,fig.width=12,fig.height=10}
+p12 <- ggbetweenstats(
+  data = historical_temp_year,
+  x = year, 
+  y = median_mean_temp,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Median Mean Temperature of each year across 10 years (2014 to 2023)",
+  ylab = "Temperature (°C)",
+  xlab = "Year",
+  ggsignif.args = list(textsize = 5)
+) +
+  theme(text = element_text(size = 20),plot.title=element_text(size=20))
+p12
+
+```
+
+The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median mean temperature across the 10 years for:
+
+-   2014 with 2016 and 2019
+
+-   2016 with 2017, 2018 and 2022
+
+-   2017 with 2019
+
+-   2018 with 2019
+
+-   2019 with 2022
+
+**Overall, this indicates that changes in mean temperature over the years is statistically significant.**
+
 ## Daily Mean Temperature
 
 **The hypothesis is as follows:**
 
-*H~0~: There is no difference between mean daily mean temperature across 10 years.*
+*H~0~: There is no difference between median daily mean temperature across 10 years.*
 
-*H~1~: There is a difference between mean daily mean temperature across 10 years.*
+*H~1~: There is a difference between median daily mean temperature across 10 years.*
 
 ```{r,fig.width=12,fig.height=10}
-ggbetweenstats(
+p13 <- ggbetweenstats(
   data = historical_temp,
   x = year, 
   y = mean_temperature,
@@ -493,20 +549,55 @@ ggbetweenstats(
   ggsignif.args = list(textsize = 5)
 ) +
   theme(text = element_text(size = 20),plot.title=element_text(size=20))
+p13
 ```
 
-As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the mean daily mean temperature across the years.
+This test shows a more detailed comparison of median daily mean temperature across the 10 years. As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily mean temperature across the years.
+:::
+
+::: panel-tabset
+## Median Max Temperature by year
+
+**The** **hypothesis is as follows:**
+
+*H~0~: There is no difference between median max temperature of each year across 10 years.*
+
+*H~1~: There is a difference between median max temperature of each year across 10 years.*
+
+```{r,fig.width=12,fig.height=10}
+p14 <- ggbetweenstats(
+  data = historical_temp_year,
+  x = year, 
+  y = median_max_temp,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Median Max Temperature of each year across 10 years (2014 to 2023)",
+  ylab = "Temperature (°C)",
+  xlab = "Year",
+  ggsignif.args = list(textsize = 5)
+) +
+  theme(text = element_text(size = 20),plot.title=element_text(size=20))
+p14
+```
+
+The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median max temperature across the years for:
+
+-   2017 with 2019
+
+-   2019 with 2022
+
+**Overall, this indicates that some changes in max temperature over the years are statistically significant, specifically for 2017 to 2022 period. Further observations/data collection will need to be carried out to study further changes.**
 
 ## Daily Max Temperature
 
 **The hypothesis is as follows:**
 
-*H~0~: There is no difference between mean daily max temperature across 10 years.*
+*H~0~: There is no difference between median daily max temperature across 10 years.*
 
-*H~1~: There is a difference between mean daily max temperature across 10 years.*
+*H~1~: There is a difference between median daily max temperature across 10 years.*
 
 ```{r,fig.width=12,fig.height=10}
-ggbetweenstats(
+p15 <- ggbetweenstats(
   data = historical_temp,
   x = year, 
   y = maximum_temperature,
@@ -518,20 +609,57 @@ ggbetweenstats(
   ggsignif.args = list(textsize = 5)
 ) +
   theme(text = element_text(size = 20),plot.title=element_text(size=20))
+p15
 ```
 
-As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the mean daily max temperature across the years.
+This test shows a more detailed comparison of median daily max temperature across the 10 years. As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily max temperature across the years.
+:::
+
+::: panel-tabset
+## Median Min Temperature by year
+
+**The** **hypothesis is as follows:**
+
+*H~0~: There is no difference between median min temperature per year across 10 years.*
+
+*H~1~: There is a difference between median min temperature per year across 10 years.*
+
+```{r,fig.width=12,fig.height=10}
+p16 <- ggbetweenstats(
+  data = historical_temp_year,
+  x = year, 
+  y = median_min_temp,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Median Min Temperature of each year across 10 years (2014 to 2023)",
+  ylab = "Temperature (°C)",
+  xlab = "Year",
+  ggsignif.args = list(textsize = 5)
+) +
+  theme(text = element_text(size = 20),plot.title=element_text(size=20))
+p16
+```
+
+The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median min temperature across the years for:
+
+-   2014 with 2016 and 2019
+
+-   2016 with 2022
+
+-   2019 with 2022
+
+**Overall, this indicates that changes in min temperature over the years is statistically significant.**
 
 ## Daily Min Temperature
 
 **The hypothesis is as follows:**
 
-*H~0~: There is no difference between mean daily min temperature across 10 years.*
+*H~0~: There is no difference between median daily min temperature across 10 years.*
 
-*H~1~: There is a difference between mean daily min temperature across 10 years.*
+*H~1~: There is a difference between median daily min temperature across 10 years.*
 
 ```{r,fig.width=12,fig.height=10}
-ggbetweenstats(
+p17 <- ggbetweenstats(
   data = historical_temp,
   x = year, 
   y = minimum_temperature,
@@ -543,9 +671,10 @@ ggbetweenstats(
   ggsignif.args = list(textsize = 5)
 ) +
   theme(text = element_text(size = 20),plot.title=element_text(size=20))
+p17
 ```
 
-As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the mean daily min temperature across the years.
+This test shows a more detailed comparison of median daily min temperature across the 10 years. As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily min temperature across the years.
 :::
 
 ## 5.2 CDA #2 - Are there really certain months “drier” or “wetter”/ “hotter” or “cooler”?
@@ -561,7 +690,7 @@ DT::datatable(historical_rainfall_month,class = "compact")
 ```
 
 ```{r,fig.width=17,fig.height=15}
-test <- ggplot(historical_rainfall_month,
+p18 <- ggplot(historical_rainfall_month,
              aes(y=monthly_rainfall,
                  x = month,
                  fill = year)) +
@@ -573,7 +702,7 @@ test <- ggplot(historical_rainfall_month,
   theme_minimal()+
   theme(panel.spacing.y = unit(10, "lines"))
 
-ggplotly(test)
+ggplotly(p18)
 ```
 
 From the above plots, in 2014 and 2015, it can be seen that rainfall volume is higher in the later months of the year however this is less obvious after 2016. Notably, in 2018 and 2021, a higher volume of rainfall was seen in January as compared to December.
@@ -586,7 +715,7 @@ We first study the distribution of rainfall by month to determine if the distrib
 ## Zoomed-in plot
 
 ```{r,fig.width=30,fig.height=20}
-ggplot(historical_rainfall, 
+p19 <- ggplot(historical_rainfall, 
        aes(x = daily_rainfall_total, 
            y = month, 
            fill = 0.5 - abs(0.5-stat(ecdf)))) +
@@ -601,12 +730,13 @@ ggplot(historical_rainfall,
   labs(title="Distribution of Daily Rainfall in a month from 2014 to 2023",
        y="Station",
        x="Rainfall volume (mm)")
+p19
 ```
 
 ## Full plot
 
 ```{r,fig.width=30,fig.height=20}
-ggplot(historical_rainfall, 
+p20 <- ggplot(historical_rainfall, 
        aes(x = daily_rainfall_total, 
            y = month, 
            fill = 0.5 - abs(0.5-stat(ecdf)))) +
@@ -620,47 +750,55 @@ ggplot(historical_rainfall,
   labs(title="Distribution of Daily Rainfall in a month from 2014 to 2023",
        y="Station",
        x="Rainfall volume (mm)")
+p20
 ```
 :::
 
 As can be seen from the plots above, the distribution of rainfall is not normal (with the plots right-skewed), as such, I will utilise non-parametric test.
 
 ::: panel-tabset
-## Mean Rainfall across months
+## Median Rainfall across months
 
 **The hypothesis is as follows:**
 
-*H~0~: There is no difference between mean rainfall across months.*
+*H~0~: There is no difference between median rainfall across months.*
 
-*H~1~: There is a difference between mean rainfall across months.*
+*H~1~: There is a difference between median rainfall across months.*
 
 ```{r,fig.width=12,fig.height=10}
-ggbetweenstats(
+p21 <- ggbetweenstats(
   data = historical_rainfall_month,
   x = month, 
   y = monthly_rainfall,
   type = "np",
   messages = FALSE,
-  title="Distribution of Rainfall across months (2014 to 2023)",
+  title="Distribution of Median Rainfall across months (2014 to 2023)",
   ylab = "Rainfall volume (mm)",
   xlab = "Month",
   ggsignif.args = list(textsize = 5)
 ) +
   theme(text = element_text(size = 20), plot.title=element_text(size=20))
+p21
 ```
 
-As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the rainfall across months.
+The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median rainfall across the months for:
 
-## Mean Daily Rainfall across months
+-   February with November and December
+
+-   August with November
+
+**Overall, this indicates that the differences in median rainfall across some months are statistically significant, with February being drier than November and December, and August being drier than November.**
+
+## Median Daily Rainfall across months
 
 **The hypothesis is as follows:**
 
-*H~0~: There is no difference between mean daily rainfall across months.*
+*H~0~: There is no difference between median daily rainfall across months.*
 
-*H~1~: There is a difference between mean daily rainfall across months.*
+*H~1~: There is a difference between median daily rainfall across months.*
 
 ```{r,fig.width=15,fig.height=20}
-ggbetweenstats(
+p22 <- ggbetweenstats(
   data = historical_rainfall,
   x = month, 
   y = daily_rainfall_total,
@@ -672,9 +810,10 @@ ggbetweenstats(
   ggsignif.args = list(textsize = 5)
 ) +
   theme(text = element_text(size = 20), plot.title=element_text(size=20))
+p22
 ```
 
-As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the mean daily rainfall across the years.
+This test shows a more detailed comparison of median daily rainfall across the months. As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily rainfall across the months.
 :::
 
 ### 5.2.2 Temperature across different months
@@ -693,62 +832,68 @@ DT::datatable(historical_temp_month,class = "compact")
 ## Median Daily Mean Temperature
 
 ```{r,fig.width=15,fig.height=12}
-test2 <- ggplot(historical_temp_month,
+p23 <- ggplot(historical_temp_month,
        aes(y = median_mean_temp,
-           x = month,
-           fill = year)) +
-  geom_bar(stat = "identity")+
+           x = as.numeric(month),
+           colour = year)) +
+  geom_line()+
   facet_wrap(~year,scales = "free_x") +
   labs(title="Daily mean temperature across weather stations from 2014 to 2023",
        y = "Temperature (°C)",
        x = "Year")+
+  coord_cartesian(ylim = c(20,35))+
+  scale_x_continuous(breaks = 1:12, labels = 1:12)+
   theme_minimal() +
   theme(panel.spacing.y = unit(5,"lines"))
 
-ggplotly(test2)
+ggplotly(p23)
 ```
 
-Based on observation, it seems like median daily mean temperature does not differ signicantly across months from 2014 to 2023.
+Based on observation, it seems like median daily mean temperature does not differ significantly across months from 2014 to 2023.
 
 ## Median Daily Maximum Temperature
 
 ```{r,fig.width=15,fig.height=12}
-test3 <- ggplot(historical_temp_month,
+p24 <- ggplot(historical_temp_month,
        aes(y = median_max_temp,
-           x = month,
-           fill = year)) +
-  geom_bar(stat = "identity")+
+           x = as.numeric(month),
+           colour = year)) +
+  geom_line()+
   facet_wrap(~year,scales = "free_x") +
   labs(title="Daily max temperature across weather stations from 2014 to 2023",
        y = "Temperature (°C)",
        x = "Year") +
+  coord_cartesian(ylim = c(25,35))+
+  scale_x_continuous(breaks = 1:12, labels = 1:12)+
   theme_minimal() +
   theme(panel.spacing.y = unit(5,"lines"))
 
-ggplotly(test3)
+ggplotly(p24)
 ```
 
-Based on observation, it seems like median daily max temperature is not significantly different across months over the years from 2014 to 2023.
+Based on observation, it seems like median daily max temperature does not differ significantly across months over the years from 2014 to 2023.
 
 ## Median Daily Minimum Temperature
 
 ```{r,fig.width=15,fig.height=12}
-test4 <- ggplot(historical_temp_month,
+p25 <- ggplot(historical_temp_month,
        aes(y = median_min_temp,
-           x = month,
-           fill = year)) +
-  geom_bar(stat = "identity")+
+           x = as.numeric(month),
+           colour = year)) +
+  geom_line()+
   facet_wrap(~year,scales = "free_x") +
   labs(title="Daily min temperature across weather stations from 2014 to 2023",
        y = "Temperature (°C)",
        x = "Year") +
+  coord_cartesian(ylim = c(20,30))+
+  scale_x_continuous(breaks = 1:12, labels = 1:12)+
   theme_minimal() +
   theme(panel.spacing.y = unit(5,"lines"))
 
-ggplotly(test4)
+ggplotly(p25)
 ```
 
-Based on observation, it seems like median daily minimum temperature significantly differs across months over the years from 2014 to 2023.
+Based on observation, it seems like median daily minimum temperature does not differ significantly across months over the years from 2014 to 2023.
 :::
 
 We visualise the distribution using ridgeline plots, using the code chunks below.
@@ -757,7 +902,7 @@ We visualise the distribution using ridgeline plots, using the code chunks below
 ## Daily Mean Temperature
 
 ```{r,fig.width=30,fig.height=20}
-ggplot(historical_temp, 
+p26 <- ggplot(historical_temp, 
        aes(x = mean_temperature, 
            y = month, 
            fill = 0.5 - abs(0.5-stat(ecdf)))) +
@@ -771,6 +916,7 @@ ggplot(historical_temp,
   labs(title="Distribution of Daily Mean Temperature from 2014 to 2023",
        y="Station",
        x="Temperature (°C)")
+p26
 ```
 
 As can be seen from the plot above, the distribution of daily mean temperature is not normal, as such, non-parametric test will be used.
@@ -778,7 +924,7 @@ As can be seen from the plot above, the distribution of daily mean temperature i
 ## Daily Maximum Temperature
 
 ```{r,fig.width=30,fig.height=20}
-ggplot(historical_temp, 
+p27 <- ggplot(historical_temp, 
        aes(x = maximum_temperature, 
            y = month, 
            fill = 0.5 - abs(0.5-stat(ecdf)))) +
@@ -792,6 +938,7 @@ ggplot(historical_temp,
   labs(title="Distribution of Daily Maximum Temperature from 2014 to 2023",
        y="Station",
        x="Temperature (°C)")
+p27
 ```
 
 As can be seen from the plot above, the distribution of daily maximum temperature is not normal, as such, non-parametric test will be used.
@@ -799,7 +946,7 @@ As can be seen from the plot above, the distribution of daily maximum temperatur
 ## Daily Minimum Temperature
 
 ```{r,fig.width=30,fig.height=20}
-ggplot(historical_temp, 
+p28 <- ggplot(historical_temp, 
        aes(x = minimum_temperature, 
            y = month, 
            fill = 0.5 - abs(0.5-stat(ecdf)))) +
@@ -813,39 +960,59 @@ ggplot(historical_temp,
   labs(title="Distribution of Daily Minimum Temperature from 2014 to 2023",
        y="Station",
        x="Temperature (°C)")
+p28
 ```
 
 As can be seen from the plot above, the distribution of daily minimum temperature is not normal, as such, non-parametric test will be used.
 :::
 
-## Testing
+::: panel-tabset
+## Median mean temperature by month
+
+**The** **hypothesis is as follows:**
+
+*H~0~: There is no difference between median mean temperature across months.*
+
+*H~1~: There is a difference between median mean temperature across months.*
 
 ```{r,fig.width=12,fig.height=10}
-ggbetweenstats(
-  data = historical_temp_month,
-  x = month, 
-  y = median_mean_temp,
-  type = "np",
-  messages = FALSE,
-  title="Distribution of Daily Mean Temperature across months (2014 to 2023)",
-  ylab = "Temperature (°C)",
-  xlab = "Month",
-  ggsignif.args = list(textsize = 5)
-) +
-  theme(text = element_text(size = 20),plot.title=element_text(size=20))
+p29 <- ggbetweenstats(data = historical_temp_month,
+                      x = month,
+                      y = median_mean_temp,
+                      type = "np",
+                      messages = FALSE,
+                      title = "Distribution of Median Mean Temperature by month (2014 to 2023)",
+                      ylab = "Temperature (C)",
+                      xlab = "Month",
+                      ggsignif.args = list(textsize =5)) +
+  theme(text = element_text(size = 20),plot.title = element_text(size = 20))
+p29
 ```
 
-::: panel-tabset
+The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median mean temperature across the months for:
+
+-   January with April to September
+
+-   February with April to July
+
+-   April with December
+
+-   May to July with November and December
+
+-   August and September with December
+
+**Overall, this indicates that the differences in median mean temperature across months is generally statistically significant. This suggests that mean temperatures are higher during the middle months of the year.**
+
 ## Daily Mean Temperature
 
 **The hypothesis is as follows:**
 
-*H~0~: There is no difference between mean daily mean temperature across months.*
+*H~0~: There is no difference between median daily mean temperature across months.*
 
-*H~1~: There is a difference between mean daily mean temperature across months.*
+*H~1~: There is a difference between median daily mean temperature across months.*
 
 ```{r,fig.width=12,fig.height=10}
-ggbetweenstats(
+p30 <- ggbetweenstats(
   data = historical_temp,
   x = month, 
   y = mean_temperature,
@@ -857,20 +1024,59 @@ ggbetweenstats(
   ggsignif.args = list(textsize = 5)
 ) +
   theme(text = element_text(size = 20),plot.title=element_text(size=20))
+p30
 ```
 
-As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the mean daily mean temperature across months.
+This test shows a more detailed comparison of median daily mean temperature across the months. As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily mean temperature across the months.
+:::
+
+::: panel-tabset
+## Median Max Temperature by month
+
+**The hypothesis is as follows:**
+
+*H~0~: There is no difference between median max temperature across months.*
+
+*H~1~: There is a difference between median max temperature across months.*
+
+```{r,fig.width=12,fig.height=10}
+p31 <- ggbetweenstats(data = historical_temp_month,
+                      x = month,
+                      y = median_max_temp,
+                      type = "np",
+                      messages = FALSE,
+                      title = "Distribution of Median Max Temperature by month (2014 to 2023)",
+                      ylab = "Temperature (C)",
+                      xlab = "Month",
+                      ggsignif.args = list(textsize =5)) +
+  theme(text = element_text(size = 20),plot.title = element_text(size = 20))
+p31
+```
+
+The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median max temperature across the months for:
+
+-   January with March to May
+
+-   February with April
+
+-   March with December
+
+-   April with August, November and December
+
+-   May with December
+
+**Overall, this indicates that the differences in median max temperature across months is generally statistically significant. This suggests that max temperatures are higher during the middle months of the year.**
 
 ## Daily Max Temperature
 
 **The hypothesis is as follows:**
 
-*H~0~: There is no difference between mean daily max temperature across months.*
+*H~0~: There is no difference between median daily max temperature across months.*
 
-*H~1~: There is a difference between mean daily max temperature across months.*
+*H~1~: There is a difference between median daily max temperature across months.*
 
 ```{r,fig.width=12,fig.height=10}
-ggbetweenstats(
+p32 <- ggbetweenstats(
   data = historical_temp,
   x = month, 
   y = maximum_temperature,
@@ -882,9 +1088,46 @@ ggbetweenstats(
   ggsignif.args = list(textsize = 5)
 ) +
   theme(text = element_text(size = 20),plot.title=element_text(size=20))
+p32
 ```
 
-As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the mean daily max temperature across months.
+This test shows a more detailed comparison of median daily max temperature across the months. As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily max temperature across the months.
+:::
+
+::: panel-tabset
+## Median Min Temperature by month
+
+**The hypothesis is as follows:**
+
+*H~0~: There is no difference between median min temperature across months.*
+
+*H~1~: There is a difference between median min temperature across months.*
+
+```{r,fig.width=12,fig.height=10}
+p33 <- ggbetweenstats(data = historical_temp_month,
+                      x = month,
+                      y = median_min_temp,
+                      type = "np",
+                      messages = FALSE,
+                      title = "Distribution of Median Min Temperature by month (2014 to 2023)",
+                      ylab = "Temperature (C)",
+                      xlab = "Month",
+                      ggsignif.args = list(textsize =5)) +
+  theme(text = element_text(size = 20),plot.title = element_text(size = 20))
+p33
+```
+
+The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median min temperature across the months for:
+
+-   January with May to August
+
+-   February with May to August
+
+-   May with December
+
+-   June to August with November and December
+
+**Overall, this indicates that the differences in median min temperature across months is generally statistically significant. This suggests that min temperatures are higher during the middle months of the year.**
 
 ## Daily Min Temperature
 
@@ -895,7 +1138,7 @@ As the p-values of the test above are \< 0.05, we reject the null hypothesis at 
 *H~1~: There is a difference between mean daily min temperature across months.*
 
 ```{r,fig.width=12,fig.height=10}
-ggbetweenstats(
+p34 <- ggbetweenstats(
   data = historical_temp,
   x = month, 
   y = minimum_temperature,
@@ -907,23 +1150,55 @@ ggbetweenstats(
   ggsignif.args = list(textsize = 5)
 ) +
   theme(text = element_text(size = 20),plot.title=element_text(size=20))
+p34
 ```
 
-As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the mean daily min temperature across months.
+This test shows a more detailed comparison of median daily min temperature across the months. As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily min temperature across the months.
 :::
 
 ## 5.3 CDA #3 - Are there certain locations “drier” or “wetter”/ “hotter” or “cooler”?
 
 ### 5.3.1 Rainfall across different weather stations
 
+::: panel-tabset
+## Median Yearly Rainfall
+
 **The hypothesis is as follows:**
 
-*H~0~: There is no difference between mean daily rainfall across weather stations.*
+*H~0~: There is no difference between median yearly rainfall across weather stations.*
 
-*H~1~: There is a difference between mean daily rainfall across weather stations.*
+*H~1~: There is a difference between median yearly rainfall across weather stations.*
 
 ```{r,fig.width=12,fig.height=10}
-ggbetweenstats(
+p35 <- ggbetweenstats(
+  data = historical_rainfall_year,
+  x = station, 
+  y = yearly_rainfall,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Yearly Rainfall by Station",
+  ylab = "Rainfall volume (mm)",
+  xlab = "Station",
+  ggsignif.args = list(textsize = 3)
+) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1),
+        plot.title = element_text(size = 15),
+        text = element_text(size = 15))
+p35
+```
+
+As seen from the plot above, the p-value is \< 0.05 and hence we will reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median yearly rainfall across stations.
+
+## Median Daily Rainfall
+
+**The hypothesis is as follows:**
+
+*H~0~: There is no difference between median daily rainfall across weather stations.*
+
+*H~1~: There is a difference between median daily rainfall across weather stations*
+
+```{r,fig.width=12,fig.height=10}
+p36 <- ggbetweenstats(
   data = historical_rainfall,
   x = station, 
   y = daily_rainfall_total,
@@ -937,15 +1212,85 @@ ggbetweenstats(
   theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1),
         plot.title = element_text(size = 15),
         text = element_text(size = 15))
+p36
 ```
+
+This test shows a more detailed comparison of median daily rainfall across the stations. The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily rainfall across stations for:
+
+-   Admiralty with Changi, East Coast Parkway, Jurong Island, Pasir Panjang and Sentosa
+
+-   Ang Mo Kio with Changi, East Coast Parkway, Jurong Island, Pasir Panjang and Sentosa
+
+-   Changi with Choa Chu Kang (South), Clementi, Jurong (West), Newton, Tai Seng and Tuas South
+
+-   Choa Chu Kang (South) with East Coast Parkway, Jurong Island, Newton, Pasir Panjang, Sentosa, Tai Seng and Tuas South
+
+-   Clementi with East Coast Parkway, Jurong Island, Pasir Panjang and Sentosa
+
+-   East Coast Parkway with Jurong (West), Jurong Island, Newton, Pasir Panjang, Tai Seng and Tuas South
+
+-   Jurong (West) with Jurong Island, Newton, Pasir Panjang, Sentosa, Tai Seng and Tuas South
+
+    **Overall, this indicates that the differences in median daily rainfall across stations is generally statistically significant and that different regions in Singapore vary in degree of dryness/wetness.**
+:::
 
 ### 5.3.2 Temperature across different weather stations
 
 ::: panel-tabset
-## Daily Mean Temperature
+## Median Yearly Mean Temperature
+
+**The** **hypothesis is as follows:**
+
+*H~0~: There is no difference between median yearly mean temperature across weather stations.*
+
+*H~1~: There is a difference between median yearly mean temperature across weather stations.*
 
 ```{r,fig.width=12,fig.height=10}
-ggbetweenstats(
+p37 <- ggbetweenstats(
+  data = historical_temp_year,
+  x = station, 
+  y = median_mean_temp,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Yearly Mean Temperature by Station",
+  ylab = "Temperature (°C)",
+  xlab = "Station",
+  ggsignif.args = list(textsize = 3)
+) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1),
+        plot.title = element_text(size = 15),
+        text = element_text(size = 15))
+p37
+```
+
+The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily mean temperature for stations:
+
+-   Admiralty with East Coast Parkway, Jurong Island, Pasir Panjang, Sentosa Island and Tai Seng
+
+-   Choa Chu Kang (South) with Jurong Island and Tai Seng
+
+-   Clementi with Jurong Island and Tai Seng
+
+-   East Coast Parkway with Jurong (West)
+
+-   Jurong (West) with Jurong Island, Pasir Panjang, Sentosa Island, Tai Seng and Tuas South
+
+-   Jurong Island with Newton
+
+-   Newton with Pasir Panjang and Tai Seng
+
+**Overall, this indicates that the differences in median daily mean temperature across stations is generally statistically significant. This suggests that different regions of Singapore are hotter/cooler.**
+
+## Median Daily Mean Temperature
+
+**The** **hypothesis is as follows:**
+
+*H~0~: There is no difference between median daily mean temperature across weather stations.*
+
+*H~1~: There is a difference between median daily mean temperature across weather stations.*
+
+```{r,fig.width=12,fig.height=10}
+p38 <- ggbetweenstats(
   data = historical_temp,
   x = station, 
   y = mean_temperature,
@@ -959,12 +1304,69 @@ ggbetweenstats(
   theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1),
         plot.title = element_text(size = 15),
         text = element_text(size = 15))
+p38
 ```
 
-## Daily Maximum Temperature
+This test shows a more detailed comparison of median daily mean temperature across the stations. The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily mean temperature across stations.
+:::
+
+::: panel-tabset
+## Median Yearly Maximum Temperature
+
+**The** **hypothesis is as follows:**
+
+*H~0~: There is no difference between median yearly maximum temperature across weather stations.*
+
+*H~1~: There is a difference between median yearly maximum temperature across weather stations.*
 
 ```{r,fig.width=12,fig.height=10}
-ggbetweenstats(
+p39 <- ggbetweenstats(
+  data = historical_temp_year,
+  x = station, 
+  y = median_max_temp,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Yearly Max Temperature by Station",
+  ylab = "Temperature (°C)",
+  xlab = "Station",
+  ggsignif.args = list(textsize = 3)
+) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1),
+        plot.title = element_text(size = 15),
+        text = element_text(size = 15))
+p39
+```
+
+The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median yearly max temperature for stations:
+
+-   Admiralty with East Coast Parkway and Pasir Panjang
+
+-   Ang Mo Kio with East Coast Parkway, Pasir Panjang and Tuas South
+
+-   Changi with East Coast Parkway
+
+-   Choa Chu Kang (South) with East Coast Parkway, Jurong Island, Pasir Panjang and Tuas South
+
+-   Clementi with East Coast Parkway and Pasir Panjang
+
+-   East Coast Parkway with Sentosa Island and Tai Seng
+
+-   Pasir Panjang with Tai Seng
+
+-   Tai Seng with Tuas South
+
+**Overall, this indicates that the differences in median yearly max temperature across stations is generally statistically significant. This suggests that different regions of Singapore are hotter/cooler.**
+
+## Median Daily Maximum Temperature
+
+**The** **hypothesis is as follows:**
+
+*H~0~: There is no difference between median daily maximum temperature across weather stations.*
+
+*H~1~: There is a difference between median daily maximum temperature across weather stations.*
+
+```{r,fig.width=12,fig.height=10}
+p40 <- ggbetweenstats(
   data = historical_temp,
   x = station, 
   y = maximum_temperature,
@@ -978,12 +1380,65 @@ ggbetweenstats(
   theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1),
         plot.title = element_text(size = 15),
         text = element_text(size = 15))
+p40
 ```
 
-## Daily Minimum Temperature
+This test shows a more detailed comparison of median daily max temperature across the stations. The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily max temperature across stations.
+:::
+
+::: panel-tabset
+## Median Yearly Minimum Temperature
+
+**The** **hypothesis is as follows:**
+
+*H~0~: There is no difference between median yearly minimum temperature across weather stations.*
+
+*H~1~: There is a difference between median yearly minimum temperature across weather stations.*
 
 ```{r,fig.width=12,fig.height=10}
-ggbetweenstats(
+p41 <- ggbetweenstats(
+  data = historical_temp_year,
+  x = station, 
+  y = median_min_temp,
+  type = "np",
+  messages = FALSE,
+  title="Distribution of Yearly Min Temperature by Station",
+  ylab = "Temperature (°C)",
+  xlab = "Station",
+  ggsignif.args = list(textsize = 3)
+) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1),
+        plot.title = element_text(size = 15),
+        text = element_text(size = 15))
+p41
+```
+
+The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median yearly min temperature for stations:
+
+-   Admiralty with East Coast Parkway, Jurong Island, Pasir Panjang, Sentosa Island and Tai Seng
+
+-   Ang Mo Kio with East Coast Parkway, Pasir Panjang and Tai Seng
+
+-   Choa Chu Kang (South) with East Coast Parkway, Jurong Island, Pasir Panjang, Sentosa Island, Tai Seng and Tuas South
+
+-   Clementi with East Coast Parkway, Jurong Island, Pasir Panjang, Sentosa Island and Tai Seng
+
+-   East Coast Parkway with Jurong (West) and Newton
+
+-   Jurong (West) with Jurong Island, Pasir Panjang, Sentosa Island, Tai Seng and Tuas South
+
+**Overall, this indicates that the differences in median yearly min temperature across stations is generally statistically significant. This suggests that different regions of Singapore are hotter/cooler.**
+
+## Median Daily Minimum Temperature
+
+**The** **hypothesis is as follows:**
+
+*H~0~: There is no difference between median daily minimum temperature across weather stations.*
+
+*H~1~: There is a difference between median daily minimum temperature across weather stations.*
+
+```{r,fig.width=12,fig.height=10}
+p42 <- ggbetweenstats(
   data = historical_temp,
   x = station, 
   y = minimum_temperature,
@@ -997,5 +1452,8 @@ ggbetweenstats(
   theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1),
         plot.title = element_text(size = 15),
         text = element_text(size = 15))
+p42
 ```
+
+This test shows a more detailed comparison of median daily min temperature across the stations. The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily min temperature across stations.
 :::
