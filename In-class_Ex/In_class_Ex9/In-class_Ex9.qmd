@@ -1,0 +1,294 @@
+---
+title: "In-class Exercise 9"
+author: "Si Min Kock"
+date: "March 16, 2024"
+date-modified: "last-modified"
+toc: true
+execute:
+  eval: true
+  echo: true
+  freeze: true
+  warning: false
+  message: false
+editor: visual
+---
+
+## 1. Installing R Packages
+
+```{r}
+pacman::p_load(igraph,tidygraph,ggraph,visNetwork,tidyverse,lubridate,clock,graphlayouts)
+```
+
+-   `clock` only meant for time
+
+-   `lubridate` meant for date
+
+## 2. Importing Data
+
+*GAStech_email_node.csv* and *GAStech_email_edges-v2.csv* are imported into RStudio environment by using `read_csv()` of **readr** package.
+
+```{r}
+GAStech_nodes <- read_csv("data/GAStech_email_node.csv")
+GAStech_edges <- read_csv("data/GAStech_email_edge-v2.csv")
+```
+
+## 3. Wrangling Data
+
+### 3.1 Wrangling Time
+
+```{r}
+GAStech_edges <- GAStech_edges %>%
+  mutate(SendDate = dmy(SentDate)) %>%
+  mutate(Weekday = wday(SentDate,
+                        label = TRUE,
+                        abbr = FALSE))
+```
+
+`wday` used to extract *Weekday* from the *SentDate* and label = TRUE to ensure they are labelled.
+
+### 3.2 Wrangling Attributes
+
+```{r}
+GAStech_edges_aggregated <- GAStech_edges %>%
+  filter(MainSubject == "Work related") %>%
+  group_by(source, target, Weekday) %>%
+  summarise(Weight = n()) %>%
+  filter(source != target) %>%
+  filter(Weight > 1) %>%
+  ungroup()
+
+GAStech_edges_aggregated
+```
+
+-   Filter to pick out work-related emails
+
+-   group_by to aggregate communication by weekday
+
+-   Summarise to gather the number of counts of communication
+
+-   Filter out emails for which source and target are the same
+
+-   Filter out single/one-time emails aka looking for email communication with at least 2 emails
+
+## 4. Creating network objects using tidygraph
+
+### 4.1 Using `tbl_graph()` to build tidygraph data model
+
+`nodes` and `edges` need data in `data.frame` - the syntax however does not elaborate what type of `data.frame`
+
+To check what `data.frame` the data is in, have to use command called "class(GAStech_nodes):
+
+```{r}
+class(GAStech_nodes)
+```
+
+shows that it is a **tbl `data.frame`**
+
+test with the code to see if it works:
+
+```{r}
+GAStech_graph <- tbl_graph(nodes = GAStech_nodes,
+                           edges = GAStech_edges_aggregated,
+                           directed = TRUE)
+```
+
+`directed` used to indicate whether directed or undirected email. for emails, it is always `directed = TRUE` as emails back-and-forth might not be equal in number.
+
+you would realise that the GAStech_graph components are igraph objects
+
+```{r}
+GAStech_graph
+```
+
+The number of nodes and edges must correspond to number of observations in *GAStech_nodes* and *GAStech_edges_aggregated*.
+
+## 5. Computing ggraph
+
+```{r}
+ggraph(GAStech_graph) +
+  geom_edge_link() +
+  geom_node_point()
+```
+
+Simple graph generate with same colour and size for the nodes as not defined within the code.
+
+Cannot just use `geom_node` and `geom_link` as these are already available in *ggplot* hence naming under [*ggraph*](https://ggraph.data-imaginist.com/)is different
+
+::: callout-tip
+-   links always give straight lines while arc give curve lines
+
+-   ggraph give extra geom objects to help create graphs
+:::
+
+### 5.1 Editing the colour
+
+We now make use of the arguments within `geom_edge_link` and `geom_node_point`:
+
+```{r}
+g <- ggraph(GAStech_graph) +
+  geom_edge_link(aes(colour = "grey50")) +
+  geom_node_point(aes(colour = "grey40"))
+
+g + theme_graph(background = "grey10",
+                text_colour = "white")
+```
+
+### 5.2 Editing graph layout
+
+```{r}
+g <- ggraph(GAStech_graph,
+            layout = "fr") +
+  geom_edge_link(aes()) +
+  geom_node_point(aes())
+
+g + theme_graph()
+```
+
+More details about `layout` option can be referenced [here](https://r.igraph.org/reference/layout_.html) based on [ggraph](https://ggraph.data-imaginist.com/) website:
+
+![](images/clipboard-2011185501.png)
+
+Changing to another layout *kk*:
+
+```{r}
+g <- ggraph(GAStech_graph,
+            layout = "kk") +
+  geom_edge_link(aes()) +
+  geom_node_point(aes())
+
+g + theme_graph()
+```
+
+Changing to another layout *nicely:*
+
+```{r}
+g <- ggraph(GAStech_graph,
+            layout = "nicely") +
+  geom_edge_link(aes()) +
+  geom_node_point(aes(colour = Department,
+                      size = 3))
+
+g + theme_graph()
+```
+
+In the above, added colour and changed size for nodes.
+
+We will revise the code further under `geom_edge_link`:
+
+```{r}
+g <- ggraph(GAStech_graph,
+            layout = "nicely") +
+  geom_edge_link(aes(width=Weight),
+                 alpha = 0.2) +
+  scale_edge_width(range=c(0.1,5)) +
+  geom_node_point(aes(colour = Department,
+                      size = 3))
+
+g + theme_graph()
+```
+
+-   alpha is level of opacity
+
+-   since introduced thickness *width=Weight*, need to add in `scale_edge_width` to provide instructions on how to spread out the thickness.
+
+## 6. Creating facet graphs
+
+### 6.1 Facet edge
+
+```{r}
+set_graph_style()
+
+g <- ggraph(GAStech_graph,
+            layout = "nicely") +
+  geom_edge_link(aes(width=Weight),
+                 alpha = 0.2) +
+  scale_edge_width(range=c(0.1,5)) +
+  geom_node_point(aes(colour = Department),
+                  size = 2)
+
+g + facet_edges(~Weekday)
+```
+
+The overall layout of the graphs are the same, able to see the differences across different days of the week.
+
+### 6.2 Facet node
+
+```{r}
+set_graph_style()
+
+g <- ggraph(GAStech_graph,
+            layout = "nicely") +
+  geom_edge_link(aes(width=Weight),
+                 alpha = 0.2) +
+  scale_edge_width(range=c(0.1,5)) +
+  geom_node_point(aes(colour = Department),
+                  size =2)
+
+g + facet_nodes(~Department) +
+  th_foreground(foreground="grey80",
+                border = TRUE) +
+  theme(legend.position = "bottom")
+```
+
+At Executive level, you can see that they hardly talk to each other.
+
+### 7. Network metric analysis
+
+As shown [here](https://tidygraph.data-imaginist.com/reference/index.html) and in screenshot below, centrality under ggraph is consolidated as such:
+
+![](images/clipboard-575636994.png)
+
+\
+However when looking at igraph, centrality codes are spread out i.e. syntax is not consistent, for instance can have names like [below](https://r.igraph.org/reference/index.html#maximum-flow-and-connectivity):
+
+![](images/clipboard-4001440718.png)
+
+### 7.1 Calculating centrality indices
+
+```{r}
+g <- GAStech_graph %>%
+  mutate(betweenness_centrality = centrality_betweenness()) %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(width=Weight),
+                 alpha=0.2) +
+  scale_edge_width(range=c(0.1,5)) +
+  geom_node_point(aes(colour=Department,
+                      size=betweenness_centrality))
+
+g + theme_graph()
+```
+
+Note that `betweenness_centrality` does not appear in the datatable. help to adjust the size accordingly.
+
+## 8. Interactivity
+
+uses `visNetwork` package, will need to adjust dataset
+
+```{r}
+GAStech_edges_aggregated <- GAStech_edges %>%
+  left_join(GAStech_nodes, by=c("sourceLabel" = "label")) %>%
+  rename(from = id) %>%
+  left_join(GAStech_nodes, by=c("targetLabel" = "label")) %>%
+  rename(to=id) %>%
+  filter(MainSubject == "Work related") %>%
+  group_by(from, to) %>%
+  summarise(weight = n()) %>%
+  filter(from!=to) %>%
+  filter(weight>1) %>%
+  ungroup()
+```
+
+```{r}
+GAStech_nodes <- GAStech_nodes %>%
+  rename(group=Department)
+```
+
+```{r}
+visNetwork(GAStech_nodes,
+           GAStech_edges_aggregated) %>%
+  visIgraphLayout(layout="layout_with_fr") %>%
+  visOptions(highlightNearest = TRUE,
+             nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visLayout(randomSeed = 123)
+```

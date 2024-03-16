@@ -165,11 +165,25 @@ historical_temp <- daily_historical %>% select(1:4,9:11)
 historical_temp
 ```
 
+Saving it as a csv file:
+
+```{r}
+#| eval: false
+write_csv(historical_temp, "data/historical_temp.csv")
+```
+
 ## *historical_rainfall*
 
 ```{r}
 historical_rainfall <- daily_historical %>% select(1:8)
 historical_rainfall
+```
+
+Saving it as a csv file:
+
+```{r}
+#| eval: false
+write_csv(historical_rainfall, "data/historical_rainfall.csv")
 ```
 :::
 
@@ -189,6 +203,13 @@ historical_rainfall_year <- historical_rainfall %>%
   summarise(yearly_rainfall = sum(daily_rainfall_total))
 
 DT::datatable(historical_rainfall_year,class = "compact")
+```
+
+Saving it as a csv file:
+
+```{r}
+#| eval: false
+write_csv(historical_rainfall_year, "data/historical_rainfall_year.csv")
 ```
 
 ```{r,fig.height=6}
@@ -338,6 +359,13 @@ historical_temp_year <- historical_temp %>%
             median_min_temp = median(minimum_temperature))
 
 DT::datatable(historical_temp_year,class = "compact")
+```
+
+Saving it as a csv file:
+
+```{r}
+#| eval: false
+write_csv(historical_temp_year, "data/historical_temp_year.csv")
 ```
 
 ::: panel-tabset
@@ -686,6 +714,13 @@ historical_rainfall_month <- historical_rainfall %>%
 DT::datatable(historical_rainfall_month,class = "compact")
 ```
 
+Saving it as a csv file:
+
+```{r}
+#| eval: false
+write_csv(historical_rainfall_month, "data/historical_rainfall_month.csv")
+```
+
 ```{r,fig.width=17,fig.height=15}
 p18 <- ggplot(historical_rainfall_month,
              aes(y=monthly_rainfall,
@@ -823,6 +858,14 @@ historical_temp_month <- historical_temp %>%
             median_min_temp = median(minimum_temperature))
 
 DT::datatable(historical_temp_month,class = "compact")
+```
+
+Saving it as a csv file:
+
+```{r}
+#| eval: false
+write_csv(historical_temp_month, "data/historical_temp_month.csv")
+
 ```
 
 ::: panel-tabset
