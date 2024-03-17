@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "ISSS608",
     "section": "",
-    "text": "Welcome to Si Min’s ISSS608 Visual Analytics and Applications website.\nPlease find below the latest updates:\n\n\n\n\n\n\n\n\n\n\n\n\nIn-class Exercise 9\n\n\n6 min\n\n\n\nMar 16, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nTake-home Exercise 4: Prototyping Modules for Visual Analytics Shiny Application\n\n\n61 min\n\n\n\nMar 1, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 7A\n\n\n19 min\n\n\n\nFeb 25, 2024\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Welcome to Si Min’s ISSS608 Visual Analytics and Applications website.\nPlease find below the latest updates:\n\n\n\n\n\n\n\n\n\n\n\n\nTake-home Exercise 4: Prototyping Modules for Visual Analytics Shiny Application\n\n\n114 min\n\n\n\nMar 1, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nIn-class Exercise 9\n\n\n6 min\n\n\n\nMar 16, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 7A\n\n\n19 min\n\n\n\nFeb 25, 2024\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
@@ -1628,7 +1628,7 @@
     "href": "Take-home_Ex/Take-home_Ex4/Take-home_Ex4.html#ui-design",
     "title": "Take-home Exercise 4: Prototyping Modules for Visual Analytics Shiny Application",
     "section": "6. UI Design",
-    "text": "6. UI Design\n&lt;WIP&gt;"
+    "text": "6. UI Design\nThe envisioned UI design is as follows:\n\n\n\n\n\n\n\n\nComponents for UI Design\nExplanation\n\n\n\n\nType of test\nTo enable the user to select among the four types of test available for statistical analysis using ggbetweenstats function:\n\nparametric\nnon-parametric\nrobust\nbayes factor\n\nBy default, the selected parameter is non-parametric based on the non-normal distribution of the data as determined through analysis in the above sections (5.1.1 Historical rainfall over the years and 5.1.2 Historical temperature over the years).\n\n\nPlot type\nTo enable user to select among the three options of plot type available for statistical analysis using ggbetweenstats function:\n\nboxplot\nviolin\nviolin-boxplot\n\n\n\nConfidence level\nTo enable the user to select between 95% and 99% confidence level to observe how results would change.\n\n\nPairwise display\nTo enable the user to choose whether they want to display significant or non-significant pairwise p-values on the plot, providing them with flexibility and ease of visualisation.\nAs statistical analysis above spans across large numbers, there is a large number of pairwise comparisons:\n\n10 years - for CDA #1 on “Are the changes in rainfall and temperature over the years statistically significant?”\n12 months - for CDA #2 on “Are there really certain months “drier” or “wetter”/ “hotter” or “cooler”?”\n13 weather stations - for CDA #3 on “Are there certain locations “drier” or “wetter”/ “hotter” or “cooler”?”\n\nOffering users the option to choose between significant and non-significant pairwise p-values for display, they can focus their attention on comparisons that are most relevant for their analysis.\nFor instance, if a user is primarily interested in identifying statistically significant differences, they may choose to display only the significant pairwise p-values. This can help them quickly identify the most important comparisons without being overwhelmed by a cluttered plot. This will facilitate better interpretation of the results."
   },
   {
     "objectID": "In-class_Ex/In_class_Ex9/In-class_Ex9.html",
