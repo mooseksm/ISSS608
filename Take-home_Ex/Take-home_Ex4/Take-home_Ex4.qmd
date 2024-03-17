@@ -1528,7 +1528,7 @@ This test shows a more detailed comparison of median daily min temperature acros
 
 The envisioned UI design is as follows:
 
-![](images/shinyapp.jpg){fig-align="center"}
+![](images/shinyapp.jpg)
 
 +--------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Components for UI Design | Explanation                                                                                                                                                                                                                                                                                                                                           |
