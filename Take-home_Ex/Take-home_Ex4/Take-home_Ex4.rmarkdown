@@ -12,6 +12,7 @@ execute:
 editor: visual
 ---
 
+
 ## 1. The Task
 
 In this take-home exercise, I am required to select one of the module of my group's proposed Shiny application and complete the following tasks:
@@ -77,19 +78,23 @@ The team downloaded historical daily records from various weather stations acros
 
 The following code chunk is used to install the necessary R packages:
 
+
 ```{r}
 pacman::p_load(tidyverse,ggridges,ggrepel,ggthemes,ggstatsplot,ggsignif,hrbrthemes,patchwork,dplyr, gifski, gapminder,plotly,gganimate,ggiraph,magick)
 ```
 
+
 ### 4.2 Importing the Dataset
 
 I will import the *daily_historical.csv* datafile using the following code chunk:
+
 
 ```{r}
 daily_historical <- read_csv("data/daily_historical.csv",locale=locale(encoding="latin1"))
 
 daily_historical
 ```
+
 
 As can be seen, there are a total of 329,156 records across 13 variables.
 
@@ -99,11 +104,13 @@ As can be seen, there are a total of 329,156 records across 13 variables.
 
 Before proceeding with analysis, we first remove any missing values in the data using the following code chunk:
 
+
 ```{r}
 daily_historical <- drop_na(daily_historical)
 
 daily_historical
 ```
+
 
 As can be seen, what remains is a total of 44,856 records across 13 variables.
 
@@ -114,6 +121,7 @@ To ensure consistent comparison across all weather stations, the same time perio
 ::: panel-tabset
 ## Starting Year
 
+
 ```{r}
 daily_historical_start <- daily_historical %>% 
   group_by(station) %>% 
@@ -122,7 +130,9 @@ daily_historical_start <- daily_historical %>%
 daily_historical_start
 ```
 
+
 ## Ending Year
+
 
 ```{r}
 daily_historical_start <- daily_historical %>%
@@ -131,6 +141,7 @@ daily_historical_start <- daily_historical %>%
 
 daily_historical_start
 ```
+
 :::
 
 As the starting and ending year of weather data across all 13 weather stations is 2014 and 2023 respectively, no further steps are required to align the time period of the data.
@@ -139,12 +150,15 @@ As the starting and ending year of weather data across all 13 weather stations i
 
 Based on a *glimpse* of the *daily_historical* dataframe, the data types for *year*, *month* and *day* are continuous.
 
+
 ```{r}
 
 glimpse(daily_historical)
 ```
 
+
 For ease of further analysis, we will convert them to categorical *factor* data type instead:
+
 
 ```{r}
 daily_historical <- daily_historical %>%
@@ -153,6 +167,7 @@ daily_historical <- daily_historical %>%
 glimpse(daily_historical)
 ```
 
+
 ### 4.4 Data Wrangling
 
 We will analyse weather and rainfall data separately and hence we will create two dataframes *historical_temp* and *historical_rainfall* from the dataset *daily_historical:*
@@ -160,31 +175,39 @@ We will analyse weather and rainfall data separately and hence we will create tw
 ::: panel-tabset
 ## *historical_temp*
 
+
 ```{r}
 historical_temp <- daily_historical %>% select(1:4,9:11)
 historical_temp
 ```
 
+
 Saving it as a csv file:
+
 
 ```{r}
 #| eval: false
 write_csv(historical_temp, "data/historical_temp.csv")
 ```
 
+
 ## *historical_rainfall*
+
 
 ```{r}
 historical_rainfall <- daily_historical %>% select(1:8)
 historical_rainfall
 ```
 
+
 Saving it as a csv file:
+
 
 ```{r}
 #| eval: false
 write_csv(historical_rainfall, "data/historical_rainfall.csv")
 ```
+
 :::
 
 ## 5. Confirmatory Data Analysis (CDA)
@@ -197,6 +220,7 @@ As the data ranges from 2014 to 2023, there are 10 years worth of data.
 
 ### 5.1.1 Historical rainfall over the years
 
+
 ```{r}
 historical_rainfall_year <- historical_rainfall %>%
   group_by(station,year) %>%
@@ -205,7 +229,9 @@ historical_rainfall_year <- historical_rainfall %>%
 DT::datatable(historical_rainfall_year,class = "compact")
 ```
 
+
 Saving it as a csv file:
+
 
 ```{r}
 #| eval: false
@@ -229,12 +255,14 @@ p1 <- ggplot(historical_rainfall_year,
 ggplotly(p1)
 ```
 
+
 Over the years, across the 13 weather stations, the rainfall volume is observed to have increased albeit by different intensities. We need to examine if the differences are statistically different.
 
 Before we do so**,** we will need to determine whether the rainfall for each year follows a normal or non-normal distribution and we visualise the distribution of rainfall using ridgeline plots, using the code chunk below.
 
 ::: panel-tabset
 ## Zoomed-in plot
+
 
 ```{r,fig.width=30,fig.height=20}
 p2 <- ggplot(historical_rainfall, 
@@ -256,7 +284,9 @@ p2 <- ggplot(historical_rainfall,
 p2
 ```
 
+
 ## Full plot
+
 
 ```{r,fig.width=30,fig.height=20}
 p3 <- ggplot(historical_rainfall, 
@@ -276,6 +306,7 @@ p3 <- ggplot(historical_rainfall,
 
 p3
 ```
+
 :::
 
 As can be seen from the plots above, the distribution of rainfall is not normal (with the plots right-skewed), as such, I will utilise non-parametric test.
@@ -288,6 +319,7 @@ As can be seen from the plots above, the distribution of rainfall is not normal 
 *H~0~: There is no difference between median rainfall per year across 10 years.*
 
 *H~1~: There is a difference between median rainfall per year across 10 years.*
+
 
 ```{r,fig.width=12,fig.height=10}
 p4 <- ggbetweenstats(
@@ -306,6 +338,7 @@ p4 <- ggbetweenstats(
 
 p4
 ```
+
 
 The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median rainfall per year between years:
 
@@ -329,6 +362,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 
 *H~1~: There is a difference between median daily rainfall across 10 years.*
 
+
 ```{r,fig.width=12,fig.height=10}
 p5 <- ggbetweenstats(
   data = historical_rainfall,
@@ -346,10 +380,12 @@ p5 <- ggbetweenstats(
 p5
 ```
 
+
 This test shows a more detailed comparison of median daily rainfall across the 10 years. As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily rainfall across the years.
 :::
 
 ### 5.1.2 Historical temperature over the years
+
 
 ```{r}
 historical_temp_year <- historical_temp %>%
@@ -361,15 +397,19 @@ historical_temp_year <- historical_temp %>%
 DT::datatable(historical_temp_year,class = "compact")
 ```
 
+
 Saving it as a csv file:
+
 
 ```{r}
 #| eval: false
 write_csv(historical_temp_year, "data/historical_temp_year.csv")
 ```
 
+
 ::: panel-tabset
 ## Median Daily Mean Temperature
+
 
 ```{r}
 p6 <- ggplot(historical_temp_year,
@@ -391,9 +431,11 @@ p6 <- ggplotly(p6, tooltip="all",width = 800,height = 600) %>%
 p6
 ```
 
+
 Based on observation, it seems like median daily mean temperature for each weather station did not undergo significant changes over the years from 2014 to 2023.
 
 ## Median Daily Maximum Temperature
+
 
 ```{r}
 p7 <- ggplot(historical_temp_year,
@@ -415,9 +457,11 @@ p7 <- ggplotly(p7, tooltip="all",width = 800,height = 600) %>%
 p7
 ```
 
+
 Based on observation, it seems like median daily max temperature for each weather station did not undergo significant changes over the years from 2014 to 2023. Slight increases observed for Choa Chu Kang (South), Clementi, East Coast Parkway, Newton and Sentosa Island weather stations.
 
 ## Median Daily Minimum Temperature
+
 
 ```{r}
 p8 <- ggplot(historical_temp_year,
@@ -439,6 +483,7 @@ p8 <- ggplotly(p8, tooltip="all",width = 800,height = 600) %>%
 p8
 ```
 
+
 Based on observation, it seems like median daily minimum temperature for each weather station did not undergo significant changes over the years from 2014 to 2023.
 :::
 
@@ -446,6 +491,7 @@ Likewise, to determine whether the changes in the median daily mean, median dail
 
 ::: panel-tabset
 ## Daily Mean Temperature
+
 
 ```{r,fig.width=30,fig.height=20}
 p9 <- ggplot(historical_temp, 
@@ -466,9 +512,11 @@ p9 <- ggplot(historical_temp,
 p9
 ```
 
+
 As can be seen from the plot above, the distribution of daily mean temperature is not normal, as such, non-parametric test will be used.
 
 ## Daily Maximum Temperature
+
 
 ```{r,fig.width=30,fig.height=20}
 p10 <- ggplot(historical_temp, 
@@ -488,9 +536,11 @@ p10 <- ggplot(historical_temp,
 p10
 ```
 
+
 As can be seen from the plot above, the distribution of daily maximum temperature is not normal, as such, non-parametric test will be used.
 
 ## Daily Minimum Temperature
+
 
 ```{r,fig.width=30,fig.height=20}
 p11 <- ggplot(historical_temp, 
@@ -510,6 +560,7 @@ p11 <- ggplot(historical_temp,
 p11
 ```
 
+
 As can be seen from the plot above, the distribution of daily minimum temperature is not normal, as such, non-parametric test will be used.
 :::
 
@@ -521,6 +572,7 @@ As can be seen from the plot above, the distribution of daily minimum temperatur
 *H~0~: There is no difference between median mean temperature of each year across 10 years.*
 
 *H~1~: There is a difference between median mean temperature of each year across 10 years.*
+
 
 ```{r,fig.width=12,fig.height=10}
 p12 <- ggbetweenstats(
@@ -538,6 +590,7 @@ p12 <- ggbetweenstats(
 p12
 
 ```
+
 
 The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median mean temperature across the 10 years for:
 
@@ -561,6 +614,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 
 *H~1~: There is a difference between median daily mean temperature across 10 years.*
 
+
 ```{r,fig.width=12,fig.height=10}
 p13 <- ggbetweenstats(
   data = historical_temp,
@@ -577,6 +631,7 @@ p13 <- ggbetweenstats(
 p13
 ```
 
+
 This test shows a more detailed comparison of median daily mean temperature across the 10 years. As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily mean temperature across the years.
 :::
 
@@ -588,6 +643,7 @@ This test shows a more detailed comparison of median daily mean temperature acro
 *H~0~: There is no difference between median max temperature of each year across 10 years.*
 
 *H~1~: There is a difference between median max temperature of each year across 10 years.*
+
 
 ```{r,fig.width=12,fig.height=10}
 p14 <- ggbetweenstats(
@@ -605,6 +661,7 @@ p14 <- ggbetweenstats(
 p14
 ```
 
+
 The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median max temperature across the years for:
 
 -   2017 with 2019
@@ -620,6 +677,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 *H~0~: There is no difference between median daily max temperature across 10 years.*
 
 *H~1~: There is a difference between median daily max temperature across 10 years.*
+
 
 ```{r,fig.width=12,fig.height=10}
 p15 <- ggbetweenstats(
@@ -637,6 +695,7 @@ p15 <- ggbetweenstats(
 p15
 ```
 
+
 This test shows a more detailed comparison of median daily max temperature across the 10 years. As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily max temperature across the years.
 :::
 
@@ -648,6 +707,7 @@ This test shows a more detailed comparison of median daily max temperature acros
 *H~0~: There is no difference between median min temperature per year across 10 years.*
 
 *H~1~: There is a difference between median min temperature per year across 10 years.*
+
 
 ```{r,fig.width=12,fig.height=10}
 p16 <- ggbetweenstats(
@@ -664,6 +724,7 @@ p16 <- ggbetweenstats(
   theme(text = element_text(size = 20),plot.title=element_text(size=20))
 p16
 ```
+
 
 The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median min temperature across the years for:
 
@@ -683,6 +744,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 
 *H~1~: There is a difference between median daily min temperature across 10 years.*
 
+
 ```{r,fig.width=12,fig.height=10}
 p17 <- ggbetweenstats(
   data = historical_temp,
@@ -699,12 +761,14 @@ p17 <- ggbetweenstats(
 p17
 ```
 
+
 This test shows a more detailed comparison of median daily min temperature across the 10 years. As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily min temperature across the years.
 :::
 
 ## 5.2 CDA #2 - Are there really certain months “drier” or “wetter”/ “hotter” or “cooler”?
 
 ### 5.2.1 Rainfall across different months
+
 
 ```{r}
 historical_rainfall_month <- historical_rainfall %>%
@@ -714,7 +778,9 @@ historical_rainfall_month <- historical_rainfall %>%
 DT::datatable(historical_rainfall_month,class = "compact")
 ```
 
+
 Saving it as a csv file:
+
 
 ```{r}
 #| eval: false
@@ -737,6 +803,7 @@ p18 <- ggplot(historical_rainfall_month,
 ggplotly(p18)
 ```
 
+
 From the above plots, in 2014 and 2015, it can be seen that rainfall volume is higher in the later months of the year however this is less obvious after 2016. Notably, in 2018 and 2021, a higher volume of rainfall was seen in January as compared to December.
 
 To determine if there are certain months which are drier or wetter, we need to carry out statistical test to determine if there is a significant difference in the rainfall volume across months.
@@ -745,6 +812,7 @@ We first study the distribution of rainfall by month to determine if the distrib
 
 ::: panel-tabset
 ## Zoomed-in plot
+
 
 ```{r,fig.width=30,fig.height=20}
 p19 <- ggplot(historical_rainfall, 
@@ -765,7 +833,9 @@ p19 <- ggplot(historical_rainfall,
 p19
 ```
 
+
 ## Full plot
+
 
 ```{r,fig.width=30,fig.height=20}
 p20 <- ggplot(historical_rainfall, 
@@ -784,6 +854,7 @@ p20 <- ggplot(historical_rainfall,
        x="Rainfall volume (mm)")
 p20
 ```
+
 :::
 
 As can be seen from the plots above, the distribution of rainfall is not normal (with the plots right-skewed), as such, I will utilise non-parametric test.
@@ -796,6 +867,7 @@ As can be seen from the plots above, the distribution of rainfall is not normal 
 *H~0~: There is no difference between median rainfall across months.*
 
 *H~1~: There is a difference between median rainfall across months.*
+
 
 ```{r,fig.width=12,fig.height=10}
 p21 <- ggbetweenstats(
@@ -813,6 +885,7 @@ p21 <- ggbetweenstats(
 p21
 ```
 
+
 The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median rainfall across the months for:
 
 -   February with November and December
@@ -828,6 +901,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 *H~0~: There is no difference between median daily rainfall across months.*
 
 *H~1~: There is a difference between median daily rainfall across months.*
+
 
 ```{r,fig.width=15,fig.height=20}
 p22 <- ggbetweenstats(
@@ -845,10 +919,12 @@ p22 <- ggbetweenstats(
 p22
 ```
 
+
 This test shows a more detailed comparison of median daily rainfall across the months. As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily rainfall across the months.
 :::
 
 ### 5.2.2 Temperature across different months
+
 
 ```{r}
 historical_temp_month <- historical_temp %>%
@@ -860,7 +936,9 @@ historical_temp_month <- historical_temp %>%
 DT::datatable(historical_temp_month,class = "compact")
 ```
 
+
 Saving it as a csv file:
+
 
 ```{r}
 #| eval: false
@@ -868,8 +946,10 @@ write_csv(historical_temp_month, "data/historical_temp_month.csv")
 
 ```
 
+
 ::: panel-tabset
 ## Median Daily Mean Temperature
+
 
 ```{r,fig.width=15,fig.height=12}
 p23 <- ggplot(historical_temp_month,
@@ -889,9 +969,11 @@ p23 <- ggplot(historical_temp_month,
 ggplotly(p23)
 ```
 
+
 Based on observation, it seems like median daily mean temperature does not differ significantly across months from 2014 to 2023.
 
 ## Median Daily Maximum Temperature
+
 
 ```{r,fig.width=15,fig.height=12}
 p24 <- ggplot(historical_temp_month,
@@ -911,9 +993,11 @@ p24 <- ggplot(historical_temp_month,
 ggplotly(p24)
 ```
 
+
 Based on observation, it seems like median daily max temperature does not differ significantly across months over the years from 2014 to 2023.
 
 ## Median Daily Minimum Temperature
+
 
 ```{r,fig.width=15,fig.height=12}
 p25 <- ggplot(historical_temp_month,
@@ -933,6 +1017,7 @@ p25 <- ggplot(historical_temp_month,
 ggplotly(p25)
 ```
 
+
 Based on observation, it seems like median daily minimum temperature does not differ significantly across months over the years from 2014 to 2023.
 :::
 
@@ -940,6 +1025,7 @@ We visualise the distribution using ridgeline plots, using the code chunks below
 
 ::: panel-tabset
 ## Daily Mean Temperature
+
 
 ```{r,fig.width=30,fig.height=20}
 p26 <- ggplot(historical_temp, 
@@ -959,9 +1045,11 @@ p26 <- ggplot(historical_temp,
 p26
 ```
 
+
 As can be seen from the plot above, the distribution of daily mean temperature is not normal, as such, non-parametric test will be used.
 
 ## Daily Maximum Temperature
+
 
 ```{r,fig.width=30,fig.height=20}
 p27 <- ggplot(historical_temp, 
@@ -981,9 +1069,11 @@ p27 <- ggplot(historical_temp,
 p27
 ```
 
+
 As can be seen from the plot above, the distribution of daily maximum temperature is not normal, as such, non-parametric test will be used.
 
 ## Daily Minimum Temperature
+
 
 ```{r,fig.width=30,fig.height=20}
 p28 <- ggplot(historical_temp, 
@@ -1003,6 +1093,7 @@ p28 <- ggplot(historical_temp,
 p28
 ```
 
+
 As can be seen from the plot above, the distribution of daily minimum temperature is not normal, as such, non-parametric test will be used.
 :::
 
@@ -1014,6 +1105,7 @@ As can be seen from the plot above, the distribution of daily minimum temperatur
 *H~0~: There is no difference between median mean temperature across months.*
 
 *H~1~: There is a difference between median mean temperature across months.*
+
 
 ```{r,fig.width=12,fig.height=10}
 p29 <- ggbetweenstats(data = historical_temp_month,
@@ -1028,6 +1120,7 @@ p29 <- ggbetweenstats(data = historical_temp_month,
   theme(text = element_text(size = 20),plot.title = element_text(size = 20))
 p29
 ```
+
 
 The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median mean temperature across the months for:
 
@@ -1051,6 +1144,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 
 *H~1~: There is a difference between median daily mean temperature across months.*
 
+
 ```{r,fig.width=15,fig.height=10}
 p30 <- ggbetweenstats(
   data = historical_temp,
@@ -1067,6 +1161,7 @@ p30 <- ggbetweenstats(
 p30
 ```
 
+
 This test shows a more detailed comparison of median daily mean temperature across the months. As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily mean temperature across the months.
 :::
 
@@ -1078,6 +1173,7 @@ This test shows a more detailed comparison of median daily mean temperature acro
 *H~0~: There is no difference between median max temperature across months.*
 
 *H~1~: There is a difference between median max temperature across months.*
+
 
 ```{r,fig.width=12,fig.height=10}
 p31 <- ggbetweenstats(data = historical_temp_month,
@@ -1092,6 +1188,7 @@ p31 <- ggbetweenstats(data = historical_temp_month,
   theme(text = element_text(size = 20),plot.title = element_text(size = 20))
 p31
 ```
+
 
 The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median max temperature across the months for:
 
@@ -1115,6 +1212,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 
 *H~1~: There is a difference between median daily max temperature across months.*
 
+
 ```{r,fig.width=15,fig.height=10}
 p32 <- ggbetweenstats(
   data = historical_temp,
@@ -1131,6 +1229,7 @@ p32 <- ggbetweenstats(
 p32
 ```
 
+
 This test shows a more detailed comparison of median daily max temperature across the months. As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily max temperature across the months.
 :::
 
@@ -1142,6 +1241,7 @@ This test shows a more detailed comparison of median daily max temperature acros
 *H~0~: There is no difference between median min temperature across months.*
 
 *H~1~: There is a difference between median min temperature across months.*
+
 
 ```{r,fig.width=12,fig.height=10}
 p33 <- ggbetweenstats(data = historical_temp_month,
@@ -1156,6 +1256,7 @@ p33 <- ggbetweenstats(data = historical_temp_month,
   theme(text = element_text(size = 20),plot.title = element_text(size = 20))
 p33
 ```
+
 
 The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median min temperature across the months for:
 
@@ -1177,6 +1278,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 
 *H~1~: There is a difference between mean daily min temperature across months.*
 
+
 ```{r,fig.width=15,fig.height=10}
 p34 <- ggbetweenstats(
   data = historical_temp,
@@ -1193,6 +1295,7 @@ p34 <- ggbetweenstats(
 p34
 ```
 
+
 This test shows a more detailed comparison of median daily min temperature across the months. As the p-values of the test above are \< 0.05, we reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily min temperature across the months.
 :::
 
@@ -1208,6 +1311,7 @@ This test shows a more detailed comparison of median daily min temperature acros
 *H~0~: There is no difference between median yearly rainfall across weather stations.*
 
 *H~1~: There is a difference between median yearly rainfall across weather stations.*
+
 
 ```{r,fig.width=12,fig.height=10}
 p35 <- ggbetweenstats(
@@ -1227,6 +1331,7 @@ p35 <- ggbetweenstats(
 p35
 ```
 
+
 As seen from the plot above, the p-value is \< 0.05 and hence we will reject the null hypothesis at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median yearly rainfall across stations.
 
 ## Median Daily Rainfall
@@ -1236,6 +1341,7 @@ As seen from the plot above, the p-value is \< 0.05 and hence we will reject the
 *H~0~: There is no difference between median daily rainfall across weather stations.*
 
 *H~1~: There is a difference between median daily rainfall across weather stations*
+
 
 ```{r,fig.width=12,fig.height=10}
 p36 <- ggbetweenstats(
@@ -1254,6 +1360,7 @@ p36 <- ggbetweenstats(
         text = element_text(size = 15))
 p36
 ```
+
 
 This test shows a more detailed comparison of median daily rainfall across the stations. The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily rainfall across stations for:
 
@@ -1285,6 +1392,7 @@ This test shows a more detailed comparison of median daily rainfall across the s
 
 *H~1~: There is a difference between median yearly mean temperature across weather stations.*
 
+
 ```{r,fig.width=12,fig.height=10}
 p37 <- ggbetweenstats(
   data = historical_temp_year,
@@ -1302,6 +1410,7 @@ p37 <- ggbetweenstats(
         text = element_text(size = 15))
 p37
 ```
+
 
 The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median yearly mean temperature for stations:
 
@@ -1329,6 +1438,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 
 *H~1~: There is a difference between median daily mean temperature across weather stations.*
 
+
 ```{r,fig.width=12,fig.height=10}
 p38 <- ggbetweenstats(
   data = historical_temp,
@@ -1347,6 +1457,7 @@ p38 <- ggbetweenstats(
 p38
 ```
 
+
 This test shows a more detailed comparison of median daily mean temperature across the stations. The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily mean temperature across stations.
 :::
 
@@ -1358,6 +1469,7 @@ This test shows a more detailed comparison of median daily mean temperature acro
 *H~0~: There is no difference between median yearly maximum temperature across weather stations.*
 
 *H~1~: There is a difference between median yearly maximum temperature across weather stations.*
+
 
 ```{r,fig.width=12,fig.height=10}
 p39 <- ggbetweenstats(
@@ -1376,6 +1488,7 @@ p39 <- ggbetweenstats(
         text = element_text(size = 15))
 p39
 ```
+
 
 The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median yearly max temperature for stations:
 
@@ -1405,6 +1518,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 
 *H~1~: There is a difference between median daily maximum temperature across weather stations.*
 
+
 ```{r,fig.width=12,fig.height=10}
 p40 <- ggbetweenstats(
   data = historical_temp,
@@ -1423,6 +1537,7 @@ p40 <- ggbetweenstats(
 p40
 ```
 
+
 This test shows a more detailed comparison of median daily max temperature across the stations. The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily max temperature across stations.
 :::
 
@@ -1434,6 +1549,7 @@ This test shows a more detailed comparison of median daily max temperature acros
 *H~0~: There is no difference between median yearly minimum temperature across weather stations.*
 
 *H~1~: There is a difference between median yearly minimum temperature across weather stations.*
+
 
 ```{r,fig.width=12,fig.height=10}
 p41 <- ggbetweenstats(
@@ -1452,6 +1568,7 @@ p41 <- ggbetweenstats(
         text = element_text(size = 15))
 p41
 ```
+
 
 The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median yearly min temperature for stations:
 
@@ -1477,6 +1594,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 
 *H~1~: There is a difference between median daily minimum temperature across weather stations.*
 
+
 ```{r,fig.width=12,fig.height=10}
 p42 <- ggbetweenstats(
   data = historical_temp,
@@ -1494,6 +1612,7 @@ p42 <- ggbetweenstats(
         text = element_text(size = 15))
 p42
 ```
+
 
 This test shows a more detailed comparison of median daily min temperature across the stations. The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily min temperature across stations.
 :::
@@ -1528,7 +1647,7 @@ This test shows a more detailed comparison of median daily min temperature acros
 
 The envisioned UI design is as follows:
 
-![](images/shinyapp.jpg){fig-align="center"}
+![](data/shinyapp.jpg){fig-align="center"}
 
 +--------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Components for UI Design | Explanation                                                                                                                                                                                                                                                                                                                                           |
@@ -1569,3 +1688,4 @@ The envisioned UI design is as follows:
 |                          |                                                                                                                                                                                                                                                                                                                                                       |
 |                          | For instance, if a user is primarily interested in identifying statistically significant differences, they may choose to display only the significant pairwise p-values. This can help them quickly identify the most important comparisons without being overwhelmed by a cluttered plot. This will facilitate better interpretation of the results. |
 +--------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
