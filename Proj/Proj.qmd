@@ -174,36 +174,17 @@ write_csv(rainfall_data_month, "data/rainfall_data_month.csv")
 ## Overview of rainfall over the years
 
 ```{r,fig.height=6}
-p0 <- ggplot(rainfall_data_year,
+p1 <- ggplot(rainfall_data_year,
              aes(y=yearly_rainfall,
-                 x = as.factor(year),
-                 fill = as.factor(year))) +
-  geom_bar(stat = "identity") +
+                 x = year))+
+  geom_point()+
+  geom_line() +
   labs(title="Rainfall from 2014 to 2023",
        y = "Rainfall volume (mm)",
        x = "Year") +
+  scale_x_continuous(breaks =seq(2014,2023,1)) +
   theme_minimal() +
   theme(axis.text.x=element_text(angle=90,hjust=1),panel.spacing.y = unit(5,"lines"),legend.position = "none")
-
-ggplotly(p0)
-```
-
-## Detailed view of rainfall over the years
-
-```{r,fig.height=6}
-p1 <- ggplot(rainfall_data_month,
-             aes(y=monthly_rainfall,
-                 x = as.factor(month),
-                 group = year,
-                 color = as.factor(year))) +
-  geom_line() +
-  facet_wrap(~year,scales = "free_x") +
-  labs(title="Rainfall from 2014 to 2023",
-       y = "Rainfall volume (mm)",
-       x = "Month") +
-  scale_color_discrete(name = "Year")+
-  theme_minimal() +
-  theme(axis.text.x=element_text(angle=90,hjust=1),panel.spacing.y = unit(5,"lines") )
 
 ggplotly(p1)
 ```
@@ -370,35 +351,6 @@ p4 <- ggplotly(p4, tooltip="all",width = 800,height = 600) %>%
 p4
 ```
 
-## Detailed view of temperature over the years
-
-```{r,fig.width==6}
-
-combined_data2 <- reshape2::melt(temp_month, id.vars = c("year", "month"), variable.name = "temperature_type")
-
-p5 <- ggplot(combined_data2, aes(x = month, 
-                                 y = value,
-                                 color = temperature_type)) +
-  geom_line() +
-  facet_wrap(~ year,scales = "free_x")+
-  labs(title = "Detailed Temperature Trends from 2014 to 2023",
-       y = "Temperature (°C)",
-       x = "Month",
-       color = "Temperature Type") +
-  scale_x_continuous(breaks = seq(1,12, 1)) +
-  scale_color_manual(values = c("turquoise", "violetred2", "steelblue2"), 
-                      labels = c("Mean", "Max", "Min")) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1),
-        panel.border = element_rect(color = "lightgrey",linetype = "dashed", fill = NA, size = 1))
-
-p5 <- ggplotly(p5, tooltip = "all", width = 800, height = 600) %>% 
-  layout(width = 800, height = 600)
-
-p5
-
-```
-
 Based on observation, it seems like median mean, highest max and lowest min temperature did not undergo significant changes over the years from 2014 to 2023.
 
 ### 4.1.2.2 Distribution of Temperature (Mean, Max and Min) from 2014 to 2023
@@ -409,7 +361,7 @@ Likewise, to determine whether the changes in the median mean, median maximum an
 ## Distribution of Mean Temperature
 
 ```{r,fig.width=30,fig.height=20}
-p6 <- ggplot(temp_month, 
+p5 <- ggplot(temp_month, 
        aes(x = median_mean_temp, 
            y = as.factor(year), 
            fill = 0.5 - abs(0.5-stat(ecdf)))) +
@@ -424,13 +376,13 @@ p6 <- ggplot(temp_month,
        y="Year",
        x="Temperature (°C)")
 
-p6
+p5
 ```
 
 ## Distribution of Maximum Temperature
 
 ```{r,fig.width=30,fig.height=20}
-p7 <- ggplot(temp_month, 
+p6 <- ggplot(temp_month, 
        aes(x = highest_max_temp, 
            y = as.factor(year), 
            fill = 0.5 - abs(0.5-stat(ecdf)))) +
@@ -445,13 +397,13 @@ p7 <- ggplot(temp_month,
        y="Year",
        x="Temperature (°C)")
 
-p7
+p6
 ```
 
 ## Distribution of Minimum Temperature
 
 ```{r,fig.width=30,fig.height=20}
-p8 <- ggplot(temp_month, 
+p7 <- ggplot(temp_month, 
        aes(x = lowest_min_temp, 
            y = as.factor(year), 
            fill = 0.5 - abs(0.5-stat(ecdf)))) +
@@ -466,7 +418,7 @@ p8 <- ggplot(temp_month,
        y="Year",
        x="Temperature (°C)")
 
-p8
+p7
 ```
 
 From the plots above, it seems like the distribution of mean, highest maximum and lowest minimum temperature within each year is not normal.
@@ -632,7 +584,7 @@ Taking in results from the normality test and Levene test, non-parametric tests 
 *H~1~: There is a difference between median mean temperature of each year across 10 years.*
 
 ```{r,fig.width=12,fig.height=10}
-p9 <- ggbetweenstats(
+p8 <- ggbetweenstats(
   data = temp_month,
   x = year, 
   y = median_mean_temp,
@@ -646,7 +598,7 @@ p9 <- ggbetweenstats(
   ggsignif.args = list(textsize = 5)
 ) +
   theme(text = element_text(size = 20),plot.title=element_text(size=20))
-p9
+p8
 
 ```
 
@@ -661,7 +613,7 @@ The plot above shows that the p-value of the test is 0.29 which is \> 0.05, for 
 *H~1~: There is a difference between median highest max temperature of each year across 10 years.*
 
 ```{r,fig.width=12,fig.height=10}
-p10 <- ggbetweenstats(
+p9 <- ggbetweenstats(
   data = temp_month,
   x = year, 
   y = highest_max_temp,
@@ -675,7 +627,7 @@ p10 <- ggbetweenstats(
   ggsignif.args = list(textsize = 5)
 ) +
   theme(text = element_text(size = 20),plot.title=element_text(size=20))
-p10
+p9
 ```
 
 The plot above shows that the p-value of the test is 0.90 which is \> 0.05, for which we do not reject the null hypothesis at alpha = 0.05. **There is insufficient evidence to indicate that there is a difference in the highest max temperature across the years from 2014 to 2023.**
@@ -689,7 +641,7 @@ The plot above shows that the p-value of the test is 0.90 which is \> 0.05, for 
 *H~1~: There is a difference between median lowest min temperature per year across 10 years.*
 
 ```{r,fig.width=12,fig.height=10}
-p11 <- ggbetweenstats(
+p10 <- ggbetweenstats(
   data = temp_month,
   x = year, 
   y = lowest_min_temp,
@@ -703,7 +655,7 @@ p11 <- ggbetweenstats(
   ggsignif.args = list(textsize = 5)
 ) +
   theme(text = element_text(size = 20),plot.title=element_text(size=20))
-p11
+p10
 ```
 
 The plot above shows that the p-value of the test is 0.11 which is \> 0.05, for which we do not reject the null hypothesis at alpha = 0.05. **There is insufficient evidence to indicate that there is a difference in the lowest min temperature across the years from 2014 to 2023.**
@@ -716,7 +668,7 @@ The plot above shows that the p-value of the test is 0.11 which is \> 0.05, for 
 ### 4.2.1.1 Rainfall across different months
 
 ```{r,fig.width=17,fig.height=15}
-p12 <- ggplot(rainfall_data_month,
+p11 <- ggplot(rainfall_data_month,
              aes(y=monthly_rainfall,
                  x = as.factor(month),
                  fill = as.factor(year))) +
@@ -729,7 +681,7 @@ p12 <- ggplot(rainfall_data_month,
   theme(panel.spacing.y = unit(10, "lines"))+
   scale_fill_discrete(name = "Year")
 
-ggplotly(p12)
+ggplotly(p11)
 ```
 
 From the above plots, in 2014 and 2015, it can be seen that rainfall volume is higher in the later months of the year however this is less obvious after 2016. Notably, in 2021, a higher volume of rainfall was seen in January as compared to December.
@@ -745,7 +697,7 @@ hline.data <- rainfall_data_month %>%
 ```
 
 ```{r}
-p13 <- ggplot() +
+p12 <- ggplot() +
   geom_line(data = rainfall_data_month,
             aes(x = year,
                 y = monthly_rainfall,
@@ -763,7 +715,7 @@ p13 <- ggplot() +
   ylab("Rainfall volume (mm)")+
               theme_tufte(base_family = "Helvetica")+ theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 1))
 
-p13
+p12
 ```
 
 To determine if there are certain months which are drier or wetter, we need to carry out statistical test to determine if there is a significant difference in the rainfall volume across months.
@@ -780,7 +732,7 @@ As data is aggregated at the monthly_rainfall level in the starting dataset *wea
 *H~1~: There is a difference between median rainfall across months.*
 
 ```{r,fig.width=12,fig.height=10}
-p14 <- ggbetweenstats(
+p13 <- ggbetweenstats(
   data = rainfall_data_month,
   x = month, 
   y = monthly_rainfall,
@@ -792,7 +744,7 @@ p14 <- ggbetweenstats(
   ggsignif.args = list(textsize = 5)
 ) +
   theme(text = element_text(size = 20), plot.title=element_text(size=20))
-p14
+p13
 ```
 
 The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median rainfall across the months for:
@@ -812,7 +764,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 ## Mean Temperature
 
 ```{r,fig.width=15,fig.height=12}
-p15 <- ggplot(temp_month,
+p14 <- ggplot(temp_month,
        aes(y = median_mean_temp,
            x = month,
            colour = as.factor(year))) +
@@ -827,13 +779,13 @@ p15 <- ggplot(temp_month,
   theme(panel.spacing.y = unit(5,"lines"),
         axis.text.x = element_text(angle = 90))
 
-ggplotly(p15)
+ggplotly(p14)
 ```
 
 ## Highest Max Temperature
 
 ```{r,fig.width=15,fig.height=12}
-p16 <- ggplot(temp_month,
+p15 <- ggplot(temp_month,
        aes(y = highest_max_temp,
            x = month,
            colour = as.factor(year))) +
@@ -847,13 +799,13 @@ p16 <- ggplot(temp_month,
   theme_minimal() +
   theme(panel.spacing.y = unit(5,"lines"))
 
-ggplotly(p16)
+ggplotly(p15)
 ```
 
 ## Lowest Minimum Temperature
 
 ```{r,fig.width=15,fig.height=12}
-p17 <- ggplot(temp_month,
+p16 <- ggplot(temp_month,
        aes(y = lowest_min_temp,
            x = month,
            colour = as.factor(year))) +
@@ -867,9 +819,37 @@ p17 <- ggplot(temp_month,
   theme_minimal() +
   theme(panel.spacing.y = unit(5,"lines"))
 
-ggplotly(p17)
+ggplotly(p16)
 ```
 :::
+
+## Combined view
+
+```{r,fig.width==6}
+
+combined_data2 <- reshape2::melt(temp_month, id.vars = c("year", "month"), variable.name = "temperature_type")
+
+p17 <- ggplot(combined_data2, aes(x = month, 
+                                 y = value,
+                                 color = temperature_type)) +
+  geom_line() +
+  facet_wrap(~ year,scales = "free_x")+
+  labs(title = "Detailed Temperature Trends from 2014 to 2023",
+       y = "Temperature (°C)",
+       x = "Month",
+       color = "Temperature Type") +
+  scale_x_continuous(breaks = seq(1,12, 1)) +
+  scale_color_manual(values = c("turquoise", "violetred2", "steelblue2"), 
+                      labels = c("Mean", "Max", "Min")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        panel.border = element_rect(color = "lightgrey",linetype = "dashed", fill = NA, size = 1))
+
+p17 <- ggplotly(p17, tooltip = "all", width = 800, height = 600) %>% 
+  layout(width = 800, height = 600)
+
+p17
+```
 
 A cycle plot can be used to visualise the monthly trend of temperature over the years from 2014 to 2023:
 
@@ -877,37 +857,37 @@ A cycle plot can be used to visualise the monthly trend of temperature over the 
 
 ```{r}
 hline_mean_temp.data <- temp_month %>%
-  group_by(month) %>%
+  group_by(year) %>%
   summarise(avgvalue = mean(median_mean_temp))
 
 hline_max_temp.data <- temp_month %>%
-  group_by(month) %>%
+  group_by(year) %>%
   summarise(avgvalue = mean(highest_max_temp))
 
 hline_min_temp.data <- temp_month %>%
-  group_by(month) %>%
+  group_by(year) %>%
   summarise(avgvalue = mean(lowest_min_temp))
 ```
 
 ```{r}
 p18 <- ggplot() +
   geom_line(data = temp_month,
-            aes(x = year,
+            aes(x = as.factor(month),
                 y = median_mean_temp,
-                group = month,
-                colour = as.factor(month)))+
+                group = year,
+                colour = as.factor(year)))+
               geom_hline(aes(yintercept=avgvalue),
                          data=hline_mean_temp.data,
                          linetype=6,
                          colour="red",
                          size=0.5)+
-              facet_wrap(~month,scales = "free_x")+
+              facet_wrap(~year,scales = "free_x")+
               labs(axis.text.x=element_blank(),
-                   title = "Mean temperature by month from 2014 to 2023")+
+                   title = "Mean temperature by year from 2014 to 2023")+
               xlab("")+
               ylab("Degrees (°C)")+
-              scale_color_discrete(name = "Month")+
-              theme_tufte(base_family = "Helvetica")+ theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 1))
+              scale_color_discrete(name = "Year")+
+              theme_tufte(base_family = "Helvetica")
 
 p18
 ```
@@ -916,46 +896,46 @@ p18
 
 p19 <- ggplot() +
   geom_line(data = temp_month,
-            aes(x = year,
+            aes(x = as.factor(month),
                 y = highest_max_temp,
-                group = month,
-                colour = as.factor(month)))+
+                group = year,
+                colour = as.factor(year)))+
               geom_hline(aes(yintercept=avgvalue),
                          data=hline_max_temp.data,
                          linetype=6,
                          colour="red",
                          size=0.5)+
-              facet_wrap(~month,scales = "free_x")+
+              facet_wrap(~year,scales = "free_x")+
               labs(axis.text.x=element_blank(),
-                   title = "Highest max temperature by month from 2014 to 2023")+
+                   title = "Max temperature by year from 2014 to 2023")+
               xlab("")+
               ylab("Degrees (°C)")+
-              scale_color_discrete(name = "Month")+
-              theme_tufte(base_family = "Helvetica")+ theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 1))
-  
+              scale_color_discrete(name = "Year")+
+              theme_tufte(base_family = "Helvetica")
+
 p19
 ```
 
 ```{r}
 p20 <- ggplot() +
   geom_line(data = temp_month,
-            aes(x = year,
+            aes(x = as.factor(month),
                 y = lowest_min_temp,
-                group = month,
-                colour = as.factor(month)))+
+                group = year,
+                colour = as.factor(year)))+
               geom_hline(aes(yintercept=avgvalue),
                          data=hline_min_temp.data,
                          linetype=6,
                          colour="red",
                          size=0.5)+
-              facet_wrap(~month,scales = "free_x")+
+              facet_wrap(~year,scales = "free_x")+
               labs(axis.text.x=element_blank(),
-                   title = "Lowest min temperature by month from 2014 to 2023")+
+                   title = "Min temperature by year from 2014 to 2023")+
               xlab("")+
               ylab("Degrees (°C)")+
-              scale_color_discrete(name = "Month")+
-              theme_tufte(base_family = "Helvetica")+ theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 1))
-  
+              scale_color_discrete(name = "Year")+
+              theme_tufte(base_family = "Helvetica")
+
 p20
 ```
 
@@ -1222,6 +1202,40 @@ p28
 ```
 :::
 
+```{r}
+combined_data3 <- reshape2::melt(temp_stn, id.vars = c("station", "year"), variable.name = "temperature_type")
+
+p29 <- ggplot(combined_data3, aes(x = year, 
+                                 y = value,
+                                 color = temperature_type)) +
+  geom_line() +
+  facet_wrap(~ station,scales = "free_x")+
+  labs(title = "Detailed Temperature Trends across stations from 2014 to 2023",
+       y = "Temperature (°C)",
+       x = "Year",
+       color = "Temperature Type") +
+  scale_x_continuous(breaks = seq(2014,2023, 1)) +
+  scale_color_manual(values = c("turquoise", "violetred2", "steelblue2"), 
+                      labels = c("Mean", "Max", "Min")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        panel.border = element_rect(color = "lightgrey",linetype = "dashed", fill = NA, size = 1))
+
+p29 <- ggplotly(p29, tooltip = "all", width = 800, height = 600) %>% 
+  layout(width = 800, height = 600)
+
+p29
+```
+
+Saving *combined_data, combined_data2* and *combined_data3* as csv files:
+
+```{r}
+#| eval: false 
+write_csv(combined_data, "data/combined_data.csv")
+write_csv(combined_data2, "data/combined_data2.csv")
+write_csv(combined_data3, "data/combined_data3.csv")
+```
+
 ::: panel-tabset
 ## Median Mean Temperature
 
@@ -1232,7 +1246,7 @@ p28
 *H~1~: There is a difference between median mean temperature across weather stations.*
 
 ```{r,fig.width=12,fig.height=10}
-p29 <- ggbetweenstats(
+p30 <- ggbetweenstats(
   data = temp_stn,
   x = station, 
   y = median_mean_temp,
@@ -1248,7 +1262,7 @@ p29 <- ggbetweenstats(
   theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1),
         plot.title = element_text(size = 15),
         text = element_text(size = 15))
-p29
+p30
 ```
 
 The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median yearly mean temperature for stations:
@@ -1276,7 +1290,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 *H~1~: There is a difference between median maximum temperature across weather stations.*
 
 ```{r,fig.width=12,fig.height=10}
-p30 <- ggbetweenstats(
+p31 <- ggbetweenstats(
   data = temp_stn,
   x = station, 
   y = highest_max_temp,
@@ -1292,7 +1306,7 @@ p30 <- ggbetweenstats(
   theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1),
         plot.title = element_text(size = 15),
         text = element_text(size = 15))
-p30
+p31
 ```
 
 The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median yearly max temperature for stations:
@@ -1324,7 +1338,7 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 *H~1~: There is a difference between median minimum temperature across weather stations.*
 
 ```{r,fig.width=12,fig.height=10}
-p31 <- ggbetweenstats(
+p32 <- ggbetweenstats(
   data = temp_stn,
   x = station, 
   y = lowest_min_temp,
@@ -1340,7 +1354,7 @@ p31 <- ggbetweenstats(
   theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1),
         plot.title = element_text(size = 15),
         text = element_text(size = 15))
-p31
+p32
 ```
 
 The plot above shows p-values of pairwise test that have p-values \< 0.05 and for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median yearly min temperature for stations:
@@ -1356,98 +1370,101 @@ The plot above shows p-values of pairwise test that have p-values \< 0.05 and fo
 
 ## 4.4 CDA Summary Table
 
-+------------+--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| S/N        | CDA                                                                      | Findings                                                                                                                                                                                                                                                                                                              |
-+============+==========================================================================+=======================================================================================================================================================================================================================================================================================================================+
-| **1.1**    | Are the changes in rainfall over the years statistically significant?    | -   Yes, there is **sufficient** evidence to indicate that there is a difference in the median rainfall across the years from 2014 to 2023.                                                                                                                                                                           |
-+------------+--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **1.2**    | Are the changes in temperature over the years statistically significant? | -   No, there is **insufficient** evidence to indicate that there is a difference in the mean, max and min temperature across the years from 2014 to 2023.                                                                                                                                                            |
-+------------+--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **2.1**    | Are there really certain months “drier” or “wetter”?                     | -   Yes, there is sufficient evidence to indicate that there is a difference in the median rainfall across the months for:                                                                                                                                                                                            |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     > February with November and December                                                                                                                                                                                                                                                                             |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     > August with November                                                                                                                                                                                                                                                                                            |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          | -   This indicates that the differences in median rainfall across months **are statistically significant, with February being drier than November and December, and August being drier than November.**                                                                                                               |
-+------------+--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **2.2**    | Are there really certain months “hotter” or “cooler”?                    | -   Yes, there is sufficient evidence to indicate that there is a difference in the median mean temperature across the months for:                                                                                                                                                                                    |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   January and February with May to September and November                                                                                                                                                                                                                                                       |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   March with May to August                                                                                                                                                                                                                                                                                      |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   June, July and August with December                                                                                                                                                                                                                                                                           |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     **Overall, this indicates that the differences in mean temperature across months is generally statistically significant. This suggests that mean temperatures are higher during the middle months of the year.**                                                                                                  |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          | -   Yes, there is sufficient evidence to indicate that there is a difference in the median highest max temperature across the months for:                                                                                                                                                                             |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   January, February and March with Jun to September and November                                                                                                                                                                                                                                                |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   April with Jun, July, Aug                                                                                                                                                                                                                                                                                     |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   Jun, July with December                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     **Overall, this indicates that the differences in median max temperature across months is generally statistically significant. This suggests that max temperatures are higher during the middle months of the year.**                                                                                             |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          | -   Yes, there is sufficient evidence to indicate that there is a difference in the lowest min temperature across the months from 2014 to 2023.                                                                                                                                                                       |
-+------------+--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **3.1**    | Are there certain locations “drier” or “wetter”?                         | Yes.                                                                                                                                                                                                                                                                                                                  |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          | -   **There is sufficient evidence to indicate that there is differences in median daily rainfall across stations.**                                                                                                                                                                                                  |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     The p-value of pairwise test between                                                                                                                                                                                                                                                                              |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   Choa Chu Kang (South) with East Coast Parkway                                                                                                                                                                                                                                                                 |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     is \< 0.05, for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily rainfall **specifically for Choa Chu Kang (South) and East Coast Parkway, indicating different locations vary in degree of dryness/wetness.** |
-+------------+--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **3.2**    | Are there certain locations “hotter” or “cooler”?                        | Yes.                                                                                                                                                                                                                                                                                                                  |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          | -   There is sufficient evidence to indicate that there is a difference in the median yearly mean temperature for stations:                                                                                                                                                                                           |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   Admiralty with Pasir Panjang and Tai Seng                                                                                                                                                                                                                                                                     |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   Choa Chu Kang (South) and Clementi with Tai Seng                                                                                                                                                                                                                                                              |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   East Coast Parkway with Jurong (West) and Newton                                                                                                                                                                                                                                                              |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   Jurong (West) with Jurong Island, Pasir Panjang, Sentosa Island, Tai Seng and Tuas South                                                                                                                                                                                                                      |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   Jurong Island with Newton                                                                                                                                                                                                                                                                                     |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   Newton with Pasir Panjang, Sentosa Island, Tai Seng and Tuas South                                                                                                                                                                                                                                            |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     **Overall, this indicates that the differences in median mean temperature across stations is generally statistically significant. This suggests that different regions of Singapore are hotter/cooler.**                                                                                                          |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          | -   There is sufficient evidence to indicate that there is a difference in the median yearly max temperature for stations:                                                                                                                                                                                            |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   Admiralty with East Coast Parkway, Pasir Panjang and Tai Seng                                                                                                                                                                                                                                                 |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   Changi with East Coast Parkway and Pasir Panjang                                                                                                                                                                                                                                                              |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   Choa Chu Kang (South) with East Coast Parkway, Jurong Island, Pasir Panjang, and Tai Seng                                                                                                                                                                                                                     |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   Clementi with East Coast Parkway, Jurong Island, Pasir Panjang, Tai Seng and Tuas South                                                                                                                                                                                                                       |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   East Coast Parkway with Jurong (West) and Newton                                                                                                                                                                                                                                                              |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   Jurong (West) with Pasir Panjang and Tai Seng                                                                                                                                                                                                                                                                 |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   Jurong Island and Newton                                                                                                                                                                                                                                                                                      |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   Newton with Pasir Panjang and Tai Seng                                                                                                                                                                                                                                                                        |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     **Overall, this indicates that the differences in median max temperature across stations is generally statistically significant. This suggests that different regions of Singapore are hotter/cooler.**                                                                                                           |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          | -   There is sufficient evidence to indicate that there is a difference in the median yearly min temperature for stations:                                                                                                                                                                                            |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   Clementi with East Coast Parkway, Sentosa Island and Tuas South                                                                                                                                                                                                                                               |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   East Coast Parkway with Jurong (West)                                                                                                                                                                                                                                                                         |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     -   Jurong (West) with Sentosa Island and Tuas South                                                                                                                                                                                                                                                              |
-|            |                                                                          |                                                                                                                                                                                                                                                                                                                       |
-|            |                                                                          |     **Overall, this indicates that the differences in median yearly min temperature across stations is generally statistically significant. This suggests that different regions of Singapore are hotter/cooler.**                                                                                                    |
-+------------+--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
++----------+--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| S/N      | CDA                                                                      | Findings                                                                                                                                                                                                                                                                                                              |
++==========+==========================================================================+=======================================================================================================================================================================================================================================================================================================================+
+| **1.1**  | Are the changes in rainfall over the years statistically significant?    | -   Yes, there is **sufficient** evidence to indicate that there is a difference in the median rainfall across the years from 2014 to 2023.                                                                                                                                                                           |
++----------+--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **1.2**  | Are the changes in temperature over the years statistically significant? | -   No, there is **insufficient** evidence to indicate that there is a difference in the mean, max and min temperature across the years from 2014 to 2023.                                                                                                                                                            |
++----------+--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **2.1**  | Are there really certain months “drier” or “wetter”?                     | -   Yes, there is sufficient evidence to indicate that there is a difference in the median rainfall across the months for:                                                                                                                                                                                            |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     > February with November and December                                                                                                                                                                                                                                                                             |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     > August with November                                                                                                                                                                                                                                                                                            |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          | -   This indicates that the differences in median rainfall across months **are statistically significant, with February being drier than November and December, and August being drier than November.**                                                                                                               |
++----------+--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **2.2**  | Are there really certain months “hotter” or “cooler”?                    | -   Yes, there is sufficient evidence to indicate that there is a difference in the median mean temperature across the months for:                                                                                                                                                                                    |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   January and February with May to September and November                                                                                                                                                                                                                                                       |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   March with May to August                                                                                                                                                                                                                                                                                      |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   June, July and August with December                                                                                                                                                                                                                                                                           |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     **Overall, this indicates that the differences in mean temperature across months is generally statistically significant. This suggests that mean temperatures are higher during the middle months of the year.**                                                                                                  |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          | -   Yes, there is sufficient evidence to indicate that there is a difference in the median highest max temperature across the months for:                                                                                                                                                                             |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   January, February and March with Jun to September and November                                                                                                                                                                                                                                                |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   April with Jun, July, Aug                                                                                                                                                                                                                                                                                     |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   Jun, July with December                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     **Overall, this indicates that the differences in median max temperature across months is generally statistically significant. This suggests that max temperatures are higher during the middle months of the year.**                                                                                             |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          | -   Yes, there is sufficient evidence to indicate that there is a difference in the lowest min temperature across the months from 2014 to 2023.                                                                                                                                                                       |
++----------+--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **3.1**  | Are there certain locations “drier” or “wetter”?                         | Yes.                                                                                                                                                                                                                                                                                                                  |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          | -   **There is sufficient evidence to indicate that there is differences in median daily rainfall across stations.**                                                                                                                                                                                                  |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     The p-value of pairwise test between                                                                                                                                                                                                                                                                              |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   Choa Chu Kang (South) with East Coast Parkway                                                                                                                                                                                                                                                                 |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     is \< 0.05, for which the null hypothesis will be rejected at alpha = 0.05. There is sufficient evidence to indicate that there is a difference in the median daily rainfall **specifically for Choa Chu Kang (South) and East Coast Parkway, indicating different locations vary in degree of dryness/wetness.** |
++----------+--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **3.2**  | Are there certain locations “hotter” or “cooler”?                        | Yes.                                                                                                                                                                                                                                                                                                                  |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          | -   There is sufficient evidence to indicate that there is a difference in the median yearly mean temperature for stations:                                                                                                                                                                                           |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   Admiralty with Pasir Panjang and Tai Seng                                                                                                                                                                                                                                                                     |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   Choa Chu Kang (South) and Clementi with Tai Seng                                                                                                                                                                                                                                                              |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   East Coast Parkway with Jurong (West) and Newton                                                                                                                                                                                                                                                              |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   Jurong (West) with Jurong Island, Pasir Panjang, Sentosa Island, Tai Seng and Tuas South                                                                                                                                                                                                                      |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   Jurong Island with Newton                                                                                                                                                                                                                                                                                     |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   Newton with Pasir Panjang, Sentosa Island, Tai Seng and Tuas South                                                                                                                                                                                                                                            |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     **Overall, this indicates that the differences in median mean temperature across stations is generally statistically significant. This suggests that different regions of Singapore are hotter/cooler.**                                                                                                          |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          | -   There is sufficient evidence to indicate that there is a difference in the median yearly max temperature for stations:                                                                                                                                                                                            |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   Admiralty with East Coast Parkway, Pasir Panjang and Tai Seng                                                                                                                                                                                                                                                 |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   Changi with East Coast Parkway and Pasir Panjang                                                                                                                                                                                                                                                              |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   Choa Chu Kang (South) with East Coast Parkway, Jurong Island, Pasir Panjang, and Tai Seng                                                                                                                                                                                                                     |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   Clementi with East Coast Parkway, Jurong Island, Pasir Panjang, Tai Seng and Tuas South                                                                                                                                                                                                                       |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   East Coast Parkway with Jurong (West) and Newton                                                                                                                                                                                                                                                              |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   Jurong (West) with Pasir Panjang and Tai Seng                                                                                                                                                                                                                                                                 |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   Jurong Island and Newton                                                                                                                                                                                                                                                                                      |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   Newton with Pasir Panjang and Tai Seng                                                                                                                                                                                                                                                                        |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     **Overall, this indicates that the differences in median max temperature across stations is generally statistically significant. This suggests that different regions of Singapore are hotter/cooler.**                                                                                                           |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          | -   There is sufficient evidence to indicate that there is a difference in the median yearly min temperature for stations:                                                                                                                                                                                            |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   Clementi with East Coast Parkway, Sentosa Island and Tuas South                                                                                                                                                                                                                                               |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   East Coast Parkway with Jurong (West)                                                                                                                                                                                                                                                                         |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     -   Jurong (West) with Sentosa Island and Tuas South                                                                                                                                                                                                                                                              |
+|          |                                                                          |                                                                                                                                                                                                                                                                                                                       |
+|          |                                                                          |     **Overall, this indicates that the differences in median yearly min temperature across stations is generally statistically significant. This suggests that different regions of Singapore are hotter/cooler.**                                                                                                    |
++----------+--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+```{}
+```
